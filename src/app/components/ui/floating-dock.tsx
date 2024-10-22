@@ -9,7 +9,7 @@ import {
   useTransform,
 } from 'framer-motion';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export const FloatingDock = ({
   items,
@@ -55,12 +55,31 @@ function IconContainer({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    // Check if window is defined and update the state based on window width
+    if (typeof window !== 'undefined') {
+      setIsDesktop(window.innerWidth >= 768);
+
+      const handleResize = () => {
+        setIsDesktop(window.innerWidth >= 768);
+      };
+
+      // Listen for window resize events
+      window.addEventListener('resize', handleResize);
+
+      // Clean up the event listener when the component is unmounted
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
   const distance = useTransform(mouseX, (val) => {
     const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };
     return val - bounds.x - bounds.width / 2;
   });
 
-  // Ukuran untuk desktop
+  // Transform for desktop size
   const desktopWidthTransform = useTransform(
     distance,
     [-150, 0, 150],
@@ -77,27 +96,30 @@ function IconContainer({
     [20, 40, 20]
   );
 
-  // Ukuran untuk mobile (lebih kecil)
+  // Mobile sizes
   const mobileWidth = 40;
   const mobileHeight = 40;
   const mobileIconSize = 20;
 
-  const width = useSpring(desktopWidthTransform, {
+  const width = useSpring(isDesktop ? desktopWidthTransform : mobileWidth, {
     mass: 0.1,
     stiffness: 150,
     damping: 12,
   });
-  const height = useSpring(desktopHeightTransform, {
+  const height = useSpring(isDesktop ? desktopHeightTransform : mobileHeight, {
     mass: 0.1,
     stiffness: 150,
     damping: 12,
   });
 
-  const iconSize = useSpring(desktopIconTransform, {
-    mass: 0.1,
-    stiffness: 150,
-    damping: 12,
-  });
+  const iconSize = useSpring(
+    isDesktop ? desktopIconTransform : mobileIconSize,
+    {
+      mass: 0.1,
+      stiffness: 150,
+      damping: 12,
+    }
+  );
 
   const [hovered, setHovered] = useState(false);
 
@@ -106,8 +128,8 @@ function IconContainer({
       <motion.div
         ref={ref}
         style={{
-          width: window.innerWidth >= 768 ? width : mobileWidth,
-          height: window.innerWidth >= 768 ? height : mobileHeight,
+          width,
+          height,
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
@@ -125,8 +147,8 @@ function IconContainer({
         )}
         <motion.div
           style={{
-            width: window.innerWidth >= 768 ? iconSize : mobileIconSize,
-            height: window.innerWidth >= 768 ? iconSize : mobileIconSize,
+            width: iconSize,
+            height: iconSize,
           }}
           className="flex items-center justify-center"
         >
