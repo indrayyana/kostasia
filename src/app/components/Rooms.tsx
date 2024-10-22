@@ -2,7 +2,8 @@ import Image from 'next/image';
 import { RoomType } from '@/app/types/room';
 
 async function getRooms() {
-  const res = await fetch('http://localhost:3000/api/rooms');
+  // const res = await fetch('http://localhost:3000/api/rooms');
+  const res = await fetch('https://kost-asia.vercel.app/api/rooms');
   if (!res.ok) {
     throw new Error('Failed to fetch data');
   }
