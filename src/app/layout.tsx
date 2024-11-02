@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     'Menyediakan kamar kos-kosan harian, mingguan, dan bulanan di Kota Klungkung',
   keywords: 'kos, kost, klungkung, asia, semarapura, harian, mingguan, bulanan',
   verification: {
-    google: '7WHI3VRVzn5V1bJ-mxTCsBg04oaZbdx6SQUfT1E4RPg',
+    google: 'Txlx0FGJL3xU51CQE1kupCKkO7XTkBCaLmWROKbjLEw',
   },
   manifest: '/manifest.json',
 };
