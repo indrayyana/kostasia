@@ -10,14 +10,17 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Kost ASIA',
+  title: 'Kost ASIA - Kost Harian, Mingguan, Bulanan di Klungkung',
   description:
-    'Menyediakan kamar kos-kosan harian, mingguan, dan bulanan di Kota Klungkung',
+    'Menyediakan kamar kos-kosan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung',
   keywords: 'kos, kost, klungkung, asia, semarapura, harian, mingguan, bulanan',
   verification: {
     google: 'Txlx0FGJL3xU51CQE1kupCKkO7XTkBCaLmWROKbjLEw',
   },
   manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
