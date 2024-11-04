@@ -10,12 +10,25 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Kost ASIA - Kost Harian, Mingguan, Bulanan di Klungkung',
+  title: 'Kost ASIA',
   description:
-    'Menyediakan kamar kos-kosan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung',
+    'Menyediakan kamar kos-kosan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung dengan harga terjangkau',
   keywords: 'kos, kost, klungkung, asia, semarapura, harian, mingguan, bulanan',
   verification: {
     google: 'Txlx0FGJL3xU51CQE1kupCKkO7XTkBCaLmWROKbjLEw',
+  },
+  openGraph: {
+    title: 'Kost ASIA',
+    description:
+      'Menyediakan kamar kos-kosan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung dengan harga terjangkau',
+    type: 'website',
+    url: `${process.env.BASE_URL}`,
+    siteName: 'Kost ASIA',
+    // images: [
+    //   {
+    //     url: `${process.env.BASE_URL}/api/og`,
+    //   },
+    // ]
   },
   manifest: '/manifest.json',
   icons: {
