@@ -11,13 +11,17 @@ const inter = Inter({
 
 export const viewport: Viewport = {
   themeColor: '#4285f4',
+  width: 'device-width',
+  initialScale: 1,
+  minimumScale: 1,
+  maximumScale: 1,
 };
 
 export const metadata: Metadata = {
   applicationName: 'Kost ASIA',
-  title: 'Kost ASIA',
+  title: 'Kost ASIA - Klungkung',
   description:
-    'Menyediakan kamar kos-kosan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung dengan harga terjangkau',
+    'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung dengan harga terjangkau',
   keywords:
     'kost asia, kos, kost, info kost, rumah kost, sewa kost, kost terdekat, kost murah, cari kost, klungkung, asia, semarapura, harian, mingguan, bulanan',
   verification: {
@@ -27,9 +31,9 @@ export const metadata: Metadata = {
     canonical: `${process.env.BASE_URL}`,
   },
   openGraph: {
-    title: 'Kost ASIA',
+    title: 'Kost ASIA - Klungkung',
     description:
-      'Menyediakan kamar kos-kosan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung dengan harga terjangkau',
+      'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung dengan harga terjangkau',
     type: 'website',
     url: `${process.env.BASE_URL}`,
     siteName: 'Kost ASIA',
@@ -38,6 +42,7 @@ export const metadata: Metadata = {
     //     url: `${process.env.BASE_URL}/api/og`,
     //   },
     // ]
+    locale: 'in_ID',
   },
   manifest: '/manifest.json',
   icons: {
@@ -56,7 +61,9 @@ export const metadata: Metadata = {
     'Business, Rent House, Sewa Kost, Property, Rent Room, Info Kost, Information, Kost, Room, Cari Kost, Kost Murah, Kost Bebas, Application, Mobile Application, Kamar Kost, Kamar Kos, Kostan, Kos, Rumah Kost, Rumah Kos, Kost Harian',
   other: {
     'mobile-web-app-capable': 'yes',
+    'revisit-after': '2 days',
     rating: 'general',
+    locale: 'in_ID',
     keyphrases:
       'Info Kost, Cari Kost, Sewa Kost, Kost Murah, Aplikasi Kost, Aplikasi Info Kost, Kost, Kost ASIA, Kamar Kost, Kamar Kos, Kostan, Kos, Rumah Kost, Rumah Kos, Kost Harian',
   },
@@ -69,7 +76,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="">
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-white dark:bg-slate-800`}>
         <Providers>{children}</Providers>
       </body>
     </html>

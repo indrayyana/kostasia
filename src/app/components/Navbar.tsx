@@ -34,9 +34,9 @@ export default function Navbar() {
   ];
 
   return (
-    <div className="flex items-end fixed z-50 justify-center w-full">
+    <nav className="flex items-end fixed z-50 justify-center w-full">
       <FloatingDock items={links} />
-    </div>
+    </nav>
   );
 }
 
