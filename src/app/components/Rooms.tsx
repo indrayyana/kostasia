@@ -1,31 +1,31 @@
-// import Image from 'next/image';
-// import { Product, WithContext } from 'schema-dts';
-// import { RoomType } from '@/app/types/room';
+import Image from 'next/image';
+import { Product, WithContext } from 'schema-dts';
+import { RoomType } from '@/app/types/room';
 
-// async function getRooms() {
-//   const res = await fetch(`${process.env.API_URL}`);
+async function getRooms() {
+  const res = await fetch(`${process.env.API_URL}`);
 
-//   if (!res.ok) {
-//     throw new Error('Failed to fetch data');
-//   }
+  if (!res.ok) {
+    throw new Error('Failed to fetch data');
+  }
 
-//   return res.json();
-// }
+  return res.json();
+}
 
 export default async function Rooms() {
-  // const rooms = await getRooms();
+  const rooms = await getRooms();
 
-  // const jsonLd: WithContext<Product> = {
-  //   '@context': 'https://schema.org',
-  //   '@type': 'Product',
-  //   name: rooms.name,
-  //   image: rooms.image,
-  //   description: rooms.info,
-  // };
+  const jsonLd: WithContext<Product> = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: rooms.name,
+    image: rooms.image,
+    description: rooms.info,
+  };
 
   return (
     <>
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
         {rooms.data.map((room: RoomType) => (
           <div
             key={room.id}
@@ -87,8 +87,7 @@ export default async function Rooms() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      /> */}
-      <p>test</p>
+      />
     </>
   );
 }
