@@ -8,7 +8,9 @@ export default function Home() {
   return (
     <>
       <header>
-        <h1 className="pt-5 text-4xl text-center font-bold">Kost ASIA</h1>
+        <h1 className="pt-5 text-4xl text-center font-bold dark:text-white">
+          Kost ASIA
+        </h1>
         <Navbar />
       </header>
       <main>

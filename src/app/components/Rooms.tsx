@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { Product, WithContext } from 'schema-dts';
 import { RoomType } from '@/app/types/room';
 
 async function getRooms() {
@@ -14,14 +13,6 @@ async function getRooms() {
 
 export default async function Rooms() {
   const rooms = await getRooms();
-
-  const jsonLd: WithContext<Product> = {
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: rooms.name,
-    image: rooms.image,
-    description: rooms.info,
-  };
 
   return (
     <>
@@ -84,10 +75,6 @@ export default async function Rooms() {
           </div>
         ))}
       </div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
     </>
   );
 }
