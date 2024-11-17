@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import { Providers } from './components/Provider';
+import { Providers } from '@/components/Provider';
+import Header from '@/components/ui/header';
+import Footer from '@/components/ui/footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -18,11 +20,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   applicationName: 'Kost ASIA',
-  title: 'Kost ASIA - Klungkung',
+  title: 'Kost ASIA',
   description:
-    'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung dengan harga terjangkau',
+    'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Denpasar dan Klungkung dengan harga terjangkau',
   keywords:
-    'kost asia, kos, kost, info kost, rumah kost, sewa kost, kost terdekat, kost murah, cari kost, klungkung, asia, semarapura, harian, mingguan, bulanan',
+    'kost asia, kos, kost, info kost, rumah kost, sewa kost, kost terdekat, kost murah, cari kost, klungkung, denpasar, asia, semarapura, harian, mingguan, bulanan',
   verification: {
     google: 'Txlx0FGJL3xU51CQE1kupCKkO7XTkBCaLmWROKbjLEw',
   },
@@ -30,9 +32,9 @@ export const metadata: Metadata = {
     canonical: `${process.env.BASE_URL}`,
   },
   openGraph: {
-    title: 'Kost ASIA - Klungkung',
+    title: 'Kost ASIA',
     description:
-      'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Klungkung dengan harga terjangkau',
+      'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Denpasar dan Klungkung dengan harga terjangkau',
     type: 'website',
     url: `${process.env.BASE_URL}`,
     siteName: 'Kost ASIA',
@@ -60,7 +62,6 @@ export const metadata: Metadata = {
     'Business, Rent House, Sewa Kost, Property, Rent Room, Info Kost, Information, Kost, Room, Cari Kost, Kost Murah, Kost Bebas, Application, Mobile Application, Kamar Kost, Kamar Kos, Kostan, Kos, Rumah Kost, Rumah Kos, Kost Harian',
   other: {
     'mobile-web-app-capable': 'yes',
-    'revisit-after': '2 days',
     rating: 'general',
     locale: 'in_ID',
     keyphrases:
@@ -76,7 +77,11 @@ export default function RootLayout({
   return (
     <html lang="id" className="">
       <body className={`${inter.className} bg-white dark:bg-slate-800`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { RoomType } from '@/app/types/room';
+import { RoomType } from '@/types/room';
 
 async function getRooms() {
   const res = await fetch(`${process.env.API_URL}`);
