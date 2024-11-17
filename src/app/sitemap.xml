@@ -8,8 +8,19 @@
 
 
 <url>
-  <loc>https://kost-asia.vercel.app/</loc>
-  <lastmod>2024-11-02T12:48:43+00:00</lastmod>
+  <loc>https://www.kostasia.com/</loc>
+  <lastmod>2024-11-17T01:35:42+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://www.kostasia.com/denpasar</loc>
+  <lastmod>2024-11-17T01:35:42+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://www.kostasia.com/klungkung</loc>
+  <lastmod>2024-11-17T01:35:42+00:00</lastmod>
+  <priority>0.80</priority>
 </url>
 
 
