@@ -1,6 +1,7 @@
 export type RoomType = {
   id: number;
-  name: string;
-  image: string;
-  info: string;
+  nama: string;
+  gambar: string;
+  status: string;
 };
+

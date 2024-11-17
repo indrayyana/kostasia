@@ -44,7 +44,7 @@ export default function Denpasar() {
       </section>
       <section id="kamar" className="flex flex-col p-12">
         <h2 className="text-2xl font-bold my-4">Kamar</h2>
-        <Rooms />
+        <Rooms endpoint="denpasar" />
       </section>
       <section id="kontak" className="p-12 bg-blue-600">
         <h2 className="text-2xl font-bold my-4">Kontak Kami</h2>

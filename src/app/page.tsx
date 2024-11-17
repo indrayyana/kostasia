@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Home() {
   // throw new Error('Controller file error in line 87'); // TODO: testing server error
   return (
@@ -12,6 +14,22 @@ export default function Home() {
         <h2 className="mt-5 text-4xl text-center text-white font-bold">
           &quot;(Pages are under construction).&quot;
         </h2>
+        <div className="mt-5 flex justify-center gap-10">
+          <Link
+            href="/denpasar"
+            type="button"
+            className="mt-4 text-white bg-purple-600 font-bold border-2 border-black shadow-solid-sm hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-7 py-3 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+          >
+            Denpasar
+          </Link>
+          <Link
+            href="/klungkung"
+            type="button"
+            className="mt-4 text-white bg-purple-600 font-bold border-2 border-black shadow-solid-sm hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-7 py-3 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+          >
+            Klungkung
+          </Link>
+        </div>
       </section>
     </>
   );
