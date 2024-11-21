@@ -2,7 +2,12 @@ import Image from 'next/image';
 import { RoomType } from '@/types/room';
 
 async function getRooms(endpoint: string) {
-  const res = await fetch(`${process.env.API_URL}/${endpoint}`);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/rooms/${endpoint}`,
+    {
+      cache: 'no-store',
+    }
+  );
 
   if (!res.ok) {
     throw new Error('Failed to fetch data');
@@ -16,18 +21,18 @@ interface RoomsProps {
 }
 
 export default async function Rooms({ endpoint }: RoomsProps) {
-  const rooms = await getRooms(endpoint);
+  const data = await getRooms(endpoint);
 
   return (
     <>
       <div
         className={`grid grid-cols-1 sm:grid-cols-2 ${
-          rooms.data.length === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+          data.kamar.length === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
         } gap-5 sm:gap-6 lg:gap-8`}
       >
-        {rooms.data.map((room: RoomType) => (
+        {data.kamar.map((room: RoomType) => (
           <div
-            key={room.id}
+            key={room.kamar_id}
             className="text-center bg-blue-500 text-black p-4 border-4 border-black shadow-solid"
           >
             <Image

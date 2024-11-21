@@ -1,9 +1,9 @@
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/Provider';
-import Header from '@/components/ui/header';
-import Footer from '@/components/ui/footer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Denpasar dan Klungkung dengan harga terjangkau',
   keywords:
     'kost asia, kos, kost, info kost, rumah kost, sewa kost, kost terdekat, kost murah, cari kost, klungkung, denpasar, asia, semarapura, harian, mingguan, bulanan',
-  verification: {
-    google: 'Txlx0FGJL3xU51CQE1kupCKkO7XTkBCaLmWROKbjLEw',
-  },
+  // verification: {
+  //   google: 'Txlx0FGJL3xU51CQE1kupCKkO7XTkBCaLmWROKbjLEw',
+  // },
   alternates: {
     canonical: `${process.env.BASE_URL}`,
   },
@@ -77,11 +77,9 @@ export default function RootLayout({
   return (
     <html lang="id" className="">
       <body className={`${inter.className} bg-white dark:bg-slate-800`}>
-        <Providers>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </Providers>
+        <Providers>{children}</Providers>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

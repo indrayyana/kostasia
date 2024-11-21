@@ -1,7 +1,8 @@
 export type RoomType = {
-  id: number;
+  kamar_id: number;
   nama: string;
-  gambar: string;
   status: string;
+  gambar: string;
+  cabang: string;
 };
 

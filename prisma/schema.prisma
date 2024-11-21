@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+  user_id    String   @id @default(uuid()) @db.Uuid
+  nama       String   @db.VarChar(20)
+  email      String?  @unique @db.VarChar(64)
+  telepon    String?  @db.VarChar(20)
+  role       String   @default("pengunjung") @db.VarChar(20)
+  foto       String?  @db.VarChar(64)
+  ktp        String?  @db.VarChar(64)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  token      Token?
+
+  @@map("user")
+}
+
+model Token {
+  token_id   String   @id @default(uuid()) @db.Uuid
+  user_id    String   @unique @db.Uuid
+  token      String   @db.VarChar(400)
+  User       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  type       String   @db.VarChar(20)
+  expires    DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("token")
+}
+
+model Kamar {
+  kamar_id   Int      @id @default(autoincrement())
+  nama       String   @db.VarChar(20)
+  status     String   @db.VarChar(20)
+  gambar     String   @db.VarChar(64)
+  cabang     String   @db.VarChar(20)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+
+  @@map("kamar")
+}

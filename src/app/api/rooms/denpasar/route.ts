@@ -1,22 +1,16 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import prisma from '@/lib/prisma';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const supabase = await createClient();
+  const kamar = await prisma.kamar.findMany({
+    where: { cabang: 'Denpasar' },
+    orderBy: {
+      kamar_id: 'asc',
+    },
+  });
 
-  const { data, error } = await supabase
-    .from('kamar')
-    .select()
-    .eq('cabang', 'Denpasar');
-
-  if (error) {
-    return NextResponse.json({
-      status: 500,
-      message: 'Error',
-      error: error.message,
-    });
-  }
-
-  return NextResponse.json({ status: 200, message: 'Success', data });
+  return NextResponse.json({ status: 200, message: 'Success', kamar });
 }
 
