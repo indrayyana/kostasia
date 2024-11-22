@@ -45,3 +45,11 @@ npx prisma generate
 npx prisma db push
 ```
 
+Husky command:
+
+```bash
+npx husky init
+
+# kemudian buat file nya di folder .husky
+```
+
