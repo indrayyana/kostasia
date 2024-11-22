@@ -50,6 +50,9 @@ Husky command:
 ```bash
 npx husky init
 
+npm run prepare
+
+chmod +x .husky/*
 # kemudian buat file nya di folder .husky
 ```
 
