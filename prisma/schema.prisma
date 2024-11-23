@@ -20,8 +20,8 @@ model User {
   email      String?  @unique @db.VarChar(64)
   telepon    String?  @db.VarChar(20)
   role       String   @default("pengunjung") @db.VarChar(20)
-  foto       String?  @db.VarChar(64)
-  ktp        String?  @db.VarChar(64)
+  foto       String?  @db.Text
+  ktp        String?  @db.Text
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
   token      Token?
@@ -46,7 +46,7 @@ model Kamar {
   kamar_id   Int      @id @default(autoincrement())
   nama       String   @db.VarChar(20)
   status     String   @db.VarChar(20)
-  gambar     String   @db.VarChar(64)
+  gambar     String   @db.Text
   cabang     String   @db.VarChar(20)
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt

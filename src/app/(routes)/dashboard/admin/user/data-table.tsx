@@ -7,30 +7,17 @@ import {
   FileSpreadsheet,
   FileText,
   Plus,
-  Search,
-  Trash2,
 } from 'lucide-react';
 import {
   ColumnDef,
   ColumnFiltersState,
-  flexRender,
   getCoreRowModel,
   useReactTable,
   getFilteredRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,7 +25,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import TableLoader from '../../../../../components/common/TableLoader';
+import TableSearch from '@/components/ui/table-search';
+import MyTable from '@/components/ui/my-table';
 
 interface DataTableProps<TData extends { user_id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -70,14 +58,6 @@ export function DataTable<TData extends { user_id: string | number }, TValue>({
     },
   });
 
-  const selectedRows = table.getSelectedRowModel().rows;
-
-  const handleDelete = () => {
-    const selectedIds = selectedRows.map((row) => row.original.user_id);
-    alert(`Hapus ID: ${selectedIds}`);
-    // TODO: Tambahkan logika untuk menghapus data di sini
-  };
-
   const fileDownload = (format: string) => {
     alert(`Download file ${format} berhasil`);
   };
@@ -85,19 +65,8 @@ export function DataTable<TData extends { user_id: string | number }, TValue>({
   return (
     <>
       <div className="flex gap-2 justify-between">
-        <div className="w-90 relative">
-          <span className="absolute left-2 top-2.5">
-            <Search size={20} className="text-gray-500" />
-          </span>
-          <Input
-            placeholder="Cari"
-            value={(table.getColumn('nama')?.getFilterValue() as string) ?? ''}
-            onChange={(event) =>
-              table.getColumn('nama')?.setFilterValue(event.target.value)
-            }
-            className="pl-8 pr-4.5 dark:text-white"
-          />
-        </div>
+        <TableSearch table={table} columnName="nama" />
+
         <div className="flex items-center dark:text-white">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -129,99 +98,7 @@ export function DataTable<TData extends { user_id: string | number }, TValue>({
         </div>
       </div>
 
-      <div className="rounded-md border bg-white mt-5 dark:bg-boxdark dark:text-white dark:border-gray-500">
-        <div className="w-full h-9 m-2">
-          {selectedRows.length > 0 && (
-            <div>
-              <Button
-                size={'sm'}
-                variant="destructive"
-                onClick={handleDelete}
-                className="bg-red-600 hover:bg-red-700"
-              >
-                <Trash2 />
-                Hapus
-              </Button>
-            </div>
-          )}
-        </div>
-        <Table>
-          <TableHeader className="bg-gray-50 dark:bg-black">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow className="dark:border-gray-500" key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead
-                      key={header.id}
-                      className="font-bold text-black-2 dark:text-white"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {isLoading ? (
-              <TableLoader colSpan={columns.length} />
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className="dark:border-gray-500"
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  Tidak ada hasil.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4 dark:text-white">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} dari{' '}
-          {table.getFilteredRowModel().rows.length} data dipilih.
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Sebelumnya
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Selanjutnya
-        </Button>
-      </div>
+      <MyTable table={table} columns={columns} isLoading={isLoading} />
     </>
   );
 }

@@ -64,7 +64,7 @@ export default function Klungkung() {
               allowFullScreen={true}
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Location of Kost ASIA"
+              title="Lokasi Kost ASIA Klungkung"
             />
           </div>
         </section>

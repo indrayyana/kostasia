@@ -1,12 +1,12 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CellAction } from '@/components/cell-action';
 import { UserType } from '@/types/user';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -76,16 +76,31 @@ export const columns: ColumnDef<UserType>[] = [
     accessorKey: 'foto',
     header: 'Foto',
     cell: ({ row }) => {
+      const fotoUrl: string = row.getValue('foto');
+      const nama: string = row.getValue('nama');
+
       return (
-        <Link href={row.getValue('foto')} target="_blank">
-          <Image
-            className="h-10 w-auto"
-            src={row.getValue('foto')}
-            width={40}
-            height={40}
-            alt={row.getValue('nama')}
-          />
-        </Link>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Image
+              className="h-10 w-auto cursor-pointer"
+              src={fotoUrl}
+              width={40}
+              height={40}
+              alt={`Foto ${nama}`}
+              priority
+            />
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] dark:border-gray-500">
+            <Image
+              className="rounded-md"
+              src={fotoUrl}
+              width={400}
+              height={400}
+              alt={`Foto ${nama}`}
+            />
+          </DialogContent>
+        </Dialog>
       );
     },
   },
@@ -93,16 +108,31 @@ export const columns: ColumnDef<UserType>[] = [
     accessorKey: 'ktp',
     header: 'KTP',
     cell: ({ row }) => {
+      const ktpUrl: string = row.getValue('ktp');
+      const nama: string = row.getValue('nama');
+
       return (
-        <Link href={row.getValue('ktp')} target="_blank">
-          <Image
-            className="h-10 w-auto"
-            src={row.getValue('ktp')}
-            width={40}
-            height={40}
-            alt={row.getValue('nama')}
-          />
-        </Link>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Image
+              className="h-10 w-auto cursor-pointer"
+              src={ktpUrl}
+              width={40}
+              height={40}
+              alt={`KTP ${nama}`}
+              priority
+            />
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px] dark:border-gray-500">
+            <Image
+              className="rounded-md"
+              src={ktpUrl}
+              width={400}
+              height={400}
+              alt={`KTP ${nama}`}
+            />
+          </DialogContent>
+        </Dialog>
       );
     },
   },

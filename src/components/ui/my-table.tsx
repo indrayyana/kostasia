@@ -1,17 +1,11 @@
-'use client';
-
 import * as React from 'react';
-import { Plus, Trash2 } from 'lucide-react';
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
-  getCoreRowModel,
-  useReactTable,
-  getFilteredRowModel,
-  getPaginationRowModel,
+  Table as TableType,
 } from '@tanstack/react-table';
-
+import { Button } from './button';
+import { Trash2 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -19,72 +13,35 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from './table';
+import TableLoader from '../common/TableLoader';
+import TablePagination from './table-pagination';
 
-import { Button } from '@/components/ui/button';
-import TableLoader from '@/components/common/TableLoader';
-import TableSearch from '@/components/ui/table-search';
-import TablePagination from '@/components/ui/table-pagination';
-
-interface DataTableProps<TData extends { kamar_id: string | number }, TValue> {
+interface Props<TData extends { user_id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+  table: TableType<TData>;
   isLoading: boolean;
 }
 
-export function DataTable<TData extends { kamar_id: string | number }, TValue>({
-  columns,
-  data,
-  isLoading,
-}: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [rowSelection, setRowSelection] = React.useState({});
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onRowSelectionChange: setRowSelection,
-    state: {
-      columnFilters,
-      rowSelection,
-    },
-  });
-
+export default function MyTable<
+  TData extends { user_id: string | number },
+  TValue
+>({ table, columns, isLoading }: Props<TData, TValue>) {
   const selectedRows = table.getSelectedRowModel().rows;
 
   const handleDelete = () => {
-    const selectedIds = selectedRows.map((row) => row.original.kamar_id);
+    const selectedIds = selectedRows.map((row) => row.original.user_id);
     alert(`Hapus ID: ${selectedIds}`);
     // TODO: Tambahkan logika untuk menghapus data di sini
   };
 
   return (
     <>
-      <div className="flex gap-2 justify-between">
-        <TableSearch table={table} columnName="status" />
-
-        <Button size={'sm'} className="dark:text-white font-bold">
-          <Plus />
-          Tambah
-        </Button>
-      </div>
-
       <div className="rounded-md border bg-white mt-5 dark:bg-boxdark dark:text-white dark:border-gray-500">
         <div className="w-full h-9 m-2">
           {selectedRows.length > 0 && (
             <div>
-              <Button
-                size={'sm'}
-                variant="destructive"
-                onClick={handleDelete}
-                className="bg-red-600 hover:bg-red-700"
-              >
+              <Button size={'sm'} variant="destructive" onClick={handleDelete}>
                 <Trash2 />
                 Hapus
               </Button>

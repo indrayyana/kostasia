@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { Metadata } from 'next';
 import { Mail, Upload, User } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
-import DefaultLayout from '@/components/Layouts/DefaultLayout';
+import UserLayout from '@/components/Layouts/UserLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 const Profil = () => {
   return (
-    <DefaultLayout>
+    <UserLayout>
       <div className="mx-auto max-w-270">
         <Breadcrumb pageName="Profil" />
 
@@ -46,7 +46,7 @@ const Profil = () => {
                           <User size={20} />
                         </span>
                         <Input
-                          className="bg-gray pl-11.5 pr-4.5 text-black dark:text-white"
+                          className="bg-gray pl-11.5 pr-4.5 text-black dark:border-strokedark dark:bg-meta-4 dark:text-white"
                           type="text"
                           id="fullName"
                           name="fullName"
@@ -84,7 +84,7 @@ const Profil = () => {
                         <Mail size={20} />
                       </span>
                       <Input
-                        className="bg-gray pl-11.5 pr-4.5 text-black dark:text-white"
+                        className="bg-gray pl-11.5 pr-4.5 text-black dark:border-strokedark dark:bg-meta-4 dark:text-white"
                         type="email"
                         id="emailAddress"
                         name="emailAddress"
@@ -127,7 +127,7 @@ const Profil = () => {
 
                   <div className="flex justify-end gap-4.5">
                     <Button variant={'destructive'}>Batal</Button>
-                    <Button>Simpan</Button>
+                    <Button className="dark:text-white">Simpan</Button>
                   </div>
                 </form>
               </div>
@@ -156,12 +156,21 @@ const Profil = () => {
                         Edit foto profil
                       </span>
                       <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
+                        {/* <button className="text-sm hover:text-primary">
                           Hapus
-                        </button>
-                        <button className="text-sm hover:text-primary">
+                        </button> */}
+                        <Button
+                          className="text-red-600 p-0 size-fit"
+                          variant={'link'}
+                        >
+                          Hapus
+                        </Button>
+                        <Button
+                          className="text-yellow-600 p-0 size-fit"
+                          variant={'link'}
+                        >
                           Update
-                        </button>
+                        </Button>
                       </span>
                     </div>
                   </div>
@@ -190,7 +199,7 @@ const Profil = () => {
 
                   <div className="flex justify-end gap-4.5">
                     <Button variant={'destructive'}>Batal</Button>
-                    <Button>Simpan</Button>
+                    <Button className="dark:text-white">Simpan</Button>
                   </div>
                 </form>
               </div>
@@ -198,7 +207,7 @@ const Profil = () => {
           </div>
         </div>
       </div>
-    </DefaultLayout>
+    </UserLayout>
   );
 };
 

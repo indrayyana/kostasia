@@ -1,4 +1,4 @@
-import { IconHome, IconDoor, IconBrandWhatsapp } from '@tabler/icons-react';
+import { IconHome, IconBrandWhatsapp, IconUser } from '@tabler/icons-react';
 import Theme from './Theme';
 import Link from 'next/link';
 
@@ -16,15 +16,6 @@ export default function Navbar() {
           </span>
         </Link>
         <Link
-          href={'#kamar'}
-          className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-        >
-          <IconDoor className="w-7 h-7 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-            Kamar
-          </span>
-        </Link>
-        <Link
           href={'#kontak'}
           className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
         >
@@ -34,6 +25,15 @@ export default function Navbar() {
           </span>
         </Link>
         <Theme />
+        <Link
+          href="/dashboard/profil"
+          className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+        >
+          <IconUser className="w-7 h-7 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
+          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+            Profil
+          </span>
+        </Link>
       </div>
     </nav>
   );
