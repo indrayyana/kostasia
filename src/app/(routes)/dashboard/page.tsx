@@ -1,8 +1,9 @@
 'use client';
 
 // import type { Metadata } from 'next';
-import { SessionProvider, signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
+import UserLayout from '../../../components/Layouts/UserLayout';
 
 // export const metadata: Metadata = {
 //   robots: {
@@ -19,30 +20,28 @@ export default function Dashboard() {
   const { data: session } = useSession();
 
   return (
-    <SessionProvider>
-      <div className="flex h-screen justify-center items-center">
-        {session ? (
-          <div>
-            <p>Welcome, {session.user?.name}</p>
-            <Button
-              onClick={() => {
-                signOut();
-              }}
-            >
-              Logout
-            </Button>
-          </div>
-        ) : (
+    <UserLayout>
+      {session ? (
+        <div>
+          <p>Welcome, {session.user?.name}</p>
           <Button
             onClick={() => {
-              signIn('google');
+              signOut();
             }}
           >
-            Login
+            Logout
           </Button>
-        )}
-      </div>
-    </SessionProvider>
+        </div>
+      ) : (
+        <Button
+          onClick={() => {
+            signIn('google');
+          }}
+        >
+          Login
+        </Button>
+      )}
+    </UserLayout>
   );
 }
 
