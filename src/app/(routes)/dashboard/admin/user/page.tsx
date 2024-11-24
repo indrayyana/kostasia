@@ -13,7 +13,7 @@ export default function UserPage() {
     fetcher
   );
 
-  const users = data?.users || [];
+  const users = data?.user || [];
 
   return (
     <DefaultLayout>

@@ -6,10 +6,13 @@ import {
   NextResponse,
 } from 'next/server';
 
-const onlyAdminPage = [
+const onlyAdmin = [
   '/dashboard/admin',
   '/dashboard/admin/kamar',
   '/dashboard/admin/user',
+
+  '/api/rooms',
+  '/api/users',
 ];
 const authPage = ['/dashboard/login'];
 
@@ -39,7 +42,7 @@ export default function withAuth(
           return NextResponse.redirect(new URL('/dashboard/profil', req.url));
         }
 
-        if (token.role !== 'admin' && onlyAdminPage.includes(pathname)) {
+        if (token.role !== 'admin' && onlyAdmin.includes(pathname)) {
           return NextResponse.redirect(new URL('/', req.url));
         }
       }

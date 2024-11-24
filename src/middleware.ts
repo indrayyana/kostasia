@@ -15,5 +15,8 @@ export default withAuth(mainMiddleware, [
   '/dashboard/admin/user',
   '/dashboard/profil',
   '/dashboard/login',
+
+  '/api/rooms',
+  '/api/users',
 ]);
 

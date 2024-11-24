@@ -4,12 +4,26 @@ import prisma from '@/lib/prisma';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const kamar = await prisma.kamar.findMany({
-    orderBy: {
-      kamar_id: 'asc',
-    },
-  });
+  try {
+    const kamar = await prisma.kamar.findMany({
+      orderBy: {
+        kamar_id: 'asc',
+      },
+    });
 
-  return NextResponse.json({ status: 200, message: 'Success', kamar });
+    return NextResponse.json({
+      code: 200,
+      status: 'success',
+      message: 'Get rooms successfully',
+      kamar,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      code: 500,
+      status: 'error',
+      message: 'Internal Server Error',
+      errors: error,
+    });
+  }
 }
 

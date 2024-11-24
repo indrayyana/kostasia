@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { signOut } from 'next-auth/react';
 import { ChevronDown, CreditCard, DoorOpen, LogOut, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -71,7 +72,12 @@ const DropdownUser = () => {
               </Link>
             </li>
           </ul>
-          <button className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+          <button
+            className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+            onClick={() => {
+              signOut();
+            }}
+          >
             <LogOut />
             Log Out
           </button>

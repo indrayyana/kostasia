@@ -82,24 +82,30 @@ export const columns: ColumnDef<UserType>[] = [
       return (
         <Dialog>
           <DialogTrigger asChild>
-            <Image
-              className="h-10 w-auto cursor-pointer"
-              src={fotoUrl}
-              width={40}
-              height={40}
-              alt={`Foto ${nama}`}
-              priority
-            />
+            {fotoUrl ? (
+              <Image
+                className="h-10 w-auto cursor-pointer"
+                src={fotoUrl}
+                width={40}
+                height={40}
+                alt={`Foto ${nama}`}
+                priority
+              />
+            ) : (
+              <p>kosong</p>
+            )}
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] dark:border-gray-500">
-            <Image
-              className="rounded-md"
-              src={fotoUrl}
-              width={400}
-              height={400}
-              alt={`Foto ${nama}`}
-            />
-          </DialogContent>
+          {fotoUrl && (
+            <DialogContent className="sm:max-w-[425px] dark:border-gray-500">
+              <Image
+                className="rounded-md"
+                src={fotoUrl}
+                width={400}
+                height={400}
+                alt={`Foto ${nama}`}
+              />
+            </DialogContent>
+          )}
         </Dialog>
       );
     },
@@ -114,24 +120,30 @@ export const columns: ColumnDef<UserType>[] = [
       return (
         <Dialog>
           <DialogTrigger asChild>
-            <Image
-              className="h-10 w-auto cursor-pointer"
-              src={ktpUrl}
-              width={40}
-              height={40}
-              alt={`KTP ${nama}`}
-              priority
-            />
+            {ktpUrl ? (
+              <Image
+                className="h-10 w-auto cursor-pointer"
+                src={ktpUrl}
+                width={40}
+                height={40}
+                alt={`KTP ${nama}`}
+                priority
+              />
+            ) : (
+              <p>kosong</p>
+            )}
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] dark:border-gray-500">
-            <Image
-              className="rounded-md"
-              src={ktpUrl}
-              width={400}
-              height={400}
-              alt={`KTP ${nama}`}
-            />
-          </DialogContent>
+          {ktpUrl && (
+            <DialogContent className="sm:max-w-[425px] dark:border-gray-500">
+              <Image
+                className="rounded-md"
+                src={ktpUrl}
+                width={400}
+                height={400}
+                alt={`KTP ${nama}`}
+              />
+            </DialogContent>
+          )}
         </Dialog>
       );
     },
