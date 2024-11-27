@@ -20,7 +20,9 @@ export default function KamarPage() {
       <Breadcrumb pageName="Kamar" />
       <div className="flex flex-col text-black-2">
         {error ? (
-          <p className="text-red-500">Error fetching data: {error.message}</p>
+          <p className="text-red-500 text-center">
+            Terjadi kesalahan saat menampilkan data: {error.message}
+          </p>
         ) : (
           <DataTable columns={columns} data={rooms} isLoading={isLoading} />
         )}

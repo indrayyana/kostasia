@@ -61,6 +61,7 @@ const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.email = token.email!;
         session.user.name = token.name!;
+        session.user.role = token.role!;
       }
 
       return session;

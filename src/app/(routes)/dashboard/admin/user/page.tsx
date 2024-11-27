@@ -20,7 +20,9 @@ export default function UserPage() {
       <Breadcrumb pageName="User" />
       <div className="flex flex-col text-black-2">
         {error ? (
-          <p className="text-red-500">Error fetching data: {error.message}</p>
+          <p className="text-red-500 text-center">
+            Terjadi kesalahan saat menampilkan data: {error.message}
+          </p>
         ) : (
           <DataTable columns={columns} data={users} isLoading={isLoading} />
         )}

@@ -41,7 +41,7 @@ const menuGroups = [
   },
 ];
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const UserSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const [pageName, setPageName] = useLocalStorage('selectedMenu', 'dashboard');
 
   return (
@@ -104,5 +104,5 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   );
 };
 
-export default Sidebar;
+export default UserSidebar;
 

@@ -3,7 +3,7 @@
 // import type { Metadata } from 'next';
 import { signIn, signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import UserLayout from '../../../components/Layouts/UserLayout';
+import UserLayout from '@/components/Layouts/UserLayout';
 
 // export const metadata: Metadata = {
 //   robots: {

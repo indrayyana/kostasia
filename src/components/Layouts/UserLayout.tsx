@@ -1,7 +1,9 @@
 'use client';
 import React, { useState } from 'react';
-import Sidebar from '@/components/Sidebar/User';
+import Sidebar from '@/components/Sidebar';
+import UserSidebar from '@/components/Sidebar/User';
 import Header from '@/components/Header';
+import { useSession } from 'next-auth/react';
 
 export default function UserLayout({
   children,
@@ -9,12 +11,22 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { data: session } = useSession();
+
   return (
     <>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex min-h-screen">
         {/* <!-- ===== Sidebar Start ===== --> */}
-        <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        {session?.user.role === 'admin' ? (
+          <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        ) : (
+          <UserSidebar
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+          />
+        )}
+
         {/* <!-- ===== Sidebar End ===== --> */}
 
         {/* <!-- ===== Content Area Start ===== --> */}
