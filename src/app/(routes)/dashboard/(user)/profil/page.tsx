@@ -1,21 +1,9 @@
 import Image from 'next/image';
-import { Metadata } from 'next';
 import { Mail, Upload, User } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
 import UserLayout from '@/components/Layouts/UserLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-
-export const metadata: Metadata = {
-  robots: {
-    index: false,
-    follow: false,
-    googleBot: {
-      index: false,
-      follow: false,
-    },
-  },
-};
 
 const Profil = () => {
   return (
@@ -67,7 +55,7 @@ const Profil = () => {
                         type="number"
                         id="phoneNumber"
                         name="phoneNumber"
-                        placeholder="+628123456789"
+                        placeholder="contoh: 08123456789"
                       />
                     </div>
                   </div>

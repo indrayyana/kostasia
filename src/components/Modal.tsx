@@ -1,7 +1,6 @@
 'use client';
 
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { SessionProvider } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function Modal({
@@ -17,11 +16,9 @@ export default function Modal({
   }
 
   return (
-    <SessionProvider>
-      <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
-        <DialogContent className={className || ''}>{children}</DialogContent>
-      </Dialog>
-    </SessionProvider>
+    <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
+      <DialogContent className={className || ''}>{children}</DialogContent>
+    </Dialog>
     // TODO: check
   );
 }

@@ -29,9 +29,10 @@ export default async function Rooms({ endpoint }: RoomsProps) {
 
   if (!data || !data.kamar) {
     return (
-      <p className="text-center">
-        Terjadi kesalahan saat menampilkan data kamar
-      </p>
+      <div className="text-center">
+        <p>Terjadi kesalahan saat menampilkan data kamar</p>
+        <p>Silakan coba refresh halaman atau coba lagi nanti.</p>
+      </div>
     );
   }
 

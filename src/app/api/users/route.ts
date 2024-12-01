@@ -1,5 +1,7 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import httpStatus from 'http-status';
 import prisma from '@/lib/prisma';
+import { createUser } from './validation';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,19 +13,75 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({
-      code: 200,
-      status: 'success',
-      message: 'Get users successfully',
-      user,
-    });
+    return NextResponse.json(
+      {
+        code: httpStatus.OK,
+        status: 'success',
+        message: 'Get users successfully',
+        user,
+      },
+      { status: httpStatus.OK }
+    );
   } catch (error) {
-    return NextResponse.json({
-      code: 500,
-      status: 'error',
-      message: 'Internal Server Error',
-      errors: error,
+    console.log(error);
+
+    return NextResponse.json(
+      {
+        code: httpStatus.INTERNAL_SERVER_ERROR,
+        status: 'error',
+        message: 'Internal Server Error',
+      },
+      { status: httpStatus.INTERNAL_SERVER_ERROR }
+    );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const body = await req.json();
+
+    const validation = createUser.safeParse({
+      nama: body.nama,
+      email: body.email,
+      telepon: body.telepon,
+      role: body.role,
     });
+    if (!validation.success) {
+      return NextResponse.json(
+        {
+          code: httpStatus.BAD_REQUEST,
+          status: 'error',
+          message: 'Bad Request',
+          errors: validation.error.flatten().fieldErrors,
+        },
+        { status: httpStatus.BAD_REQUEST }
+      );
+    }
+
+    const user = await prisma.user.create({
+      data: body,
+    });
+
+    return NextResponse.json(
+      {
+        code: httpStatus.OK,
+        status: 'success',
+        message: 'Delete user successfully',
+        user,
+      },
+      { status: httpStatus.OK }
+    );
+  } catch (error) {
+    console.log(error);
+
+    return NextResponse.json(
+      {
+        code: httpStatus.INTERNAL_SERVER_ERROR,
+        status: 'error',
+        message: 'Internal Server Error',
+      },
+      { status: httpStatus.INTERNAL_SERVER_ERROR }
+    );
   }
 }
 

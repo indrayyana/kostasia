@@ -1,25 +1,11 @@
-'use client';
-
-// import type { Metadata } from 'next';
-import DefaultLayout from '@/components/Layouts/DefaultLayout';
 import ECommerce from '@/components/Dashboard/E-commerce';
-
-// export const metadata: Metadata = {
-//   robots: {
-//     index: false,
-//     follow: false,
-//     googleBot: {
-//       index: false,
-//       follow: false,
-//     },
-//   },
-// };
+import UserLayout from '@/components/Layouts/UserLayout';
 
 export default function Dashboard() {
   return (
-    <DefaultLayout>
+    <UserLayout>
       <ECommerce />
-    </DefaultLayout>
+    </UserLayout>
   );
 }
 

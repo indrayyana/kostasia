@@ -25,6 +25,15 @@ import { Button } from '@/components/ui/button';
 import TableLoader from '@/components/common/TableLoader';
 import TableSearch from '@/components/ui/table-search';
 import TablePagination from '@/components/ui/table-pagination';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 interface DataTableProps<TData extends { kamar_id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,6 +50,7 @@ export function DataTable<TData extends { kamar_id: string | number }, TValue>({
     []
   );
   const [rowSelection, setRowSelection] = React.useState({});
+  const [isOpen, setIsOpen] = React.useState(false);
 
   const table = useReactTable({
     data,
@@ -58,10 +68,16 @@ export function DataTable<TData extends { kamar_id: string | number }, TValue>({
 
   const selectedRows = table.getSelectedRowModel().rows;
 
-  const handleDelete = () => {
-    const selectedIds = selectedRows.map((row) => row.original.kamar_id);
-    alert(`Hapus ID: ${selectedIds}`);
+  const handleOpenDialog = () => {
+    const ids = selectedRows.map((row) => row.original.kamar_id);
+    setIsOpen(true);
+    console.log(ids);
+
     // TODO: Tambahkan logika untuk menghapus data di sini
+  };
+
+  const handleDelete = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -82,7 +98,7 @@ export function DataTable<TData extends { kamar_id: string | number }, TValue>({
               <Button
                 size={'sm'}
                 variant="destructive"
-                onClick={handleDelete}
+                onClick={handleOpenDialog}
                 className="bg-red-600 hover:bg-red-700"
               >
                 <Trash2 />
@@ -148,6 +164,27 @@ export function DataTable<TData extends { kamar_id: string | number }, TValue>({
       </div>
 
       <TablePagination table={table} />
+
+      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+        {/* <AlertDialogTrigger>Open</AlertDialogTrigger> */}
+        <AlertDialogContent className="dark:text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Apakah Anda yakin ingin menghapus data ini ?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data
+              secara permanen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <Button variant={'destructive'} onClick={handleDelete}>
+              Hapus
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

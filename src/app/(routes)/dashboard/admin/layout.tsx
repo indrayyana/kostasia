@@ -1,20 +1,18 @@
-'use client';
-
-// import type { Metadata } from 'next';
+import type { Metadata } from 'next';
 import 'jsvectormap/dist/jsvectormap.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import '@/css/style.css';
 
-// export const metadata: Metadata = {
-//   robots: {
-//     index: false,
-//     follow: false,
-//     googleBot: {
-//       index: false,
-//       follow: false,
-//     },
-//   },
-// };
+export const metadata: Metadata = {
+  robots: {
+    index: false,
+    follow: false,
+    googleBot: {
+      index: false,
+      follow: false,
+    },
+  },
+};
 
 export default function DashboardLayout({
   children,

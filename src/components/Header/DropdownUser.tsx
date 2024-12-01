@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { signOut } from 'next-auth/react';
-import { ChevronDown, CreditCard, DoorOpen, LogOut, User } from 'lucide-react';
+import { ChevronDown, CreditCard, DoorOpen, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import ClickOutside from '@/components/ClickOutside';
+import ButtonLogout from './ButtonLogout';
+import { UserType } from '@/types/user';
 
-const DropdownUser = () => {
+const DropdownUser = (props: { user: UserType }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -17,21 +18,25 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {props.user.nama}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs capitalize text-[#64748B]">
+            {props.user.role}
+          </span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
           <Image
+            className="rounded-full"
             width={112}
             height={112}
-            src={'/images/user/user-01.png'}
+            src={props.user.foto}
             style={{
               width: 'auto',
               height: 'auto',
             }}
             alt="User"
+            priority
           />
         </span>
 
@@ -72,15 +77,7 @@ const DropdownUser = () => {
               </Link>
             </li>
           </ul>
-          <button
-            className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-            onClick={() => {
-              signOut();
-            }}
-          >
-            <LogOut />
-            Log Out
-          </button>
+          <ButtonLogout />
         </div>
       )}
       {/* <!-- Dropdown End --> */}
