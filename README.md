@@ -56,3 +56,11 @@ chmod +x .husky/*
 # kemudian buat file nya di folder .husky
 ```
 
+Jest command:
+
+```bash
+npm install -D jest jest-environment-jsdom @testing-library/react @testing-library/jest-dom @types/jest ts-node
+
+npm init jest@latest
+```
+
