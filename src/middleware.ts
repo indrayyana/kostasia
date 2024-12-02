@@ -29,7 +29,10 @@ export async function middleware(req: NextRequest) {
 
   const token = req.cookies.get('access-token')?.value;
   if (!token) {
-    return NextResponse.redirect(new URL('/', req.url));
+    const url = new URL('/', req.url);
+    url.searchParams.set('callbackUrl', encodeURI(req.url));
+
+    return NextResponse.redirect(url);
   }
 
   try {
@@ -40,7 +43,10 @@ export async function middleware(req: NextRequest) {
     }
 
     if (onlyAdmin.includes(pathname) && payload.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', req.url));
+      const url = new URL('/', req.url);
+      url.searchParams.set('callbackUrl', encodeURI(req.url));
+
+      return NextResponse.redirect(url);
     }
 
     return NextResponse.next();
@@ -49,7 +55,10 @@ export async function middleware(req: NextRequest) {
       return unauthorizedResponse(req);
     }
 
-    return NextResponse.redirect(new URL('/', req.url));
+    const url = new URL('/', req.url);
+    url.searchParams.set('callbackUrl', encodeURI(req.url));
+
+    return NextResponse.redirect(url);
   }
 }
 
@@ -72,6 +81,9 @@ function unauthorizedResponse(
   }
 
   // For page routes, redirect to login
-  return NextResponse.redirect(new URL('/', req.url));
+  const url = new URL('/', req.url);
+  url.searchParams.set('callbackUrl', encodeURI(req.url));
+
+  return NextResponse.redirect(url);
 }
 
