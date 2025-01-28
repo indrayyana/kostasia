@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { deleteToken, setToken } from '../utils/cookies';
+import { setToken, deleteToken } from '../utils/cookies';
 
 const headers = {
   Accept: 'application/json',

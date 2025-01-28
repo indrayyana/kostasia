@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
+
 import { google, oauth2Client } from '@/lib/oauth';
 import prisma from '@/lib/prisma';
-import { generateAuthTokens } from '../../service';
 import { config } from '@/utils/config';
 import { setToken } from '@/utils/cookies';
-import { roleType } from '@/types/user';
+import { RoleType } from '@/types/user';
+import tokenService from '@/services/token';
 
 export const dynamic = 'force-dynamic';
 
@@ -77,9 +78,9 @@ export async function GET(req: NextRequest) {
       userId = user.user_id;
     }
 
-    const authTokens = await generateAuthTokens({
+    const authTokens = await tokenService.generateAuthTokens({
       id: userId,
-      role: user.role as roleType,
+      role: user.role as RoleType,
     });
 
     setToken(authTokens.access.token, authTokens.refresh.token);

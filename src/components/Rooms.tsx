@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { RoomType } from '@/types/room';
+import { RoomInterface } from '@/types/room';
 
 interface RoomsProps {
   endpoint: string;
@@ -43,7 +43,7 @@ export default async function Rooms({ endpoint }: RoomsProps) {
           data.kamar?.length === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
         } gap-5 sm:gap-6 lg:gap-8`}
       >
-        {data.kamar?.map((room: RoomType) => (
+        {data.kamar?.map((room: RoomInterface) => (
           <div
             key={room.kamar_id}
             className="text-center bg-blue-500 text-black p-4 border-4 border-black shadow-solid"
@@ -51,6 +51,7 @@ export default async function Rooms({ endpoint }: RoomsProps) {
             <Image
               src={room.gambar}
               alt={room.nama}
+              title="Foto Kamar"
               width={500}
               height={500}
               priority

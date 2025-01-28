@@ -1,22 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import httpStatus from 'http-status';
-import { deleteUser, getUser, updateUser } from '../validation';
-import { getUserById } from '../service';
+import { getUserById } from '@/services/user';
+import { ContextParams } from '@/types/context';
+import userValidation from '@/validations/user';
 
 export const dynamic = 'force-dynamic';
-
-interface ContextParams {
-  params: {
-    id: string;
-  };
-}
 
 export async function GET(req: NextRequest, ctx: ContextParams) {
   try {
     const id = ctx.params.id;
 
-    const validation = getUser.safeParse({ user_id: id });
+    const validation = userValidation.getUser.safeParse({ user_id: id });
     if (!validation.success) {
       return NextResponse.json(
         {
@@ -65,7 +60,7 @@ export async function PATCH(req: NextRequest, ctx: ContextParams) {
     const id = ctx.params.id;
     const body = await req.json();
 
-    const validation = updateUser.safeParse({
+    const validation = userValidation.updateUser.safeParse({
       user_id: id,
       nama: body.nama,
       email: body.email,
@@ -118,7 +113,7 @@ export async function DELETE(req: NextRequest, ctx: ContextParams) {
   try {
     const id = ctx.params.id;
 
-    const validation = deleteUser.safeParse({ user_id: id });
+    const validation = userValidation.deleteUser.safeParse({ user_id: id });
     if (!validation.success) {
       const { errors } = validation.error;
 
@@ -130,7 +125,7 @@ export async function DELETE(req: NextRequest, ctx: ContextParams) {
       });
     }
 
-    let user = await getUserById(id);
+    const user = await getUserById(id);
     if (!user) {
       return NextResponse.json({
         code: 404,
@@ -139,7 +134,7 @@ export async function DELETE(req: NextRequest, ctx: ContextParams) {
       });
     }
 
-    user = await prisma.user.delete({
+    await prisma.user.delete({
       where: {
         user_id: id,
       },

@@ -1,10 +1,12 @@
-import { roleType } from './user';
+import { RoleType } from './user';
+
+export type TokenType = 'access' | 'refresh' | 'notification';
 
 export interface JWTPayload {
   sub: string;
-  role: roleType;
+  role: RoleType;
   iat: number;
   exp: number;
-  type: string;
+  type: TokenType;
 }
 

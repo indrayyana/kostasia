@@ -4,14 +4,14 @@ import Image from 'next/image';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CellAction } from '@/components/cell-action';
-import { UserType } from '@/types/user';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { UserInterface } from '@/types/user';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<UserType>[] = [
+export const columns: ColumnDef<UserInterface>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -89,6 +89,7 @@ export const columns: ColumnDef<UserType>[] = [
                 width={40}
                 height={40}
                 alt={`Foto ${nama}`}
+                title="Foto Profil"
                 priority
               />
             ) : (
@@ -103,6 +104,7 @@ export const columns: ColumnDef<UserType>[] = [
                 width={400}
                 height={400}
                 alt={`Foto ${nama}`}
+                title="Foto Profil"
               />
             </DialogContent>
           )}
@@ -127,6 +129,7 @@ export const columns: ColumnDef<UserType>[] = [
                 width={40}
                 height={40}
                 alt={`KTP ${nama}`}
+                title="Foto KTP"
                 priority
               />
             ) : (
@@ -141,6 +144,7 @@ export const columns: ColumnDef<UserType>[] = [
                 width={400}
                 height={400}
                 alt={`KTP ${nama}`}
+                title="Foto KTP"
               />
             </DialogContent>
           )}

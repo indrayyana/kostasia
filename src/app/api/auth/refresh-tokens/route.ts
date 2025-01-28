@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-import { generateAuthTokens, verifyToken } from '../service';
 import { setToken } from '@/utils/cookies';
-import { roleType } from '@/types/user';
-import { getUserById } from '../../users/service';
+import { getUserById } from '@/services/user';
+import { RoleType } from '@/types/user';
+import tokenService from '@/services/token';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +21,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const refreshTokenDoc = await verifyToken(refreshToken, 'refresh');
+    const refreshTokenDoc = await tokenService.verifyToken(
+      refreshToken,
+      'refresh'
+    );
     if (!refreshTokenDoc) {
       return NextResponse.json(
         {
@@ -45,9 +48,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const authTokens = await generateAuthTokens({
+    const authTokens = await tokenService.generateAuthTokens({
       id: user.user_id,
-      role: user.role as roleType,
+      role: user.role as RoleType,
     });
 
     setToken(authTokens.access.token, authTokens.refresh.token);

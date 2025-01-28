@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
 import { jwtVerify } from 'jose';
-import { secretKey } from '../../auth/service';
-import { getUserById } from '../service';
+import { secretKey } from '@/services/token';
+import { getUserById } from '@/services/user';
 
 export const dynamic = 'force-dynamic';
 

@@ -22,6 +22,7 @@ export default function Home() {
             <Link
               href="/denpasar"
               type="button"
+              title="Kost ASIA cabang Denpasar"
               className="mt-4 text-white bg-purple-600 font-bold border-2 border-black shadow-solid-sm hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-7 py-3 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
             >
               Denpasar
@@ -29,6 +30,7 @@ export default function Home() {
             <Link
               href="/klungkung"
               type="button"
+              title="Kost ASIA cabang Klungkung"
               className="mt-4 text-white bg-purple-600 font-bold border-2 border-black shadow-solid-sm hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-7 py-3 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
             >
               Klungkung

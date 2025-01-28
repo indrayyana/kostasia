@@ -4,17 +4,16 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ClickOutside from '@/components/ClickOutside';
 import ButtonLogout from './ButtonLogout';
-import { UserType } from '@/types/user';
+import { UserInterface } from '@/types/user';
 
-const DropdownUser = (props: { user: UserType }) => {
+const DropdownUser = (props: { user: UserInterface }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
-      <Link
+      <button
         onClick={() => setDropdownOpen(!dropdownOpen)}
         className="flex items-center gap-4"
-        href="#"
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
@@ -36,12 +35,13 @@ const DropdownUser = (props: { user: UserType }) => {
               height: 'auto',
             }}
             alt="User"
+            title="Foto Profil"
             priority
           />
         </span>
 
         <ChevronDown size={20} />
-      </Link>
+      </button>
 
       {/* <!-- Dropdown Start --> */}
       {dropdownOpen && (

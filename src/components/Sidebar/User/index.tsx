@@ -60,6 +60,7 @@ const UserSidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               height={32}
               src={'/assets/logo.png'}
               alt="Logo"
+              title="Gambar Logo"
               priority
             />
             <h1 className="text-white font-semibold text-3xl">KostASIA</h1>

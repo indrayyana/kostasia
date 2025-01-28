@@ -1,6 +1,6 @@
 // import Image from 'next/image';
 // import { Product, WithContext } from 'schema-dts';
-// import { RoomType } from '@/app/types/room';
+// import { RoomInterface } from '@/app/types/room';
 
 // async function getRooms() {
 //   const res = await fetch(`${process.env.API_URL}`);
@@ -26,7 +26,7 @@
 //   return (
 //     <>
 //       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-//         {rooms.data.map((room: RoomType) => (
+//         {rooms.data.map((room: RoomInterface) => (
 //           <div
 //             key={room.id}
 //             className="text-center bg-blue-500 text-black p-4 border-4 border-black shadow-solid"

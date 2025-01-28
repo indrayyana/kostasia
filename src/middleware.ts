@@ -2,13 +2,14 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import * as jose from 'jose';
-import { secretKey } from './app/api/auth/service';
+import { secretKey } from '@/services/token';
 
 export const config = {
   matcher: [
     '/api/users/:path*',
     '/api/admin/:path*',
     '/api/rooms/:path*',
+    '/api/notifications/:path*',
     '/dashboard/:path*',
   ],
 };
@@ -18,6 +19,8 @@ const onlyAdmin = [
   '/dashboard/admin',
   '/dashboard/admin/kamar',
   '/dashboard/admin/user',
+  '/dashboard/admin/pembayaran',
+  '/dashboard/admin/notifikasi',
 ];
 
 export async function middleware(req: NextRequest) {
@@ -52,6 +55,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   } catch (err) {
     if (err instanceof jose.errors.JWTExpired) {
+      return unauthorizedResponse(req);
+    } else if (err instanceof jose.errors.JWSSignatureVerificationFailed) {
       return unauthorizedResponse(req);
     }
 

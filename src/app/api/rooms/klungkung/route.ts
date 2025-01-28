@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     const kamar = await prisma.kamar.findMany({
-      where: { cabang: 'Klungkung' },
+      where: { cabang: 'klungkung' },
       orderBy: {
         kamar_id: 'asc',
       },

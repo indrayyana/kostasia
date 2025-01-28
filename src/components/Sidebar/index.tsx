@@ -4,7 +4,6 @@ import React from 'react';
 import {
   ArrowLeft,
   Bell,
-  ChartPie,
   CreditCard,
   DoorOpen,
   LayoutDashboard,
@@ -48,17 +47,7 @@ const menuGroups = [
       {
         icon: <Bell size={20} />,
         label: 'Notifikasi',
-        route: '#',
-      },
-    ],
-  },
-  {
-    name: 'LAINNYA',
-    menuItems: [
-      {
-        icon: <ChartPie size={20} />,
-        label: 'Chart',
-        route: '/dashboard/admin/chart',
+        route: '/dashboard/admin/notifikasi',
       },
     ],
   },
@@ -83,6 +72,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               height={32}
               src={'/assets/logo.png'}
               alt="Logo"
+              title="Gambar Logo"
               priority
             />
             <h1 className="text-white font-semibold text-3xl">KostASIA</h1>

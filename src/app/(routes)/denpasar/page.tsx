@@ -42,6 +42,7 @@ export default function Denpasar() {
               'https://wa.me/6287762642945?text=Halo Bu, saya mau pesan kamar kost an'
             }
             type="button"
+            title="Booking kamar via Whatsapp"
             className="mt-4 max-w-md mx-auto text-white bg-purple-600 font-bold border-2 border-black shadow-solid-sm hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-7 py-3 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
           >
             Pesan Sekarang

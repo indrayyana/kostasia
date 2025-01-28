@@ -15,41 +15,71 @@ datasource db {
 }
 
 model User {
-  user_id    String   @id @default(uuid()) @db.Uuid
-  nama       String   @db.VarChar(20)
-  email      String?  @unique @db.VarChar(64)
-  telepon    String?  @db.VarChar(20)
-  role       String   @default("pengunjung") @db.VarChar(20)
-  foto       String?  @db.Text
-  ktp        String?  @db.Text
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
-  token      Token?
+  user_id    String       @id @default(uuid()) @db.Uuid
+  nama       String       @db.VarChar(20)
+  email      String?      @unique @db.VarChar(64)
+  telepon    String?      @db.VarChar(20)
+  role       Role         @default(pengunjung)
+  foto       String?      @db.Text
+  ktp        String?      @db.Text
+  created_at DateTime     @default(now())
+  updated_at DateTime     @default(now()) @updatedAt
+  token      Token[]
+  kamar      Kamar?
+  notif      Notifikasi[]
 
   @@map("user")
 }
 
 model Token {
-  token_id   String   @id @default(uuid()) @db.Uuid
-  user_id    String   @unique @db.Uuid
-  token      String   @db.VarChar(400)
-  User       User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  type       String   @db.VarChar(20)
-  expires    DateTime
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
+  token_id String    @id @default(uuid()) @db.Uuid
+  user_id  String    @db.Uuid
+  user     User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  token    String    @db.VarChar(400)
+  type     TokenType
+  expires  DateTime?
 
   @@map("token")
 }
 
 model Kamar {
-  kamar_id   Int      @id @default(autoincrement())
-  nama       String   @db.VarChar(20)
-  status     String   @db.VarChar(20)
-  gambar     String   @db.Text
-  cabang     String   @db.VarChar(20)
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
+  kamar_id Int     @id @default(autoincrement())
+  user_id  String? @unique @db.Uuid
+  user     User?   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  nama     String  @db.VarChar(20)
+  harga    Int     @db.Integer
+  status   String  @db.VarChar(20)
+  gambar   String  @db.Text
+  cabang   Cabang
 
   @@map("kamar")
+}
+
+model Notifikasi {
+  notifikasi_id Int      @id @default(autoincrement())
+  user_id       String   @db.Uuid
+  user          User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  judul         String   @db.VarChar(20)
+  text          String   @db.VarChar(250)
+  is_read       Boolean  @default(false) @db.Boolean
+  created_at    DateTime @default(now())
+
+  @@map("notifikasi")
+}
+
+enum Role {
+  admin
+  penyewa
+  pengunjung
+}
+
+enum TokenType {
+  access
+  refresh
+  notification
+}
+
+enum Cabang {
+  denpasar
+  klungkung
 }

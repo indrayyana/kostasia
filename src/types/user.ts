@@ -1,12 +1,12 @@
-export type roleType = 'pengunjung' | 'penyewa' | 'admin';
+export type RoleType = 'pengunjung' | 'penyewa' | 'admin';
 
-export type UserType = {
+export interface UserInterface {
   user_id: string;
   nama: string;
   telepon: string;
   email: string;
-  role: roleType;
+  role: RoleType;
   foto: string;
   ktp: string;
-};
+}
 

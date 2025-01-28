@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { ColumnDef } from '@tanstack/react-table';
-import { RoomType } from '@/types/room';
+import { RoomInterface } from '@/types/room';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CellAction } from '@/components/cell-action';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<RoomType>[] = [
+export const columns: ColumnDef<RoomInterface>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -56,6 +56,7 @@ export const columns: ColumnDef<RoomType>[] = [
                 width={40}
                 height={40}
                 alt={`Foto ${nama}`}
+                title="Foto Kamar"
                 priority
               />
             ) : (
@@ -70,6 +71,7 @@ export const columns: ColumnDef<RoomType>[] = [
                 width={400}
                 height={400}
                 alt={`Foto ${nama}`}
+                title="Foto Kamar"
               />
             </DialogContent>
           )}

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
 import prisma from '@/lib/prisma';
-import { createUser } from './validation';
+import userValidation from '@/validations/user';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const validation = createUser.safeParse({
+    const validation = userValidation.createUser.safeParse({
       nama: body.nama,
       email: body.email,
       telepon: body.telepon,
@@ -64,12 +64,12 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        code: httpStatus.OK,
+        code: httpStatus.CREATED,
         status: 'success',
-        message: 'Delete user successfully',
+        message: 'Create user successfully',
         user,
       },
-      { status: httpStatus.OK }
+      { status: httpStatus.CREATED }
     );
   } catch (error) {
     console.log(error);

@@ -27,8 +27,8 @@ yarn-error.log*
 *lock.json
 
 # local env files
-.env*.local
-.env
+.env*
+!.env.example
 
 # vercel
 .vercel
@@ -44,3 +44,4 @@ public/fallback-*.js
 
 # Jest
 src/__tests__/app/__snapshots__
+certificates
