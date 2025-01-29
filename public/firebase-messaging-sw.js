@@ -23,7 +23,7 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/assets/logo.png',
+    icon: 'https://www.kostasia.com/assets/logo.png',
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);

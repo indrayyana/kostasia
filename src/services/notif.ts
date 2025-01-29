@@ -10,6 +10,13 @@ const notifService = {
       orderBy: {
         created_at: 'desc',
       },
+      include: {
+        user: {
+          select: {
+            nama: true,
+          },
+        },
+      },
     });
 
     return notifications;

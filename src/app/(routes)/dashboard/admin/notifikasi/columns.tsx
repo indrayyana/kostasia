@@ -56,7 +56,7 @@ export const columns = (
     },
   },
   {
-    accessorKey: 'user_id',
+    accessorKey: 'user.nama',
     header: 'Kepada',
   },
   {

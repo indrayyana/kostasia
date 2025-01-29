@@ -67,6 +67,7 @@ import {
 import { sendPushNotification } from '@/utils/firebase-admin';
 import api from '@/lib/axios';
 import toast from 'react-hot-toast';
+import { NotifInterface } from '@/types/notif';
 
 interface DataTableProps<
   TData extends { notifikasi_id: string | number },
@@ -75,8 +76,7 @@ interface DataTableProps<
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading: boolean;
-  token: string;
-  onAddNotif: (newNotif: any) => void;
+  onAddNotif: (newNotif: NotifInterface) => void;
 }
 
 export const formSchema = z.object({
@@ -90,22 +90,16 @@ export const formSchema = z.object({
 export function DataTable<
   TData extends { notifikasi_id: string | number },
   TValue
->({
-  columns,
-  data,
-  isLoading,
-  token,
-  onAddNotif,
-}: DataTableProps<TData, TValue>) {
+>({ columns, data, isLoading, onAddNotif }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [rowSelection, setRowSelection] = React.useState({});
   const [open, setOpen] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
-  const [users, setUsers] = React.useState<{ user_id: string; nama: string }[]>(
-    []
-  );
+  const [users, setUsers] = React.useState<
+    { user_id: string; token: string; user: { nama: string } }[]
+  >([]);
   const [loading, setLoading] = React.useState(false);
 
   const table = useReactTable({
@@ -146,13 +140,26 @@ export function DataTable<
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const selectedUser = users.find((user) => user.user_id === values.kepada);
+    if (!selectedUser) {
+      toast.error('Token tidak ditemukan untuk user yang dipilih.');
+      return;
+    }
+
+    const token = selectedUser.token;
+
     const { data } = await api.post('/notifications', {
       judul: values.judul,
       text: values.text,
       user_id: values.kepada,
     });
     await sendPushNotification(token, values);
-    onAddNotif(data.notification);
+    onAddNotif({
+      ...data.notification,
+      user: {
+        nama: selectedUser.user.nama,
+      },
+    });
     form.reset();
     setOpen(false);
     toast.success('Notifikasi berhasil dikirim');
@@ -278,7 +285,7 @@ export function DataTable<
                                     key={user.user_id}
                                     value={user.user_id}
                                   >
-                                    {user.nama}
+                                    {user.user.nama}
                                   </SelectItem>
                                 ))
                               )}
@@ -380,7 +387,7 @@ export function DataTable<
         <AlertDialogContent className="dark:text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Apakah Anda yakin ingin menghapus data ini ?
+              Apakah Anda yakin ingin menghapus data yang dipilih ?
             </AlertDialogTitle>
             <AlertDialogDescription>
               Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data

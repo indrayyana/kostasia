@@ -4,5 +4,8 @@ export interface NotifInterface {
   text: string;
   status: boolean;
   user_id: string;
+  user: {
+    nama: string;
+  };
 }
 

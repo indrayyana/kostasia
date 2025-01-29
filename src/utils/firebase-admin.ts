@@ -38,6 +38,11 @@ export const sendPushNotification = async (
       body: payload.text,
       imageUrl: 'https://www.kostasia.com/assets/logo.png',
     },
+    android: {
+      notification: {
+        icon: 'https://www.kostasia.com/assets/logo.png',
+      },
+    },
     token: token,
   };
 
@@ -45,7 +50,7 @@ export const sendPushNotification = async (
     .messaging()
     .send(message)
     .then((response) => {
-      console.log('Notification Sent: ', response);
+      console.log('Notification Sent: ', message, response);
     })
 
     .catch((error) => {

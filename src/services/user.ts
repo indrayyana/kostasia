@@ -12,17 +12,18 @@ export async function getUserById(id: string) {
 
 const userService = {
   getUserWithPermission: async () => {
-    const users = await prisma.user.findMany({
+    const users = await prisma.token.findMany({
       where: {
-        token: {
-          some: {
-            type: 'notification',
-          },
-        },
+        type: 'notification',
       },
       select: {
         user_id: true,
-        nama: true,
+        token: true,
+        user: {
+          select: {
+            nama: true,
+          },
+        },
       },
     });
 

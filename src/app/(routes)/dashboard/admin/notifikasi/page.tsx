@@ -1,6 +1,5 @@
 'use client';
 
-import useFCM from '@/hooks/useFCM';
 import DefaultLayout from '@/components/Layouts/DefaultLayout';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
 import { DataTable } from './data-table';
@@ -8,8 +7,6 @@ import { columns } from './columns';
 import useNotif from '@/hooks/useNotif';
 
 export default function NotifikasiPage() {
-  const { fcmToken } = useFCM();
-
   const { notif, loading, error, addNotif, deleteNotif } = useNotif();
 
   return (
@@ -25,7 +22,6 @@ export default function NotifikasiPage() {
             columns={columns(deleteNotif)}
             data={notif}
             isLoading={loading}
-            token={`${fcmToken}`}
             onAddNotif={addNotif}
           />
         )}
