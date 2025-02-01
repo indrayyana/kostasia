@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Loader2, Plus, Trash2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ColumnDef,
@@ -101,6 +101,7 @@ export function DataTable<
     { user_id: string; token: string; user: { nama: string } }[]
   >([]);
   const [loading, setLoading] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
 
   const table = useReactTable({
     data,
@@ -140,6 +141,7 @@ export function DataTable<
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsSubmitting(true);
     const selectedUser = users.find((user) => user.user_id === values.kepada);
     if (!selectedUser) {
       toast.error('Token tidak ditemukan untuk user yang dipilih.');
@@ -163,6 +165,7 @@ export function DataTable<
     form.reset();
     setOpen(false);
     toast.success('Notifikasi berhasil dikirim');
+    setIsSubmitting(false);
   }
 
   React.useEffect(() => {
@@ -298,8 +301,19 @@ export function DataTable<
                   />
                 </div>
                 <DialogFooter>
-                  <Button type="submit" className="dark:text-white font-bold">
-                    Kirim
+                  <Button
+                    type="submit"
+                    className="dark:text-white font-bold"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="animate-spin" />
+                        <span>Loading</span>
+                      </div>
+                    ) : (
+                      'Kirim'
+                    )}
                   </Button>
                 </DialogFooter>
               </form>
