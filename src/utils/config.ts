@@ -34,5 +34,10 @@ export const config = {
     universeDomain: `${process.env.UNIVERSE_DOMAIN}`,
     vapidKey: `${process.env.VAPID_KEY}`,
   },
+  midtrans: {
+    merchantId: `${process.env.MIDTRANS_MERCHANT_ID}`,
+    clientKey: `${process.env.MIDTRANS_CLIENT_KEY}`,
+    serverKey: `${process.env.MIDTRANS_SERVER_KEY}`,
+  },
 };
 

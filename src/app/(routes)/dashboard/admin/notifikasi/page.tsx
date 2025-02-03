@@ -25,12 +25,6 @@ export default function NotifikasiPage() {
             onAddNotif={addNotif}
           />
         )}
-        {/* <DataTable
-          columns={columns}
-          data={notif}
-          isLoading={loading}
-          token={`${fcmToken}`}
-        /> */}
       </div>
     </DefaultLayout>
   );

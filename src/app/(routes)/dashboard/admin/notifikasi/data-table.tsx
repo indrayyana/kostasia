@@ -119,16 +119,11 @@ export function DataTable<
 
   const selectedRows = table.getSelectedRowModel().rows;
 
-  const handleOpenDialog = () => {
-    const ids = selectedRows.map((row) => row.original.notifikasi_id);
-    setIsOpen(true);
-    console.log(ids);
-
-    // TODO: Tambahkan logika untuk menghapus data di sini
-  };
-
   const handleDelete = () => {
+    const ids = selectedRows.map((row) => row.original.notifikasi_id);
+    alert(`Hapus ID: ${ids}`);
     setIsOpen(false);
+    // TODO: Tambahkan logika untuk menghapus data di sini
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -329,7 +324,9 @@ export function DataTable<
               <Button
                 size={'sm'}
                 variant="destructive"
-                onClick={handleOpenDialog}
+                onClick={() => {
+                  setIsOpen(true);
+                }}
                 className="bg-red-600 hover:bg-red-700"
               >
                 <Trash2 />
