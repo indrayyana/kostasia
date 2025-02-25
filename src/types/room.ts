@@ -1,5 +1,5 @@
 export type StatusType = 'Terisi' | 'Kosong';
-export type CabangType = 'Denpasar' | 'Klungkung';
+export type CabangType = 'denpasar' | 'klungkung';
 
 export interface RoomInterface {
   kamar_id: number;
@@ -7,5 +7,11 @@ export interface RoomInterface {
   status: StatusType;
   gambar: string;
   cabang: CabangType;
+}
+
+export interface RoomDetailParams {
+  params: {
+    id: string;
+  };
 }
 

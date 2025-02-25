@@ -36,7 +36,7 @@ interface DataTableProps<TData extends { user_id: string | number }, TValue> {
 
 export function DataTable<TData extends { user_id: string | number }, TValue>({
   columns,
-  data,
+  data = [],
   isLoading,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

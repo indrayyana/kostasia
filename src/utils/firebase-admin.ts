@@ -24,8 +24,8 @@ if (!admin.apps.length) {
 }
 
 interface notifPayload {
-  judul: string;
-  text: string;
+  judul?: string;
+  text?: string;
 }
 
 export const sendPushNotification = async (

@@ -1,36 +1,39 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { UserInterface } from '@/types/user';
 
-const useUser = () => {
-  const [user, setUser] = useState<UserInterface>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+export const useFetchUsers = () => {
+  return useQuery({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const response = await api.get('/users');
 
-  useEffect(() => {
-    async function getUser() {
-      try {
-        const { data } = await api.get('/users/profile');
-        setUser(data.user);
-      } catch (error) {
-        console.error(error);
-        setError('Terjadi kesalahan saat menampilkan data');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    getUser();
-  }, []);
-
-  return {
-    user,
-    loading,
-    error,
-  };
+      return response.data;
+    },
+  });
 };
 
-export default useUser;
+export const useDeleteUser = ({ onSuccess, onError }) => {
+  return useMutation({
+    mutationFn: async (id) => {
+      const response = await api.delete(`/users/${id}`);
+
+      return response;
+    },
+    onSuccess,
+    onError,
+  });
+};
+
+export const useFetchUserProfile = () => {
+  return useQuery({
+    queryKey: ['user.profile'],
+    queryFn: async () => {
+      const response = await api.get('/users/profile');
+
+      return response.data;
+    },
+  });
+};
 

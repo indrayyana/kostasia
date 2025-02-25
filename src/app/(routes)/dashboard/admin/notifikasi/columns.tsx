@@ -8,14 +8,13 @@ import { CellAction } from './cell-action';
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns = (
-  onDeleteNotif: (notifId: number) => void
-): ColumnDef<NotifInterface>[] => [
+export const columns = (refetch: () => void): ColumnDef<NotifInterface>[] => [
   {
     id: 'select',
     header: ({ table }) => (
       <Checkbox
         className="mt-1"
+        // @ts-expect-error off
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && 'indeterminate')
@@ -77,9 +76,6 @@ export const columns = (
   },
   {
     id: 'actions',
-    cell: ({ row }) => (
-      <CellAction data={row.original} onDeleteNotif={onDeleteNotif} />
-    ),
+    cell: ({ row }) => <CellAction data={row.original} refecth={refetch} />,
   },
 ];
-

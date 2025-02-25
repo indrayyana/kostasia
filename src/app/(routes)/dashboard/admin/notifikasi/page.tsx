@@ -4,25 +4,25 @@ import DefaultLayout from '@/components/Layouts/DefaultLayout';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
 import { DataTable } from './data-table';
 import { columns } from './columns';
-import useNotif from '@/hooks/useNotif';
+import { useFetchNotifications } from '@/hooks/useNotification';
 
 export default function NotifikasiPage() {
-  const { notif, loading, error, addNotif, deleteNotif } = useNotif();
+  const { data, refetch, isLoading, isError } = useFetchNotifications();
 
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Notifikasi" />
       <div className="flex flex-col text-black-2">
-        {error ? (
+        {isError ? (
           <p className="text-red-500 text-center">
-            Terjadi kesalahan saat menampilkan data: {error}
+            Terjadi kesalahan saat menampilkan data
           </p>
         ) : (
           <DataTable
-            columns={columns(deleteNotif)}
-            data={notif}
-            isLoading={loading}
-            onAddNotif={addNotif}
+            columns={columns(refetch)}
+            data={data?.notifications || []}
+            isLoading={isLoading}
+            refetch={refetch}
           />
         )}
       </div>

@@ -16,6 +16,7 @@ export const columns: ColumnDef<RoomInterface>[] = [
     header: ({ table }) => (
       <Checkbox
         className="mt-1"
+        // @ts-expect-error off
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && 'indeterminate')

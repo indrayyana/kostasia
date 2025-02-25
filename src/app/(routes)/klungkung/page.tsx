@@ -53,7 +53,7 @@ export default function Klungkung() {
           <Rooms endpoint="klungkung" />
         </section>
         <section id="kontak" className="p-12 bg-blue-600">
-          <h2 className="text-2xl font-bold my-4">Kontak Kami</h2>
+          <h2 className="text-2xl font-bold my-4">Lokasi Kami</h2>
           <div
             className="relative w-full h-0 text-center p-4 border-4 border-black shadow-solid"
             style={{ height: '30rem' }}

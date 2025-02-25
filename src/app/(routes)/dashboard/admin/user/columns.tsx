@@ -3,20 +3,21 @@
 import Image from 'next/image';
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { CellAction } from '@/components/cell-action';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { UserInterface } from '@/types/user';
+import { CellAction } from './cell-action';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<UserInterface>[] = [
+export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
   {
     id: 'select',
     header: ({ table }) => (
       <Checkbox
         className="mt-1"
+        // @ts-expect-error off
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && 'indeterminate')
@@ -84,7 +85,7 @@ export const columns: ColumnDef<UserInterface>[] = [
           <DialogTrigger asChild>
             {fotoUrl ? (
               <Image
-                className="h-10 w-auto cursor-pointer"
+                className="h-10 w-auto cursor-pointer rounded-full"
                 src={fotoUrl}
                 width={40}
                 height={40}
@@ -154,7 +155,7 @@ export const columns: ColumnDef<UserInterface>[] = [
   },
   {
     id: 'actions',
-    cell: () => <CellAction />,
+    cell: ({ row }) => <CellAction data={row.original} refecth={refetch} />,
   },
 ];
 

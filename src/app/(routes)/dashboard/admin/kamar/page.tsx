@@ -1,30 +1,28 @@
 'use client';
 
-import useSWR from 'swr';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
 import DefaultLayout from '@/components/Layouts/DefaultLayout';
 import { DataTable } from './data-table';
 import { columns } from './columns';
-import { fetcher } from '@/utils/fetcher';
+import { useFetchRooms } from '@/hooks/useRoom';
 
 export default function KamarPage() {
-  const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/rooms`,
-    fetcher
-  );
-
-  const rooms = data?.kamar || [];
+  const { data, isLoading, isError } = useFetchRooms();
 
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Kamar" />
       <div className="flex flex-col text-black-2">
-        {error ? (
+        {isError ? (
           <p className="text-red-500 text-center">
-            Terjadi kesalahan saat menampilkan data: {error.message}
+            Terjadi kesalahan saat menampilkan data
           </p>
         ) : (
-          <DataTable columns={columns} data={rooms} isLoading={isLoading} />
+          <DataTable
+            columns={columns}
+            data={data?.kamar || []}
+            isLoading={isLoading}
+          />
         )}
       </div>
     </DefaultLayout>

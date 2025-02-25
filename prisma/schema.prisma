@@ -17,7 +17,7 @@ datasource db {
 model User {
   user_id    String       @id @default(uuid()) @db.Uuid
   nama       String       @db.VarChar(20)
-  email      String?      @unique @db.VarChar(64)
+  email      String       @unique @db.VarChar(64)
   telepon    String?      @db.VarChar(20)
   role       Role         @default(pengunjung)
   foto       String?      @db.Text

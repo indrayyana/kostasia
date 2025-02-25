@@ -9,3 +9,11 @@ export interface NotifInterface {
   };
 }
 
+export interface UserNotificationInterface {
+  user_id: string;
+  token: string;
+  user: {
+    nama: string;
+  };
+}
+

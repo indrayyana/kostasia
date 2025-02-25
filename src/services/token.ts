@@ -32,15 +32,19 @@ const tokenService = {
     expires: Moment | null,
     type: TokenType
   ) => {
-    await tokenService.deleteToken(userId, type);
+    return await prisma.$transaction(async (tx) => {
+      await tx.token.deleteMany({
+        where: { user_id: userId, type },
+      });
 
-    return await prisma.token.create({
-      data: {
-        token,
-        user_id: userId,
-        expires: expires ? expires.toDate() : null,
-        type,
-      },
+      return await tx.token.create({
+        data: {
+          token,
+          user_id: userId,
+          expires: expires ? expires.toDate() : null,
+          type,
+        },
+      });
     });
   },
 

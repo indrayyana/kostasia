@@ -26,7 +26,10 @@ const onlyAdmin = [
 export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  if (noAuth.includes(pathname)) {
+  if (
+    noAuth.includes(pathname) ||
+    noAuth.some((route) => pathname.startsWith(route))
+  ) {
     return NextResponse.next();
   }
 

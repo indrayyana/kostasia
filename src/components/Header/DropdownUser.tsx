@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { ChevronDown, CreditCard, DoorOpen, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -6,7 +6,11 @@ import ClickOutside from '@/components/ClickOutside';
 import ButtonLogout from './ButtonLogout';
 import { UserInterface } from '@/types/user';
 
-const DropdownUser = (props: { user: UserInterface }) => {
+interface DropdownUserProps {
+  user: UserInterface;
+}
+
+const DropdownUser: React.FC<DropdownUserProps> = memo(({ user }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -17,10 +21,10 @@ const DropdownUser = (props: { user: UserInterface }) => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {props.user.nama}
+            {user.nama}
           </span>
           <span className="block text-xs capitalize text-[#64748B]">
-            {props.user.role}
+            {user.role}
           </span>
         </span>
 
@@ -29,7 +33,7 @@ const DropdownUser = (props: { user: UserInterface }) => {
             className="rounded-full"
             width={112}
             height={112}
-            src={props.user.foto}
+            src={user.foto}
             style={{
               width: 'auto',
               height: 'auto',
@@ -83,7 +87,9 @@ const DropdownUser = (props: { user: UserInterface }) => {
       {/* <!-- Dropdown End --> */}
     </ClickOutside>
   );
-};
+});
+
+DropdownUser.displayName = 'DropdownUser';
 
 export default DropdownUser;
 

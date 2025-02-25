@@ -9,10 +9,11 @@ import {
 } from '@tabler/icons-react';
 import { HiOutlineRefresh as RefreshIcon } from 'react-icons/hi';
 import Theme from './Theme';
-import useUser from '@/hooks/useUser';
+import { useFetchUserProfile } from '@/hooks/useUser';
 
 export default function Navbar() {
-  const { user, loading } = useUser();
+  const { data, isLoading } = useFetchUserProfile();
+  const user = data?.user || {};
 
   return (
     <nav className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
@@ -40,7 +41,7 @@ export default function Navbar() {
           </span>
         </Link>
         <Theme />
-        {loading ? (
+        {isLoading ? (
           <a
             href={'/api/auth/login'}
             title="Google Login"
@@ -51,7 +52,7 @@ export default function Navbar() {
               Login
             </span>
           </a>
-        ) : user?.nama ? (
+        ) : user.nama ? (
           <a
             href={'/dashboard/profil'}
             title="Profil"

@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { RoomInterface } from '@/types/room';
+import RoomItem from './RoomItem';
 
 interface RoomsProps {
   endpoint: string;
@@ -21,13 +21,15 @@ async function getRooms(endpoint: string) {
     return res.json();
   } catch (error) {
     console.log(`failed to get all rooms ${error}`);
+    return { kamar: [] };
   }
 }
 
 export default async function Rooms({ endpoint }: RoomsProps) {
   const data = await getRooms(endpoint);
+  const rooms = data?.kamar || [];
 
-  if (!data || !data.kamar) {
+  if (rooms.length < 1) {
     return (
       <div className="text-center">
         <p>Terjadi kesalahan saat menampilkan data kamar</p>
@@ -40,66 +42,11 @@ export default async function Rooms({ endpoint }: RoomsProps) {
     <>
       <div
         className={`grid grid-cols-1 sm:grid-cols-2 ${
-          data.kamar?.length === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+          rooms.length === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
         } gap-5 sm:gap-6 lg:gap-8`}
       >
-        {data.kamar?.map((room: RoomInterface) => (
-          <div
-            key={room.kamar_id}
-            className="text-center bg-blue-500 text-black p-4 border-4 border-black shadow-solid"
-          >
-            <Image
-              src={room.gambar}
-              alt={room.nama}
-              title="Foto Kamar"
-              width={500}
-              height={500}
-              priority
-              className="border-4 border-black object-cover object-top aspect-[1.48/1] w-full"
-            />
-            <h3 className="mt-6 text-black font-semibold mb-2 text-3xl">
-              {room.nama}
-            </h3>
-            {room.status === 'Kosong' ? (
-              <div
-                className="bg-black text-white py-1 w-28 mx-auto"
-                style={{
-                  clipPath:
-                    'polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)',
-                }}
-              >
-                <p
-                  className="bg-green-700 text-white py-1 mx-auto"
-                  style={{
-                    width: '6.5rem',
-                    clipPath:
-                      'polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)',
-                  }}
-                >
-                  {room.status}
-                </p>
-              </div>
-            ) : (
-              <div
-                className="bg-black text-white py-1 w-28 mx-auto"
-                style={{
-                  clipPath:
-                    'polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)',
-                }}
-              >
-                <p
-                  className="bg-rose-700 text-white py-1 w-28 mx-auto"
-                  style={{
-                    width: '6.5rem',
-                    clipPath:
-                      'polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)',
-                  }}
-                >
-                  {room.status}
-                </p>
-              </div>
-            )}
-          </div>
+        {rooms.map((room: RoomInterface) => (
+          <RoomItem key={room.kamar_id} room={room} />
         ))}
       </div>
     </>

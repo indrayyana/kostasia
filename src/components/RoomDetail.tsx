@@ -1,94 +1,73 @@
-// import Image from 'next/image';
-// import { Product, WithContext } from 'schema-dts';
-// import { RoomInterface } from '@/app/types/room';
+'use client';
 
-// async function getRooms() {
-//   const res = await fetch(`${process.env.API_URL}`);
+import Link from 'next/link';
+import Image from 'next/image';
+import { RoomInterface } from '@/types/room';
 
-//   if (!res.ok) {
-//     throw new Error('Failed to fetch data');
-//   }
+interface RoomDetailProps {
+  id: string;
+  room: RoomInterface;
+  isError: boolean;
+}
 
-//   return res.json();
-// }
-
-// export default async function Rooms() {
-//   const rooms = await getRooms();
-
-//   const jsonLd: WithContext<Product> = {
-//     '@context': 'https://schema.org',
-//     '@type': 'Product',
-//     name: rooms.name,
-//     image: rooms.image,
-//     description: rooms.info,
-//   };
-
-//   return (
-//     <>
-//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
-//         {rooms.data.map((room: RoomInterface) => (
-//           <div
-//             key={room.id}
-//             className="text-center bg-blue-500 text-black p-4 border-4 border-black shadow-solid"
-//           >
-//             <Image
-//               src={room.image}
-//               alt={room.name}
-//               width={500}
-//               height={500}
-//               priority
-//               className="border-4 border-black object-cover object-top aspect-[1.48/1] w-full"
-//             />
-//             <h3 className="mt-6 text-black font-semibold mb-2 text-3xl">
-//               {room.name}
-//             </h3>
-//             {room.info === 'Kosong' ? (
-//               <div
-//                 className="bg-black text-white py-1 w-28 mx-auto"
-//                 style={{
-//                   clipPath:
-//                     'polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)',
-//                 }}
-//               >
-//                 <p
-//                   className="bg-green-700 text-white py-1 mx-auto"
-//                   style={{
-//                     width: '6.5rem',
-//                     clipPath:
-//                       'polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)',
-//                   }}
-//                 >
-//                   {room.info}
-//                 </p>
-//               </div>
-//             ) : (
-//               <div
-//                 className="bg-black text-white py-1 w-28 mx-auto"
-//                 style={{
-//                   clipPath:
-//                     'polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)',
-//                 }}
-//               >
-//                 <p
-//                   className="bg-rose-700 text-white py-1 w-28 mx-auto"
-//                   style={{
-//                     width: '6.5rem',
-//                     clipPath:
-//                       'polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)',
-//                   }}
-//                 >
-//                   {room.info}
-//                 </p>
-//               </div>
-//             )}
-//           </div>
-//         ))}
-//       </div>
-//       <script
-//         type="application/ld+json"
-//         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-//       />
-//     </>
-//   );
-// }
+export default function RoomDetail({ id, room, isError }: RoomDetailProps) {
+  return (
+    <>
+      <main>
+        {isError ? (
+          <p className="text-red-500 text-center">
+            Terjadi kesalahan saat menampilkan data
+          </p>
+        ) : (
+          <section
+            id="tentang"
+            className="w-full p-12 mt-12 text-white flex flex-col bg-blue-600 border-4 border-black"
+          >
+            {room && (
+              <Image
+                src={room.gambar}
+                alt={room.nama}
+                title="Foto Kamar"
+                width={400}
+                height={400}
+                priority
+                className="border-4 border-black object-cover object-top aspect-[1.48/1]"
+              />
+            )}
+            {Number(id) > 10 ? (
+              <h2 className="text-2xl font-bold my-4">
+                Kamar {Number(id) - 10}
+              </h2>
+            ) : (
+              <h2 className="text-2xl font-bold my-4">Kamar {id}</h2>
+            )}
+            <p className="font-bold my-4">Spesifikasi Tipe Kamar</p>
+            <ul className="list-disc">
+              <li>3 x 4 meter</li>
+              <li>Listrik token</li>
+              <li>Sumur bor</li>
+            </ul>
+            <p className="font-bold my-4">Fasilitas Pilihan</p>
+            <ul className="list-disc">
+              <li>Kasur</li>
+              <li>Lemari pakaian</li>
+              <li>Kamar mandi dalam</li>
+            </ul>
+            <Link
+              href={
+                '/'
+                // `/${room.cabang}/kamar/${room.kamar_id}`
+              }
+              type="button"
+              title="Ajukan Sewa"
+              className="mt-4 max-w-md mx-auto text-white bg-purple-600 font-bold border-2 border-black shadow-solid-sm hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-7 py-3 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
+            >
+              Ajukan Sewa
+            </Link>
+          </section>
+        )}
+      </main>
+    </>
+  );
+}
 

@@ -7,15 +7,17 @@ import Header from '@/components/Header';
 import Loader from '../common/Loader';
 import useFCM from '@/hooks/useFCM';
 import api from '@/lib/axios';
-import { ErrorResponse } from '@/types/error';
-import useUser from '@/hooks/useUser';
+import { ErrorInterface } from '@/types/error';
+import { useFetchUserProfile } from '@/hooks/useUser';
+import DropdownUser from '../Header/DropdownUser';
 
 export default function UserLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, loading } = useUser();
+  const { data, isLoading } = useFetchUserProfile();
+  const user = data?.user;
 
   const { fcmToken } = useFCM();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -35,8 +37,8 @@ export default function UserLayout({
           });
         }
       } catch (error) {
-        const errorResponse = error as ErrorResponse;
-        if (errorResponse.response?.status === 404) {
+        const err = error as ErrorInterface;
+        if (err.response?.status === 404) {
           await api.post('/notifications/token', {
             token: fcmToken,
             user_id: user.user_id,
@@ -53,7 +55,7 @@ export default function UserLayout({
   return (
     <>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <div className="flex min-h-screen">
@@ -75,11 +77,9 @@ export default function UserLayout({
           {/* <!-- ===== Content Area Start ===== --> */}
           <div className="relative flex flex-1 flex-col lg:ml-72.5">
             {/* <!-- ===== Header Start ===== --> */}
-            <Header
-              sidebarOpen={sidebarOpen}
-              setSidebarOpen={setSidebarOpen}
-              user={user!}
-            />
+            <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
+              <DropdownUser user={user} />
+            </Header>
             {/* <!-- ===== Header End ===== --> */}
 
             {/* <!-- ===== Main Content Start ===== --> */}

@@ -2,46 +2,49 @@
 
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Trash2 } from 'lucide-react';
+import { SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { NotifInterface } from '@/types/notif';
-import { useDeleteNotification } from '@/hooks/useNotification';
+import { UserInterface } from '@/types/user';
+import { useDeleteUser } from '@/hooks/useUser';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 interface CellActionProps {
-  data: NotifInterface;
+  data: UserInterface;
   refecth: () => void;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data, refecth }) => {
   const [open, setOpen] = useState(false);
 
-  const { mutate: deleteNotif, isPending } = useDeleteNotification({
+  const { mutate: deleteUser, isPending } = useDeleteUser({
     onSuccess: () => {
       refecth();
       setOpen(false);
-      toast.success('Notifikasi berhasil dihapus');
+      toast.success('User berhasil dihapus');
     },
     onError: () => {
-      toast.error('Terjadi kesalahan saat menghapus notifikasi');
+      toast.error('Terjadi kesalahan saat menghapus user');
     },
   });
 
   const onDelete = () => {
     // @ts-expect-error off
-    deleteNotif(data.notifikasi_id);
+    deleteUser(data.user_id);
   };
 
   return (
     <>
       <ConfirmDialog
-        dataName={data.user.nama}
+        dataName={data.nama}
         open={open}
         onOpenChange={setOpen}
         onConfirm={onDelete}
         isLoading={isPending}
       />
       <div className="font-bold">
+        <Button className="text-yellow-600" variant={'link'}>
+          <SquarePen /> Edit
+        </Button>
         <Button
           className="text-red-600"
           variant={'link'}

@@ -3,6 +3,9 @@
 
 import * as React from 'react';
 import { Loader2, Plus, Trash2 } from 'lucide-react';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ColumnDef,
@@ -54,8 +57,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
 import {
   Form,
   FormControl,
@@ -65,9 +66,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { sendPushNotification } from '@/utils/firebase-admin';
-import api from '@/lib/axios';
-import toast from 'react-hot-toast';
-import { NotifInterface } from '@/types/notif';
+import { UserNotificationInterface } from '@/types/notif';
+import {
+  useCreateNotification,
+  useFetchUsersWithNotification,
+} from '@/hooks/useNotification';
 
 interface DataTableProps<
   TData extends { notifikasi_id: string | number },
@@ -76,7 +79,7 @@ interface DataTableProps<
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading: boolean;
-  onAddNotif: (newNotif: NotifInterface) => void;
+  refetch: () => void;
 }
 
 export const formSchema = z.object({
@@ -90,18 +93,17 @@ export const formSchema = z.object({
 export function DataTable<
   TData extends { notifikasi_id: string | number },
   TValue
->({ columns, data, isLoading, onAddNotif }: DataTableProps<TData, TValue>) {
+>({ columns, data = [], isLoading, refetch }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
   const [rowSelection, setRowSelection] = React.useState({});
   const [open, setOpen] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
-  const [users, setUsers] = React.useState<
-    { user_id: string; token: string; user: { nama: string } }[]
-  >([]);
-  const [loading, setLoading] = React.useState(false);
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const { data: dataUser, isLoading: isLoadingUser } =
+    useFetchUsersWithNotification();
+  const users: UserNotificationInterface[] = dataUser?.users || [];
 
   const table = useReactTable({
     data,
@@ -135,8 +137,14 @@ export function DataTable<
     },
   });
 
+  const { mutate: createNotification, isPending: createNotificationIsLoading } =
+    useCreateNotification({
+      onSuccess: () => {
+        refetch();
+      },
+    });
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
     const selectedUser = users.find((user) => user.user_id === values.kepada);
     if (!selectedUser) {
       toast.error('Token tidak ditemukan untuk user yang dipilih.');
@@ -145,40 +153,18 @@ export function DataTable<
 
     const token = selectedUser.token;
 
-    const { data } = await api.post('/notifications', {
+    // @ts-expect-error off
+    createNotification({
       judul: values.judul,
       text: values.text,
       user_id: values.kepada,
     });
     await sendPushNotification(token, values);
-    onAddNotif({
-      ...data.notification,
-      user: {
-        nama: selectedUser.user.nama,
-      },
-    });
+
     form.reset();
     setOpen(false);
     toast.success('Notifikasi berhasil dikirim');
-    setIsSubmitting(false);
   }
-
-  React.useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await api.get('/notifications/token');
-        if (response.data.code === 200) {
-          setUsers(response.data.users);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNotifications();
-  }, []);
 
   return (
     <>
@@ -267,13 +253,15 @@ export function DataTable<
                               <SelectTrigger className="col-span-3">
                                 <SelectValue
                                   placeholder={
-                                    loading ? 'Loading...' : 'Pilih penyewa'
+                                    isLoadingUser
+                                      ? 'Loading...'
+                                      : 'Pilih penyewa'
                                   }
                                 />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {loading ? (
+                              {isLoadingUser ? (
                                 <div className="p-4 text-center">
                                   Loading...
                                 </div>
@@ -299,9 +287,9 @@ export function DataTable<
                   <Button
                     type="submit"
                     className="dark:text-white font-bold"
-                    disabled={isSubmitting}
+                    disabled={createNotificationIsLoading}
                   >
-                    {isSubmitting ? (
+                    {createNotificationIsLoading ? (
                       <div className="flex items-center gap-2">
                         <Loader2 className="animate-spin" />
                         <span>Loading</span>
