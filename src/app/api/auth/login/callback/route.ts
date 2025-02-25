@@ -7,11 +7,12 @@ import { config } from '@/utils/config';
 import { setToken } from '@/utils/cookies';
 import { RoleType } from '@/types/user';
 import tokenService from '@/services/token';
+import catchAsync from '@/utils/catchAsync';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
-  try {
+export const GET = catchAsync(
+  async (req: NextRequest): Promise<NextResponse> => {
     const code = req.nextUrl.searchParams.get('code');
 
     if (!code) {
@@ -86,16 +87,6 @@ export async function GET(req: NextRequest) {
     setToken(authTokens.access.token, authTokens.refresh.token);
 
     return NextResponse.redirect(config.app.dashboardURL);
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        code: httpStatus.INTERNAL_SERVER_ERROR,
-        status: 'error',
-        message: 'Internal Server Error',
-      },
-      { status: httpStatus.INTERNAL_SERVER_ERROR }
-    );
   }
-}
+);
 
