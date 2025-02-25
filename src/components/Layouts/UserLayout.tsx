@@ -16,7 +16,7 @@ export default function UserLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data, isLoading } = useFetchUserProfile();
+  const { data, isPending } = useFetchUserProfile();
   const user = data?.user;
 
   const { fcmToken } = useFCM();
@@ -55,7 +55,7 @@ export default function UserLayout({
   return (
     <>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
-      {isLoading ? (
+      {isPending ? (
         <Loader />
       ) : (
         <div className="flex min-h-screen">

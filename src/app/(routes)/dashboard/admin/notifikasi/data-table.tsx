@@ -101,7 +101,7 @@ export function DataTable<
   const [open, setOpen] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const { data: dataUser, isLoading: isLoadingUser } =
+  const { data: dataUser, isPending: isLoadingUser } =
     useFetchUsersWithNotification();
   const users: UserNotificationInterface[] = dataUser?.users || [];
 

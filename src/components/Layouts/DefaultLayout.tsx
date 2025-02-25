@@ -12,14 +12,14 @@ export default function DefaultLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data, isLoading } = useFetchUserProfile();
+  const { data, isPending } = useFetchUserProfile();
   const user = data?.user;
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <>
-      {isLoading ? (
+      {isPending ? (
         <Loader />
       ) : (
         <div className="flex min-h-screen">

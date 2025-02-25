@@ -7,7 +7,7 @@ import { columns } from './columns';
 import { useFetchNotifications } from '@/hooks/useNotification';
 
 export default function NotifikasiPage() {
-  const { data, refetch, isLoading, isError } = useFetchNotifications();
+  const { data, refetch, isPending, isError } = useFetchNotifications();
 
   return (
     <DefaultLayout>
@@ -21,7 +21,7 @@ export default function NotifikasiPage() {
           <DataTable
             columns={columns(refetch)}
             data={data?.notifications || []}
-            isLoading={isLoading}
+            isLoading={isPending}
             refetch={refetch}
           />
         )}

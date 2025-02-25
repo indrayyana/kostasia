@@ -9,12 +9,12 @@ import { useFetchRoomDetail } from '@/hooks/useRoom';
 import RoomDetail from '@/components/RoomDetail';
 
 export default function DenpasarRoomDetail({ params }: RoomDetailParams) {
-  const { data, isLoading, isError } = useFetchRoomDetail(
+  const { data, isPending, isError } = useFetchRoomDetail(
     'denpasar',
     params.id
   );
 
-  if (isLoading) {
+  if (isPending) {
     return <Loader />;
   }
 

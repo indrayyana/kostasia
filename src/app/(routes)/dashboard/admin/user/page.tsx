@@ -7,7 +7,7 @@ import { columns } from './columns';
 import { useFetchUsers } from '@/hooks/useUser';
 
 export default function UserPage() {
-  const { data, refetch, isLoading, isError } = useFetchUsers();
+  const { data, refetch, isPending, isError } = useFetchUsers();
 
   return (
     <DefaultLayout>
@@ -21,7 +21,7 @@ export default function UserPage() {
           <DataTable
             columns={columns(refetch)}
             data={data?.user || []}
-            isLoading={isLoading}
+            isLoading={isPending}
           />
         )}
       </div>

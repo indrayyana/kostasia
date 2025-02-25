@@ -7,7 +7,7 @@ import { columns } from './columns';
 import { useFetchRooms } from '@/hooks/useRoom';
 
 export default function KamarPage() {
-  const { data, isLoading, isError } = useFetchRooms();
+  const { data, isPending, isError } = useFetchRooms();
 
   return (
     <DefaultLayout>
@@ -21,7 +21,7 @@ export default function KamarPage() {
           <DataTable
             columns={columns}
             data={data?.kamar || []}
-            isLoading={isLoading}
+            isLoading={isPending}
           />
         )}
       </div>

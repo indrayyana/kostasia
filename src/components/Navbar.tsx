@@ -12,7 +12,7 @@ import Theme from './Theme';
 import { useFetchUserProfile } from '@/hooks/useUser';
 
 export default function Navbar() {
-  const { data, isLoading } = useFetchUserProfile();
+  const { data, isPending } = useFetchUserProfile();
   const user = data?.user || {};
 
   return (
@@ -41,7 +41,7 @@ export default function Navbar() {
           </span>
         </Link>
         <Theme />
-        {isLoading ? (
+        {isPending ? (
           <a
             href={'/api/auth/login'}
             title="Google Login"
