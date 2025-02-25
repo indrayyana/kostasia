@@ -1,29 +1,22 @@
 import { NextResponse } from 'next/server';
+import httpStatus from 'http-status';
 import prisma from '@/lib/prisma';
+import catchAsync from '@/utils/catchAsync';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  try {
-    const kamar = await prisma.kamar.findMany({
-      orderBy: {
-        kamar_id: 'asc',
-      },
-    });
+export const GET = catchAsync(async (): Promise<NextResponse> => {
+  const kamar = await prisma.kamar.findMany({
+    orderBy: {
+      kamar_id: 'asc',
+    },
+  });
 
-    return NextResponse.json({
-      code: 200,
-      status: 'success',
-      message: 'Get rooms successfully',
-      kamar,
-    });
-  } catch (error) {
-    return NextResponse.json({
-      code: 500,
-      status: 'error',
-      message: 'Internal Server Error',
-      errors: error,
-    });
-  }
-}
+  return NextResponse.json({
+    code: httpStatus.OK,
+    status: 'success',
+    message: 'Get rooms successfully',
+    kamar,
+  });
+});
 

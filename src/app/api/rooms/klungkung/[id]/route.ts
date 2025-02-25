@@ -2,18 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
 import { ContextParams } from '@/types/context';
 import { getRoomsById } from '@/services/rooms';
+import catchAsync from '@/utils/catchAsync';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest, ctx: ContextParams) {
-  try {
+export const GET = catchAsync(
+  async (req: NextRequest, ctx: ContextParams): Promise<NextResponse> => {
     const id = ctx.params.id;
 
     const kamar = await getRoomsById(id, 'klungkung');
     if (!kamar) {
       return NextResponse.json(
         {
-          code: 404,
+          code: httpStatus.NOT_FOUND,
           status: 'error',
           message: 'Kamar not found',
         },
@@ -22,21 +23,11 @@ export async function GET(req: NextRequest, ctx: ContextParams) {
     }
 
     return NextResponse.json({
-      code: 200,
+      code: httpStatus.OK,
       status: 'success',
       message: `Get Klungkung room successfully`,
       kamar,
     });
-  } catch (error) {
-    return NextResponse.json(
-      {
-        code: 500,
-        status: 'error',
-        message: 'Internal Server Error',
-        errors: error,
-      },
-      { status: httpStatus.INTERNAL_SERVER_ERROR }
-    );
   }
-}
+);
 

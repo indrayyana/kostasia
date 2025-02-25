@@ -5,6 +5,7 @@ import httpStatus from 'http-status';
 
 import ApiError from './ApiError';
 import { ContextParams } from '@/types/context';
+import logger from './logger';
 
 type RouteHandler = (
   req: NextRequest,
@@ -17,6 +18,10 @@ const catchAsync = (fn: RouteHandler) => {
       return await fn(req, ctx);
     } catch (error: any) {
       if (error instanceof ApiError) {
+        logger.error('API error', {
+          message: error.message,
+        });
+
         const responseBody: {
           code: number;
           status: string;
@@ -30,6 +35,10 @@ const catchAsync = (fn: RouteHandler) => {
 
         return NextResponse.json(responseBody, { status: error.statusCode });
       }
+
+      logger.error('API error', {
+        message: error.message,
+      });
 
       return NextResponse.json(
         {

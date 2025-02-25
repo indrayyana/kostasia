@@ -3,11 +3,12 @@ import httpStatus from 'http-status';
 import { jwtVerify } from 'jose';
 import { secretKey } from '@/services/token';
 import { getUserById } from '@/services/user';
+import catchAsync from '@/utils/catchAsync';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(req: NextRequest) {
-  try {
+export const GET = catchAsync(
+  async (req: NextRequest): Promise<NextResponse> => {
     const token = req.cookies.get('access-token')?.value;
     if (!token) {
       return NextResponse.json(
@@ -46,16 +47,6 @@ export async function GET(req: NextRequest) {
       },
       { status: httpStatus.OK }
     );
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json(
-      {
-        code: httpStatus.INTERNAL_SERVER_ERROR,
-        status: 'error',
-        message: 'Internal Server Error',
-      },
-      { status: httpStatus.INTERNAL_SERVER_ERROR }
-    );
   }
-}
+);
 

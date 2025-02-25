@@ -2,42 +2,31 @@ import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
 import prisma from '@/lib/prisma';
 import userValidation from '@/validations/user';
+import catchAsync from '@/utils/catchAsync';
+import ApiError from '@/utils/ApiError';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
-  try {
-    const user = await prisma.user.findMany({
-      orderBy: {
-        created_at: 'desc',
-      },
-    });
+export const GET = catchAsync(async (): Promise<NextResponse> => {
+  const user = await prisma.user.findMany({
+    orderBy: {
+      created_at: 'desc',
+    },
+  });
 
-    return NextResponse.json(
-      {
-        code: httpStatus.OK,
-        status: 'success',
-        message: 'Get users successfully',
-        user,
-      },
-      { status: httpStatus.OK }
-    );
-  } catch (error) {
-    console.log(error);
+  return NextResponse.json(
+    {
+      code: httpStatus.OK,
+      status: 'success',
+      message: 'Get users successfully',
+      user,
+    },
+    { status: httpStatus.OK }
+  );
+});
 
-    return NextResponse.json(
-      {
-        code: httpStatus.INTERNAL_SERVER_ERROR,
-        status: 'error',
-        message: 'Internal Server Error',
-      },
-      { status: httpStatus.INTERNAL_SERVER_ERROR }
-    );
-  }
-}
-
-export async function POST(req: NextRequest) {
-  try {
+export const POST = catchAsync(
+  async (req: NextRequest): Promise<NextResponse> => {
     const body = await req.json();
 
     const validation = userValidation.createUser.safeParse({
@@ -47,14 +36,10 @@ export async function POST(req: NextRequest) {
       role: body.role,
     });
     if (!validation.success) {
-      return NextResponse.json(
-        {
-          code: httpStatus.BAD_REQUEST,
-          status: 'error',
-          message: 'Bad Request',
-          errors: validation.error.flatten().fieldErrors,
-        },
-        { status: httpStatus.BAD_REQUEST }
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Bad Request',
+        validation.error.flatten().fieldErrors
       );
     }
 
@@ -71,17 +56,6 @@ export async function POST(req: NextRequest) {
       },
       { status: httpStatus.CREATED }
     );
-  } catch (error) {
-    console.log(error);
-
-    return NextResponse.json(
-      {
-        code: httpStatus.INTERNAL_SERVER_ERROR,
-        status: 'error',
-        message: 'Internal Server Error',
-      },
-      { status: httpStatus.INTERNAL_SERVER_ERROR }
-    );
   }
-}
+);
 

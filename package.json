@@ -5,7 +5,7 @@
   "private": true,
   "author": "Indra Adnyana <gdindra13@gmail.com>",
   "scripts": {
-    "dev": "next dev --experimental-https --turbo",
+    "dev": "next dev --experimental-https",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
@@ -61,6 +61,7 @@
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.0.5",
+    "winston": "^3.17.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -86,3 +87,4 @@
     "typescript": "^5"
   }
 }
+
