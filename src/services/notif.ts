@@ -8,7 +8,7 @@ const notifService = {
   getAllNotif: async () => {
     const notifications = await prisma.notifikasi.findMany({
       orderBy: {
-        created_at: 'desc',
+        dibuat_pada: 'desc',
       },
       include: {
         user: {

@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
 import { ContextParams } from '@/types/context';
-import { getRoomsById } from '@/services/rooms';
+import roomService from '@/services/rooms';
 import catchAsync from '@/utils/catchAsync';
+import ApiError from '@/utils/ApiError';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,16 +11,9 @@ export const GET = catchAsync(
   async (req: NextRequest, ctx: ContextParams): Promise<NextResponse> => {
     const id = ctx.params.id;
 
-    const kamar = await getRoomsById(id, 'denpasar');
+    const kamar = await roomService.getRoomById(Number(id), 'denpasar');
     if (!kamar) {
-      return NextResponse.json(
-        {
-          code: httpStatus.NOT_FOUND,
-          status: 'error',
-          message: 'Kamar not found',
-        },
-        { status: httpStatus.NOT_FOUND }
-      );
+      throw new ApiError(httpStatus.NOT_FOUND, 'Kamar not found');
     }
 
     return NextResponse.json({

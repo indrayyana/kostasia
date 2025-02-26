@@ -8,7 +8,7 @@ const notifValidation = {
 
   createNotif: z.object({
     judul: z.string().max(50),
-    text: z.string().max(250),
+    deskripsi: z.string().max(250),
     user_id: z.string().uuid(),
   }),
 

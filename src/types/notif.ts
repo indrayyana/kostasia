@@ -1,7 +1,7 @@
 export interface NotifInterface {
   notifikasi_id: number;
   judul: string;
-  text: string;
+  deskripsi: string;
   status: boolean;
   user_id: string;
   user: {

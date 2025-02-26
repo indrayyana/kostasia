@@ -45,7 +45,13 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
     accessorKey: 'telepon',
     header: 'Telepon',
     cell: ({ row }) => {
-      return <p>+{row.getValue('telepon')}</p>;
+      if (row.getValue('telepon')) {
+      }
+      return (
+        <p>
+          {row.getValue('telepon') ? `+${row.getValue('telepon')}` : 'kosong'}
+        </p>
+      );
     },
   },
   {
@@ -158,4 +164,3 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
     cell: ({ row }) => <CellAction data={row.original} refecth={refetch} />,
   },
 ];
-

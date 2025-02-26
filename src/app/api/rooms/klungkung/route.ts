@@ -1,17 +1,12 @@
 import { NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-import prisma from '@/lib/prisma';
 import catchAsync from '@/utils/catchAsync';
+import roomService from '@/services/rooms';
 
 export const dynamic = 'force-dynamic';
 
 export const GET = catchAsync(async (): Promise<NextResponse> => {
-  const kamar = await prisma.kamar.findMany({
-    where: { cabang: 'klungkung' },
-    orderBy: {
-      kamar_id: 'asc',
-    },
-  });
+  const kamar = await roomService.getRoomsByCabang('klungkung');
 
   return NextResponse.json({
     code: httpStatus.OK,

@@ -83,11 +83,11 @@ interface DataTableProps<
 }
 
 export const formSchema = z.object({
-  judul: z.string().min(5, {
-    message: '"Judul" minimal dalam 5 huruf.',
+  judul: z.string().min(3, {
+    message: '"Judul" tidak boleh kosong.',
   }),
-  text: z.string().min(5, { message: '"Text" minimal dalam 5 huruf.' }),
-  kepada: z.string().min(3, { message: '"Kepada" minimal dalam 5 huruf.' }),
+  deskripsi: z.string().min(3, { message: '"Text" tidak boleh kosong.' }),
+  kepada: z.string().min(3, { message: '"Kepada" tidak boleh kosong.' }),
 });
 
 export function DataTable<
@@ -133,7 +133,7 @@ export function DataTable<
     defaultValues: {
       judul: '',
       kepada: '',
-      text: '',
+      deskripsi: '',
     },
   });
 
@@ -156,7 +156,7 @@ export function DataTable<
     // @ts-expect-error off
     createNotification({
       judul: values.judul,
-      text: values.text,
+      deskripsi: values.deskripsi,
       user_id: values.kepada,
     });
     await sendPushNotification(token, values);
@@ -214,16 +214,16 @@ export function DataTable<
                   />
                   <FormField
                     control={form.control}
-                    name="text"
+                    name="deskripsi"
                     render={({ field }) => (
                       <FormItem>
                         <div className="grid grid-cols-4 items-center gap-4">
                           <FormLabel htmlFor="text" className="text-right">
-                            Text
+                            Deskripsi
                           </FormLabel>
                           <FormControl>
                             <Textarea
-                              placeholder="Text/body notifikasi"
+                              placeholder="Deskripsi notifikasi"
                               id="text"
                               className="col-span-3"
                               autoComplete="off"

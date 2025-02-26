@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 export const GET = catchAsync(async (): Promise<NextResponse> => {
   const user = await prisma.user.findMany({
     orderBy: {
-      created_at: 'desc',
+      dibuat_pada: 'desc',
     },
   });
 

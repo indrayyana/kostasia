@@ -1,14 +1,39 @@
 import prisma from '@/lib/prisma';
 import { CabangType } from '@/types/room';
 
-export async function getRoomsById(id: string, cabang: CabangType) {
-  const kamar = await prisma.kamar.findFirst({
-    where: {
-      kamar_id: Number(id),
-      cabang: cabang,
-    },
-  });
+const roomService = {
+  getRoomById: async (id: number, cabang: CabangType) => {
+    const kamar = await prisma.kamar.findFirst({
+      where: {
+        kamar_id: id,
+        cabang: cabang,
+      },
+    });
 
-  return kamar;
-}
+    return kamar;
+  },
+
+  getAllRooms: async () => {
+    const kamar = await prisma.kamar.findMany({
+      orderBy: {
+        kamar_id: 'asc',
+      },
+    });
+
+    return kamar;
+  },
+
+  getRoomsByCabang: async (cabang: CabangType) => {
+    const kamar = await prisma.kamar.findMany({
+      where: { cabang },
+      orderBy: {
+        kamar_id: 'asc',
+      },
+    });
+
+    return kamar;
+  },
+};
+
+export default roomService;
 

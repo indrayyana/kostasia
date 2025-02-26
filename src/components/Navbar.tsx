@@ -13,7 +13,6 @@ import { useFetchUserProfile } from '@/hooks/useUser';
 
 export default function Navbar() {
   const { data, isPending } = useFetchUserProfile();
-  const user = data?.user || {};
 
   return (
     <nav className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
@@ -43,7 +42,7 @@ export default function Navbar() {
         <Theme />
         {isPending ? (
           <a
-            href={'/api/auth/login'}
+            href={'#'}
             title="Google Login"
             className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
           >
@@ -52,7 +51,7 @@ export default function Navbar() {
               Login
             </span>
           </a>
-        ) : user.nama ? (
+        ) : data?.user?.nama ? (
           <a
             href={'/dashboard/profil'}
             title="Profil"

@@ -28,7 +28,7 @@ export const POST = catchAsync(
 
     const validation = notifValidation.createNotif.safeParse({
       judul: body.judul,
-      text: body.text,
+      deskripsi: body.deskripsi,
       user_id: body.user_id,
     });
     if (!validation.success) {

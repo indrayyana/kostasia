@@ -22,7 +22,7 @@ export const POST = catchAsync(
     const tokenDoc = await prisma.token.findFirst({
       where: {
         token: refreshToken,
-        type: 'refresh',
+        tipe: 'refresh',
       },
     });
 

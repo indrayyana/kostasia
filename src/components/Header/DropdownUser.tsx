@@ -21,10 +21,10 @@ const DropdownUser: React.FC<DropdownUserProps> = memo(({ user }) => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {user.nama}
+            {user?.nama}
           </span>
           <span className="block text-xs capitalize text-[#64748B]">
-            {user.role}
+            {user?.role}
           </span>
         </span>
 
@@ -33,7 +33,7 @@ const DropdownUser: React.FC<DropdownUserProps> = memo(({ user }) => {
             className="rounded-full"
             width={112}
             height={112}
-            src={user.foto}
+            src={user?.foto}
             style={{
               width: 'auto',
               height: 'auto',

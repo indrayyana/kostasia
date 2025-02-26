@@ -14,7 +14,7 @@ const userService = {
   getUserWithPermission: async () => {
     const users = await prisma.token.findMany({
       where: {
-        type: 'notification',
+        tipe: 'notification',
       },
       select: {
         user_id: true,

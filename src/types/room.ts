@@ -4,6 +4,7 @@ export type CabangType = 'denpasar' | 'klungkung';
 export interface RoomInterface {
   kamar_id: number;
   nama: string;
+  harga: number;
   status: StatusType;
   gambar: string;
   cabang: CabangType;

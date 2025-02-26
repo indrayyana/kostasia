@@ -34,15 +34,15 @@ const tokenService = {
   ) => {
     return await prisma.$transaction(async (tx) => {
       await tx.token.deleteMany({
-        where: { user_id: userId, type },
+        where: { user_id: userId, tipe: type },
       });
 
       return await tx.token.create({
         data: {
           token,
           user_id: userId,
-          expires: expires ? expires.toDate() : null,
-          type,
+          kedaluwarsa: expires ? expires.toDate() : null,
+          tipe: type,
         },
       });
     });
@@ -50,7 +50,7 @@ const tokenService = {
 
   deleteToken: async (userId: string, type: TokenType) => {
     return await prisma.token.deleteMany({
-      where: { user_id: userId, type },
+      where: { user_id: userId, tipe: type },
     });
   },
 
@@ -63,7 +63,7 @@ const tokenService = {
     const tokenDoc = await prisma.token.findFirst({
       where: {
         token,
-        type,
+        tipe: type,
         user_id: payload.sub,
       },
     });
@@ -120,7 +120,7 @@ const tokenService = {
     const token = await prisma.token.findFirst({
       where: {
         user_id: userId,
-        type: 'notification',
+        tipe: 'notification',
       },
       select: {
         token: true,
@@ -137,7 +137,7 @@ const tokenService = {
   getAllNotificationToken: async () => {
     const token = await prisma.token.findMany({
       where: {
-        type: 'notification',
+        tipe: 'notification',
       },
       select: {
         token: true,

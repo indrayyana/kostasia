@@ -39,30 +39,22 @@ export const columns = (refetch: () => void): ColumnDef<NotifInterface>[] => [
     header: 'Judul',
   },
   {
-    accessorKey: 'text',
-    header: 'Text',
+    accessorKey: 'deskripsi',
+    header: 'Deskripsi',
   },
   {
-    accessorKey: 'is_read',
+    accessorKey: 'status',
     header: 'Status',
-    cell: ({ row }) => {
-      const rowStatus = row.getValue('is_read');
-      if (rowStatus) {
-        return <p>Dibaca</p>;
-      } else {
-        return <p>Terkirim</p>;
-      }
-    },
   },
   {
     accessorKey: 'user.nama',
     header: 'Kepada',
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'dibuat_pada',
     header: 'Tanggal Dikirim',
     cell: ({ row }) => {
-      const rowDate = row.getValue<string>('created_at');
+      const rowDate = row.getValue<string>('dibuat_pada');
       const date = new Date(rowDate);
       const formattedDate = date.toLocaleString('id-ID', {
         day: '2-digit',

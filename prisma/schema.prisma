@@ -15,29 +15,30 @@ datasource db {
 }
 
 model User {
-  user_id    String       @id @default(uuid()) @db.Uuid
-  nama       String       @db.VarChar(20)
-  email      String       @unique @db.VarChar(64)
-  telepon    String?      @db.VarChar(20)
-  role       Role         @default(pengunjung)
-  foto       String?      @db.Text
-  ktp        String?      @db.Text
-  created_at DateTime     @default(now())
-  updated_at DateTime     @default(now()) @updatedAt
-  token      Token[]
-  kamar      Kamar?
-  notif      Notifikasi[]
+  user_id     String   @id @default(uuid()) @db.Uuid
+  nama        String   @db.VarChar(20)
+  email       String   @unique @db.VarChar(64)
+  telepon     String?  @db.VarChar(20)
+  role        Role     @default(pengunjung)
+  foto        String?  @db.Text
+  ktp         String?  @db.Text
+  dibuat_pada DateTime @default(now())
+  // updated_at DateTime @default(now()) @updatedAt
+
+  token Token[]
+  kamar Kamar?
+  notif Notifikasi[]
 
   @@map("user")
 }
 
 model Token {
-  token_id String    @id @default(uuid()) @db.Uuid
-  user_id  String    @db.Uuid
-  user     User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  token    String    @db.VarChar(400)
-  type     TokenType
-  expires  DateTime?
+  token_id    String    @id @default(uuid()) @db.Uuid
+  user_id     String    @db.Uuid
+  user        User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  token       String    @db.VarChar(400)
+  tipe        TokenType
+  kedaluwarsa DateTime?
 
   @@map("token")
 }
@@ -60,9 +61,9 @@ model Notifikasi {
   user_id       String   @db.Uuid
   user          User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   judul         String   @db.VarChar(20)
-  text          String   @db.VarChar(250)
-  is_read       Boolean  @default(false) @db.Boolean
-  created_at    DateTime @default(now())
+  deskripsi     String   @db.VarChar(250)
+  status        Status   @default(terkirim)
+  dibuat_pada   DateTime @default(now())
 
   @@map("notifikasi")
 }
@@ -82,4 +83,9 @@ enum TokenType {
 enum Cabang {
   denpasar
   klungkung
+}
+
+enum Status {
+  terkirim
+  dibaca
 }
