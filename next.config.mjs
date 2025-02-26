@@ -38,6 +38,7 @@ const nextConfig = {
 
 const buildConfig = withPWA({
   dest: 'public',
+  disable: process.env.NODE_ENV !== 'production',
 })(nextConfig);
 
 export default buildConfig;
