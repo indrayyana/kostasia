@@ -48,9 +48,9 @@ const tokenService = {
     });
   },
 
-  deleteToken: async (userId: string, type: TokenType) => {
+  deleteToken: async (token: string) => {
     return await prisma.token.deleteMany({
-      where: { user_id: userId, tipe: type },
+      where: { token },
     });
   },
 
@@ -116,6 +116,15 @@ const tokenService = {
     };
   },
 
+  getTokenByType: async (token: string, tokenType: TokenType) => {
+    return await prisma.token.findFirst({
+      where: {
+        token,
+        tipe: tokenType,
+      },
+    });
+  },
+
   getNotificationToken: async (userId: string) => {
     const token = await prisma.token.findFirst({
       where: {
@@ -135,7 +144,7 @@ const tokenService = {
   },
 
   getAllNotificationToken: async () => {
-    const token = await prisma.token.findMany({
+    return await prisma.token.findMany({
       where: {
         tipe: 'notification',
       },
@@ -148,8 +157,6 @@ const tokenService = {
         },
       },
     });
-
-    return token;
   },
 };
 

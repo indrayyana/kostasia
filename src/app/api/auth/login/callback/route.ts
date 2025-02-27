@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-
 import { google, oauth2Client } from '@/lib/oauth';
-import prisma from '@/lib/prisma';
 import { config } from '@/utils/config';
 import { setToken } from '@/utils/cookies';
 import { RoleType } from '@/types/user';
 import tokenService from '@/services/token';
 import catchAsync from '@/utils/catchAsync';
+import userService from '@/services/user';
+import ApiError from '@/utils/ApiError';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,13 +16,9 @@ export const GET = catchAsync(
     const code = req.nextUrl.searchParams.get('code');
 
     if (!code) {
-      return NextResponse.json(
-        {
-          code: httpStatus.BAD_REQUEST,
-          status: 'error',
-          message: 'Authorization code is missing',
-        },
-        { status: httpStatus.BAD_REQUEST }
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Authorization code is missing'
       );
     }
 
@@ -35,46 +31,19 @@ export const GET = catchAsync(
       .userinfo.get();
 
     if (!data.email || !data.name) {
-      return NextResponse.json(
-        {
-          code: httpStatus.BAD_REQUEST,
-          status: 'error',
-          message: 'Login failed',
-        },
-        { status: httpStatus.BAD_REQUEST }
-      );
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Login failed');
     }
 
     // save user when first login
-    let user = await prisma.user.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
-
+    let user = await userService.getUserByEmail(data.email);
     let userId;
 
     if (user) {
       userId = user.user_id;
 
-      user = await prisma.user.update({
-        where: {
-          user_id: userId,
-        },
-        data: {
-          nama: data.name,
-          email: data.email,
-          foto: data.picture || null,
-        },
-      });
+      user = await userService.updateGoogleUserById(userId, data);
     } else {
-      user = await prisma.user.create({
-        data: {
-          nama: data.name,
-          email: data.email,
-          foto: data.picture || null,
-        },
-      });
+      user = await userService.createGoogleUser(data);
 
       userId = user.user_id;
     }

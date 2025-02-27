@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
 import { setToken } from '@/utils/cookies';
-import { getUserById } from '@/services/user';
+import userService from '@/services/user';
 import { RoleType } from '@/types/user';
 import tokenService from '@/services/token';
 import catchAsync from '@/utils/catchAsync';
+import ApiError from '@/utils/ApiError';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,14 +13,7 @@ export const POST = catchAsync(
   async (req: NextRequest): Promise<NextResponse> => {
     const refreshToken = req.cookies.get('refresh-token')?.value;
     if (!refreshToken) {
-      return NextResponse.json(
-        {
-          code: httpStatus.UNAUTHORIZED,
-          status: 'error',
-          message: 'Please authenticate',
-        },
-        { status: httpStatus.UNAUTHORIZED }
-      );
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
     }
 
     const refreshTokenDoc = await tokenService.verifyToken(
@@ -27,26 +21,12 @@ export const POST = catchAsync(
       'refresh'
     );
     if (!refreshTokenDoc) {
-      return NextResponse.json(
-        {
-          code: httpStatus.BAD_REQUEST,
-          status: 'error',
-          message: 'Invalid Token',
-        },
-        { status: httpStatus.BAD_REQUEST }
-      );
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid Token');
     }
 
-    const user = await getUserById(refreshTokenDoc.user_id);
+    const user = await userService.getUserById(refreshTokenDoc.user_id);
     if (!user) {
-      return NextResponse.json(
-        {
-          code: httpStatus.UNAUTHORIZED,
-          status: 'error',
-          message: 'Invalid Token',
-        },
-        { status: httpStatus.UNAUTHORIZED }
-      );
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid Token');
     }
 
     const authTokens = await tokenService.generateAuthTokens({

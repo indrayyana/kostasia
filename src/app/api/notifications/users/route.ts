@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-
 import catchAsync from '@/utils/catchAsync';
 import userService from '@/services/user';
 

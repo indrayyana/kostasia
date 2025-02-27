@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-
 import notifValidation from '@/validations/notif';
 import tokenService from '@/services/token';
 import ApiError from '@/utils/ApiError';

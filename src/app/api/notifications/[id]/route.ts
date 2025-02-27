@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-
 import { ContextParams } from '@/types/context';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';

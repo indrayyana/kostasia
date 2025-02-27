@@ -16,12 +16,15 @@ export const GET = catchAsync(
       throw new ApiError(httpStatus.NOT_FOUND, 'Kamar not found');
     }
 
-    return NextResponse.json({
-      code: httpStatus.OK,
-      status: 'success',
-      message: `Get Denpasar room successfully`,
-      kamar,
-    });
+    return NextResponse.json(
+      {
+        code: httpStatus.OK,
+        status: 'success',
+        message: `Get Denpasar room successfully`,
+        kamar,
+      },
+      { status: httpStatus.OK }
+    );
   }
 );
 

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-
 import { ContextParams } from '@/types/context';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';
@@ -24,12 +23,15 @@ export const GET = catchAsync(
 
     const token = await tokenService.getNotificationToken(userId);
 
-    return NextResponse.json({
-      code: 200,
-      status: 'success',
-      message: 'Get FCM token successfully',
-      token: token.token,
-    });
+    return NextResponse.json(
+      {
+        code: httpStatus.OK,
+        status: 'success',
+        message: 'Get FCM token successfully',
+        token: token.token,
+      },
+      { status: httpStatus.OK }
+    );
   }
 );
 

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-import prisma from '@/lib/prisma';
 import catchAsync from '@/utils/catchAsync';
+import ApiError from '@/utils/ApiError';
+import tokenService from '@/services/token';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,39 +10,15 @@ export const POST = catchAsync(
   async (req: NextRequest): Promise<NextResponse> => {
     const refreshToken = req.cookies.get('refresh-token')?.value;
     if (!refreshToken) {
-      return NextResponse.json(
-        {
-          code: httpStatus.UNAUTHORIZED,
-          status: 'error',
-          message: 'Please authenticate',
-        },
-        { status: httpStatus.UNAUTHORIZED }
-      );
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
     }
 
-    const tokenDoc = await prisma.token.findFirst({
-      where: {
-        token: refreshToken,
-        tipe: 'refresh',
-      },
-    });
-
+    const tokenDoc = await tokenService.getTokenByType(refreshToken, 'refresh');
     if (!tokenDoc) {
-      return NextResponse.json(
-        {
-          code: httpStatus.NOT_FOUND,
-          status: 'error',
-          message: 'Token not found',
-        },
-        { status: httpStatus.NOT_FOUND }
-      );
+      throw new ApiError(httpStatus.NOT_FOUND, 'Token not found');
     }
 
-    await prisma.token.deleteMany({
-      where: {
-        token: refreshToken,
-      },
-    });
+    await tokenService.deleteToken(refreshToken);
 
     return NextResponse.json(
       {

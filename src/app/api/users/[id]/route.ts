@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
 import httpStatus from 'http-status';
-import { getUserById } from '@/services/user';
+import userService from '@/services/user';
 import { ContextParams } from '@/types/context';
 import userValidation from '@/validations/user';
 import catchAsync from '@/utils/catchAsync';
@@ -15,27 +14,16 @@ export const GET = catchAsync(
 
     const validation = userValidation.getUser.safeParse({ user_id: id });
     if (!validation.success) {
-      return NextResponse.json(
-        {
-          code: httpStatus.BAD_REQUEST,
-          status: 'error',
-          message: 'Invalid user ID',
-          errors: validation.error.flatten().fieldErrors,
-        },
-        { status: httpStatus.BAD_REQUEST }
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        'Invalid user ID',
+        validation.error.flatten().fieldErrors
       );
     }
 
-    const user = await getUserById(id);
+    const user = await userService.getUserById(id);
     if (!user) {
-      return NextResponse.json(
-        {
-          code: httpStatus.NOT_FOUND,
-          status: 'error',
-          message: 'User not found',
-        },
-        { status: httpStatus.NOT_FOUND }
-      );
+      throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
     }
 
     return NextResponse.json({
@@ -66,26 +54,7 @@ export const PATCH = catchAsync(
       );
     }
 
-    let user = await getUserById(id);
-    if (!user) {
-      return NextResponse.json(
-        {
-          code: httpStatus.NOT_FOUND,
-          status: 'error',
-          message: 'User not found',
-        },
-        {
-          status: httpStatus.NOT_FOUND,
-        }
-      );
-    }
-
-    user = await prisma.user.update({
-      where: {
-        user_id: id,
-      },
-      data: body,
-    });
+    const user = await userService.updateUserById(id, body);
 
     return NextResponse.json({
       code: httpStatus.OK,
@@ -109,29 +78,16 @@ export const DELETE = catchAsync(
       );
     }
 
-    const user = await getUserById(id);
-    if (!user) {
-      return NextResponse.json(
-        {
-          code: httpStatus.NOT_FOUND,
-          status: 'error',
-          message: 'User not found',
-        },
-        { status: httpStatus.NOT_FOUND }
-      );
-    }
+    await userService.deleteUserById(id);
 
-    await prisma.user.delete({
-      where: {
-        user_id: id,
+    return NextResponse.json(
+      {
+        code: httpStatus.OK,
+        status: 'success',
+        message: 'Delete user successfully',
       },
-    });
-
-    return NextResponse.json({
-      code: httpStatus.OK,
-      status: 'success',
-      message: 'Delete user successfully',
-    });
+      { status: httpStatus.OK }
+    );
   }
 );
 

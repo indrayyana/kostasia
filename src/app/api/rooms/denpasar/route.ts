@@ -8,11 +8,14 @@ export const dynamic = 'force-dynamic';
 export const GET = catchAsync(async (): Promise<NextResponse> => {
   const kamar = await roomService.getRoomsByCabang('denpasar');
 
-  return NextResponse.json({
-    code: httpStatus.OK,
-    status: 'success',
-    message: 'Get Denpasar rooms successfully',
-    kamar,
-  });
+  return NextResponse.json(
+    {
+      code: httpStatus.OK,
+      status: 'success',
+      message: 'Get Denpasar rooms successfully',
+      kamar,
+    },
+    { status: httpStatus.OK }
+  );
 });
 
