@@ -49,6 +49,7 @@ export function DataTable<TData extends { kamar_id: string | number }, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [globalFilter, setGlobalFilter] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -59,9 +60,11 @@ export function DataTable<TData extends { kamar_id: string | number }, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     onRowSelectionChange: setRowSelection,
     state: {
       columnFilters,
+      globalFilter,
       rowSelection,
     },
   });
@@ -83,7 +86,7 @@ export function DataTable<TData extends { kamar_id: string | number }, TValue>({
   return (
     <>
       <div className="flex gap-2 justify-between">
-        <TableSearch table={table} columnName="status" />
+        <TableSearch table={table} />
 
         <Button size={'sm'} className="dark:text-white font-bold">
           <Plus />

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React from 'react';
@@ -21,6 +22,8 @@ const ButtonLogout = () => {
           showCancelButton: true,
           cancelButtonText: 'Batal',
           confirmButtonText: 'Logout',
+          showLoaderOnConfirm: true,
+          allowOutsideClick: () => !Swal.isLoading(),
           customClass: {
             popup: 'w-96 max-w-lg',
             title: 'text-lg font-semibold',
@@ -28,14 +31,18 @@ const ButtonLogout = () => {
             confirmButton: 'text-sm px-4 py-2 bg-primary',
             cancelButton: 'text-sm px-4 py-2 bg-danger',
           },
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            const res = await api.post(`${config.app.apiURL}/auth/logout`);
-            if (res.status === 200) {
+          preConfirm: async () => {
+            try {
+              const res = await api.post(`${config.app.apiURL}/auth/logout`);
+              if (res.status !== 200) {
+                throw new Error('Gagal logout, coba lagi.');
+              }
               deleteToken();
               router.push('/');
+            } catch (error: any) {
+              Swal.showValidationMessage(`Error: ${error.message}`);
             }
-          }
+          },
         });
       }}
     >

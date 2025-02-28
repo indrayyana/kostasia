@@ -42,6 +42,7 @@ export function DataTable<TData extends { user_id: string | number }, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [globalFilter, setGlobalFilter] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
@@ -51,9 +52,11 @@ export function DataTable<TData extends { user_id: string | number }, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     onRowSelectionChange: setRowSelection,
     state: {
       columnFilters,
+      globalFilter,
       rowSelection,
     },
   });
@@ -65,7 +68,7 @@ export function DataTable<TData extends { user_id: string | number }, TValue>({
   return (
     <>
       <div className="flex gap-2 justify-between">
-        <TableSearch table={table} columnName="nama" />
+        <TableSearch table={table} />
 
         <div className="flex items-center dark:text-white">
           <DropdownMenu>

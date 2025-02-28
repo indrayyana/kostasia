@@ -61,33 +61,27 @@ const notifService = {
   },
 
   deleteAllNotifById: async (ids: number[]) => {
-    const notifications = await prisma.notifikasi.findMany({
-      where: {
-        notifikasi_id: {
-          in: ids,
-        },
-      },
+    return await prisma.$transaction(async (tx) => {
+      const notifications = await tx.notifikasi.findMany({
+        where: { notifikasi_id: { in: ids } },
+      });
+
+      const foundIds = notifications.map((notif) => notif.notifikasi_id);
+      const missingIds = ids.filter((id) => !foundIds.includes(id));
+
+      if (missingIds.length > 0) {
+        throw new ApiError(
+          httpStatus.NOT_FOUND,
+          `Notif(s) not found for ID(s): ${missingIds.join(', ')}`
+        );
+      }
+
+      const deletedNotifications = await tx.notifikasi.deleteMany({
+        where: { notifikasi_id: { in: ids } },
+      });
+
+      return deletedNotifications;
     });
-
-    const foundIds = notifications.map((notif) => notif.notifikasi_id);
-    const missingIds = ids.filter((id) => !foundIds.includes(id));
-
-    if (missingIds.length > 0) {
-      throw new ApiError(
-        httpStatus.NOT_FOUND,
-        `Notif(s) not found for ID(s): ${missingIds.join(', ')}`
-      );
-    }
-
-    await prisma.notifikasi.deleteMany({
-      where: {
-        notifikasi_id: {
-          in: ids,
-        },
-      },
-    });
-
-    return notifications;
   },
 };
 

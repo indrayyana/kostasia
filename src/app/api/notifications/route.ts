@@ -52,3 +52,28 @@ export const POST = catchAsync(
   }
 );
 
+export const DELETE = catchAsync(
+  async (req: NextRequest): Promise<NextResponse> => {
+    const idParam = req.nextUrl.searchParams.get('id');
+    if (!idParam) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'ID parameter is required');
+    }
+
+    const ids = idParam.split(',').map(Number).filter(Boolean);
+    if (ids.length === 0) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid ID format');
+    }
+
+    await notifService.deleteAllNotifById(ids);
+
+    return NextResponse.json(
+      {
+        code: httpStatus.OK,
+        status: 'success',
+        message: 'Delete notifications successfully',
+      },
+      { status: httpStatus.OK }
+    );
+  }
+);
+

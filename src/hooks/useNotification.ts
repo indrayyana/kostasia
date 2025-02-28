@@ -37,6 +37,18 @@ export const useDeleteNotification = ({ onSuccess, onError }) => {
   });
 };
 
+export const useBulkDeleteNotification = ({ onSuccess, onError }) => {
+  return useMutation({
+    mutationFn: async (ids) => {
+      const response = await api.delete(`/notifications?id=${ids}`);
+
+      return response;
+    },
+    onSuccess,
+    onError,
+  });
+};
+
 export const useFetchUsersWithNotification = () => {
   return useQuery({
     queryKey: ['notifications.users'],

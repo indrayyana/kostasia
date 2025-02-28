@@ -68,6 +68,7 @@ import {
 import { sendPushNotification } from '@/utils/firebase-admin';
 import { UserNotificationInterface } from '@/types/notif';
 import {
+  useBulkDeleteNotification,
   useCreateNotification,
   useFetchUsersWithNotification,
 } from '@/hooks/useNotification';
@@ -97,6 +98,7 @@ export function DataTable<
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [globalFilter, setGlobalFilter] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [open, setOpen] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
@@ -112,20 +114,34 @@ export function DataTable<
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     onRowSelectionChange: setRowSelection,
     state: {
       columnFilters,
+      globalFilter,
       rowSelection,
     },
   });
 
   const selectedRows = table.getSelectedRowModel().rows;
 
+  const { mutate: bulkDeleteNotif, isPending: bulkDeleteNotifIsLoading } =
+    useBulkDeleteNotification({
+      onSuccess: () => {
+        refetch();
+        setRowSelection({});
+        setIsOpen(false);
+        toast.success('Notifikasi berhasil dihapus');
+      },
+      onError: () => {
+        toast.error('Terjadi kesalahan saat menghapus notifikasi');
+      },
+    });
+
   const handleDelete = () => {
     const ids = selectedRows.map((row) => row.original.notifikasi_id);
-    alert(`Hapus ID: ${ids}`);
-    setIsOpen(false);
-    // TODO: Tambahkan logika untuk menghapus data di sini
+    // @ts-expect-error off
+    bulkDeleteNotif(ids);
   };
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -169,7 +185,7 @@ export function DataTable<
   return (
     <>
       <div className="flex gap-2 justify-between">
-        <TableSearch table={table} columnName="judul" />
+        <TableSearch table={table} />
 
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -394,9 +410,22 @@ export function DataTable<
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Batal</AlertDialogCancel>
-            <Button variant={'destructive'} onClick={handleDelete}>
-              Hapus
+            <AlertDialogCancel disabled={bulkDeleteNotifIsLoading}>
+              Batal
+            </AlertDialogCancel>
+            <Button
+              variant={'destructive'}
+              onClick={handleDelete}
+              disabled={bulkDeleteNotifIsLoading}
+            >
+              {bulkDeleteNotifIsLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="animate-spin" />
+                  <span>Loading</span>
+                </div>
+              ) : (
+                'Hapus'
+              )}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

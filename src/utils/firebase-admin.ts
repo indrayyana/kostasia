@@ -25,7 +25,7 @@ if (!admin.apps.length) {
 
 interface notifPayload {
   judul?: string;
-  text?: string;
+  deskripsi?: string;
 }
 
 export const sendPushNotification = async (
@@ -35,7 +35,7 @@ export const sendPushNotification = async (
   const message: admin.messaging.Message = {
     notification: {
       title: payload.judul,
-      body: payload.text,
+      body: payload.deskripsi,
       imageUrl: 'https://www.kostasia.com/assets/logo.png',
     },
     android: {
