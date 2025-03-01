@@ -16,7 +16,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table';
-
 import {
   Table,
   TableBody,
@@ -25,9 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
 import { Button } from '@/components/ui/button';
-import TableLoader from '@/components/common/TableLoader';
 import TableSearch from '@/components/ui/table-search';
 import TablePagination from '@/components/ui/table-pagination';
 import {
@@ -72,6 +69,7 @@ import {
   useCreateNotification,
   useFetchUsersWithNotification,
 } from '@/hooks/useNotification';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DataTableProps<
   TData extends { notifikasi_id: string | number },
@@ -363,7 +361,13 @@ export function DataTable<
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableLoader colSpan={columns.length} />
+              Array.from({ length: 3 }).map((_, index) => (
+                <TableRow key={index} className="dark:border-gray-500">
+                  <TableCell colSpan={columns.length}>
+                    <Skeleton className="h-[40px] w-full" />
+                  </TableCell>
+                </TableRow>
+              ))
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

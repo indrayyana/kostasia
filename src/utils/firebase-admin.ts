@@ -2,6 +2,7 @@
 
 import admin from 'firebase-admin';
 import { config } from './config';
+import logger from './logger';
 
 const serviceAccount = {
   type: config.firebase.type,
@@ -50,11 +51,11 @@ export const sendPushNotification = async (
     .messaging()
     .send(message)
     .then((response) => {
-      console.log('Notification Sent: ', message, response);
+      logger.info('Notification Sent', { message: response });
     })
 
     .catch((error) => {
-      console.error('Error sending message: ', error);
+      logger.error('Error sending notification', { message: error });
     });
 };
 

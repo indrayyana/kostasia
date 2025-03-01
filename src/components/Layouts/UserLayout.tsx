@@ -4,12 +4,12 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '@/components/Sidebar';
 import UserSidebar from '@/components/Sidebar/User';
 import Header from '@/components/Header';
-import Loader from '../common/Loader';
 import useFCM from '@/hooks/useFCM';
 import api from '@/lib/axios';
 import { ErrorInterface } from '@/types/error';
 import { useFetchUserProfile } from '@/hooks/useUser';
 import DropdownUser from '../Header/DropdownUser';
+import SidebarLoading from '../Sidebar/loading';
 
 export default function UserLayout({
   children,
@@ -55,44 +55,42 @@ export default function UserLayout({
   return (
     <>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
-      {isPending ? (
-        <Loader />
-      ) : (
-        <div className="flex min-h-screen">
-          {/* <!-- ===== Sidebar Start ===== --> */}
-          {user?.role === 'admin' ? (
-            <Sidebar
-              sidebarOpen={sidebarOpen}
-              setSidebarOpen={setSidebarOpen}
-            />
-          ) : (
-            <UserSidebar
-              sidebarOpen={sidebarOpen}
-              setSidebarOpen={setSidebarOpen}
-            />
-          )}
+      <div className="flex min-h-screen">
+        {/* <!-- ===== Sidebar Start ===== --> */}
+        {isPending ? (
+          <SidebarLoading
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+          />
+        ) : user?.role === 'admin' ? (
+          <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+        ) : (
+          <UserSidebar
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+          />
+        )}
 
-          {/* <!-- ===== Sidebar End ===== --> */}
+        {/* <!-- ===== Sidebar End ===== --> */}
 
-          {/* <!-- ===== Content Area Start ===== --> */}
-          <div className="relative flex flex-1 flex-col lg:ml-72.5">
-            {/* <!-- ===== Header Start ===== --> */}
-            <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
-              <DropdownUser user={user} />
-            </Header>
-            {/* <!-- ===== Header End ===== --> */}
+        {/* <!-- ===== Content Area Start ===== --> */}
+        <div className="relative flex flex-1 flex-col lg:ml-72.5">
+          {/* <!-- ===== Header Start ===== --> */}
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
+            <DropdownUser user={user} />
+          </Header>
+          {/* <!-- ===== Header End ===== --> */}
 
-            {/* <!-- ===== Main Content Start ===== --> */}
-            <main>
-              <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 dark:bg-boxdark-2">
-                {children}
-              </div>
-            </main>
-            {/* <!-- ===== Main Content End ===== --> */}
-          </div>
-          {/* <!-- ===== Content Area End ===== --> */}
+          {/* <!-- ===== Main Content Start ===== --> */}
+          <main>
+            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 dark:bg-boxdark-2">
+              {children}
+            </div>
+          </main>
+          {/* <!-- ===== Main Content End ===== --> */}
         </div>
-      )}
+        {/* <!-- ===== Content Area End ===== --> */}
+      </div>
 
       {/* <!-- ===== Page Wrapper End ===== --> */}
     </>

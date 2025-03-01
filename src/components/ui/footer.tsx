@@ -58,12 +58,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  href="mailto:no.reply.kost.asia@gmail.com"
+                  href="mailto:info@kostasia.com"
                   className="hover:underline"
                 >
                   <div className="flex gap-2">
                     <IconMail />
-                    info@gmail.com
+                    info@kostasia.com
                   </div>
                 </Link>
               </li>

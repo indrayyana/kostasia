@@ -5,6 +5,7 @@ import Image from 'next/image';
 import ClickOutside from '@/components/ClickOutside';
 import ButtonLogout from './ButtonLogout';
 import { UserInterface } from '@/types/user';
+import { Skeleton } from '../ui/skeleton';
 
 interface DropdownUserProps {
   user: UserInterface;
@@ -21,27 +22,39 @@ const DropdownUser: React.FC<DropdownUserProps> = memo(({ user }) => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {user?.nama}
+            {user?.nama ? (
+              user.nama
+            ) : (
+              <Skeleton className="h-[20px] w-[100px]" />
+            )}
           </span>
           <span className="block text-xs capitalize text-[#64748B]">
-            {user?.role}
+            {user?.role ? (
+              user.role
+            ) : (
+              <Skeleton className="mt-[2px] h-[15px] w-[50px] ml-auto" />
+            )}
           </span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
-          <Image
-            className="rounded-full"
-            width={112}
-            height={112}
-            src={user?.foto}
-            style={{
-              width: 'auto',
-              height: 'auto',
-            }}
-            alt="User"
-            title="Foto Profil"
-            priority
-          />
+          {user?.foto ? (
+            <Image
+              className="rounded-full"
+              width={112}
+              height={112}
+              src={user?.foto}
+              style={{
+                width: 'auto',
+                height: 'auto',
+              }}
+              alt="User"
+              title="Foto Profil"
+              priority
+            />
+          ) : (
+            <Skeleton className="rounded-full h-[48px] w-[48px]" />
+          )}
         </span>
 
         <ChevronDown size={20} />

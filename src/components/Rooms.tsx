@@ -1,5 +1,6 @@
 import { RoomInterface } from '@/types/room';
 import RoomItem from './RoomItem';
+import logger from '@/utils/logger';
 
 interface RoomsProps {
   endpoint: string;
@@ -20,7 +21,7 @@ async function getRooms(endpoint: string) {
 
     return res.json();
   } catch (error) {
-    console.log(`failed to get all rooms ${error}`);
+    logger.error(`failed to get all rooms ${error}`, { message: error });
     return { kamar: [] };
   }
 }
