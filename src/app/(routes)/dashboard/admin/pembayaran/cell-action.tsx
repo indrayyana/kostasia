@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 import { Eye, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NotifInterface } from '@/types/notif';
-import { useDeleteNotification } from '@/hooks/useNotification';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 interface CellActionProps {
@@ -15,21 +14,22 @@ interface CellActionProps {
 
 export const CellAction = ({ data, refecth }: CellActionProps) => {
   const [open, setOpen] = useState(false);
-
-  const { mutate: deleteNotif, isPending } = useDeleteNotification({
-    onSuccess: () => {
-      refecth();
-      setOpen(false);
-      toast.success('Notifikasi berhasil dihapus');
-    },
-    onError: () => {
-      toast.error('Terjadi kesalahan saat menghapus notifikasi');
-    },
-  });
+  const isPending = false;
+  // const { mutate: deleteNotif, isPending } = useDeleteNotification({
+  //   onSuccess: () => {
+  //     refecth();
+  //     setOpen(false);
+  //     toast.success('Notifikasi berhasil dihapus');
+  //   },
+  //   onError: () => {
+  //     toast.error('Terjadi kesalahan saat menghapus notifikasi');
+  //   },
+  // });
 
   const onDelete = () => {
-    // @ts-expect-error off
-    deleteNotif(data.notifikasi_id);
+    // deleteNotif(data.notifikasi_id);
+    refecth();
+    toast('coming soon');
   };
 
   return (

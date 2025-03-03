@@ -10,6 +10,7 @@ import { ErrorInterface } from '@/types/error';
 import { useFetchUserProfile } from '@/hooks/useUser';
 import DropdownUser from '../Header/DropdownUser';
 import SidebarLoading from '../Sidebar/loading';
+import DropdownNotification from '../Header/DropdownNotification';
 
 export default function UserLayout({
   children,
@@ -76,9 +77,12 @@ export default function UserLayout({
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col lg:ml-72.5">
           {/* <!-- ===== Header Start ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
-            <DropdownUser user={user} />
-          </Header>
+          <Header
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            notification={<DropdownNotification user={user} />}
+            user={<DropdownUser user={user} />}
+          ></Header>
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}

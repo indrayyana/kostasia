@@ -82,16 +82,10 @@ interface DataTableProps<
 }
 
 export const formSchema = z.object({
-  judul: z
-    .string()
-    .min(3, {
-      message: '"Judul" tidak boleh kosong.',
-    })
-    .max(20, { message: '"Judul" tidak boleh lebih dari 20 karakter' }),
-  deskripsi: z
-    .string()
-    .min(3, { message: '"Deskripsi" tidak boleh kosong.' })
-    .max(200, { message: '"Deskripsi" tidak boleh lebih dari 200 karakter' }),
+  judul: z.string().min(3, {
+    message: '"Judul" tidak boleh kosong.',
+  }),
+  deskripsi: z.string().min(3, { message: '"Text" tidak boleh kosong.' }),
   kepada: z.string().min(3, { message: '"Kepada" tidak boleh kosong.' }),
 });
 

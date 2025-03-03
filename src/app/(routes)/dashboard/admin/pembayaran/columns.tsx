@@ -2,14 +2,13 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
-import { NotifInterface } from '@/types/notif';
 import { CellAction } from './cell-action';
-import dateFormat from '@/utils/dateFormat';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns = (refetch: () => void): ColumnDef<NotifInterface>[] => [
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export const columns = (refetch: () => void): ColumnDef<any>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -36,12 +35,12 @@ export const columns = (refetch: () => void): ColumnDef<NotifInterface>[] => [
     enableHiding: false,
   },
   {
-    accessorKey: 'judul',
-    header: 'Judul',
+    accessorKey: 'id',
+    header: 'ID Pembayaran',
   },
   {
-    accessorKey: 'deskripsi',
-    header: 'Deskripsi',
+    accessorKey: 'total',
+    header: 'Total',
   },
   {
     accessorKey: 'status',
@@ -49,15 +48,7 @@ export const columns = (refetch: () => void): ColumnDef<NotifInterface>[] => [
   },
   {
     accessorKey: 'user.nama',
-    header: 'Kepada',
-  },
-  {
-    accessorKey: 'dibuat_pada',
-    header: 'Tanggal Dikirim',
-    cell: ({ row }) => {
-      const rowDate = row.getValue<string>('dibuat_pada');
-      return <p>{dateFormat(rowDate)}</p>;
-    },
+    header: 'Oleh',
   },
   {
     id: 'actions',

@@ -14,6 +14,17 @@ export const useFetchNotifications = () => {
   });
 };
 
+export const useFetchNotificationsUser = (userId: string) => {
+  return useQuery({
+    queryKey: ['user.notifications', userId],
+    queryFn: async () => {
+      const response = await api.get(`/notifications/${userId}`);
+
+      return response.data;
+    },
+  });
+};
+
 export const useCreateNotification = ({ onSuccess }) => {
   return useMutation({
     mutationFn: async (body) => {

@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar';
 import Header from '@/components/Header';
 import { useFetchUserProfile } from '@/hooks/useUser';
 import DropdownUser from '../Header/DropdownUser';
+import DropdownNotification from '../Header/DropdownNotification';
 
 export default function DefaultLayout({
   children,
@@ -26,9 +27,12 @@ export default function DefaultLayout({
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col lg:ml-72.5">
           {/* <!-- ===== Header Start ===== --> */}
-          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}>
-            <DropdownUser user={user} />
-          </Header>
+          <Header
+            sidebarOpen={sidebarOpen}
+            setSidebarOpen={setSidebarOpen}
+            notification={<DropdownNotification user={user} />}
+            user={<DropdownUser user={user} />}
+          ></Header>
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}

@@ -21,14 +21,14 @@ export const GET = catchAsync(
       );
     }
 
-    const notification = await notifService.getAllNotifByUserId(userId);
+    const notifications = await notifService.getAllNotifByUserId(userId);
 
     return NextResponse.json(
       {
         code: httpStatus.OK,
         status: 'success',
         message: 'Get notification successfully',
-        notification,
+        notifications,
       },
       { status: httpStatus.OK }
     );

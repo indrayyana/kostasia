@@ -42,7 +42,7 @@ const menuGroups = [
       {
         icon: <CreditCard size={20} />,
         label: 'Pembayaran',
-        route: '#',
+        route: '/dashboard/admin/pembayaran',
       },
       {
         icon: <Bell size={20} />,
@@ -75,7 +75,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               title="Gambar Logo"
               priority
             />
-            <h1 className="text-white font-semibold text-3xl">KostASIA</h1>
+            <h1 className="text-white font-semibold text-3xl">Kost ASIA</h1>
           </Link>
 
           <button

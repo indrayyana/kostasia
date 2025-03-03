@@ -2,12 +2,15 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Bell } from 'lucide-react';
 import ClickOutside from '@/components/ClickOutside';
-import useFCM from '@/hooks/useFCM';
+import { useFetchNotificationsUser } from '@/hooks/useNotification';
+import { UserInterface } from '@/types/user';
+import dateFormat from '@/utils/dateFormat';
+import { Skeleton } from '../ui/skeleton';
 
-const DropdownNotification = () => {
+const DropdownNotification = ({ user }: { user: UserInterface }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifying, setNotifying] = useState(true);
-  const { messages } = useFCM();
+  const { data, isPending } = useFetchNotificationsUser(user?.user_id);
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -39,8 +42,8 @@ const DropdownNotification = () => {
             </div>
 
             <ul className="flex h-auto flex-col overflow-y-auto">
-              {messages.length > 0 ? (
-                messages.map((message, index) => (
+              {isPending ? (
+                Array.from({ length: 3 }).map((_, index) => (
                   <li key={index}>
                     <Link
                       className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
@@ -48,12 +51,33 @@ const DropdownNotification = () => {
                     >
                       <p className="text-sm">
                         <span className="text-black dark:text-white">
-                          {message.notification?.title || 'Notifikasi Baru'}
+                          <Skeleton className="h-[20px] w-[280px]" />
                         </span>{' '}
-                        {message.notification?.body || 'Tidak ada deskripsi.'}
                       </p>
 
-                      <p className="text-xs">12 May, 2025</p>
+                      <p className="text-xs">
+                        <Skeleton className="h-[15px] w-[280px]" />
+                      </p>
+                    </Link>
+                  </li>
+                ))
+              ) : data?.notifications ? (
+                data?.notifications.map((message, index) => (
+                  <li key={index}>
+                    <Link
+                      className="flex flex-col gap-2.5 border-t border-stroke px-4.5 py-3 hover:bg-gray-2 dark:border-strokedark dark:hover:bg-meta-4"
+                      href="#"
+                    >
+                      <p className="text-sm">
+                        <span className="text-black dark:text-white">
+                          {message?.judul || 'Notifikasi Baru'}
+                        </span>{' '}
+                        {message?.deskripsi || 'Tidak ada deskripsi.'}
+                      </p>
+
+                      <p className="text-xs">
+                        {dateFormat(message?.dibuat_pada)}
+                      </p>
                     </Link>
                   </li>
                 ))

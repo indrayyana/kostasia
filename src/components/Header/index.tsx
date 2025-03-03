@@ -3,19 +3,20 @@ import Link from 'next/link';
 import Image from 'next/image';
 // import { Search } from 'lucide-react';
 import DarkModeSwitcher from './DarkModeSwitcher';
-import DropdownNotification from './DropdownNotification';
 
 interface HeaderProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
-  children: ReactNode;
+  notification: ReactNode;
+  user: ReactNode;
 }
 
-const Header: React.FC<HeaderProps> = ({
+const Header = ({
   sidebarOpen,
   setSidebarOpen,
-  children,
-}) => {
+  notification,
+  user,
+}: HeaderProps) => {
   return (
     <header className="sticky top-0 z-999 flex w-full bg-white drop-shadow-1 dark:bg-boxdark dark:drop-shadow-none">
       <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
@@ -98,12 +99,12 @@ const Header: React.FC<HeaderProps> = ({
             {/* <!-- Dark Mode Toggler --> */}
 
             {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
+            {notification}
             {/* <!-- Notification Menu Area --> */}
           </ul>
 
           {/* <!-- User Area --> */}
-          {children}
+          {user}
           {/* <!-- User Area --> */}
         </div>
       </div>
