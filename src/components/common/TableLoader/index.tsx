@@ -1,11 +1,10 @@
-import React from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
 
 interface Props {
   colSpan: number;
 }
 
-const TableLoader: React.FC<Props> = ({ colSpan }) => {
+const TableLoader = ({ colSpan }: Props) => {
   return (
     <TableRow>
       <TableCell colSpan={colSpan} className="h-24 text-center">

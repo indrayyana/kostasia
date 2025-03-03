@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { SquarePen, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ interface CellActionProps {
   refecth: () => void;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data, refecth }) => {
+export const CellAction = ({ data, refecth }: CellActionProps) => {
   const [open, setOpen] = useState(false);
 
   const { mutate: deleteUser, isPending } = useDeleteUser({

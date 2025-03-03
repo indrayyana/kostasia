@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import { memo, useState } from 'react';
 import { ChevronDown, CreditCard, DoorOpen, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -11,7 +11,7 @@ interface DropdownUserProps {
   user: UserInterface;
 }
 
-const DropdownUser: React.FC<DropdownUserProps> = memo(({ user }) => {
+const DropdownUser = memo(({ user }: DropdownUserProps) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (

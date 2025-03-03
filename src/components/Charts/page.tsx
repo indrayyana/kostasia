@@ -1,14 +1,14 @@
-"use client";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import ChartOne from "@/components/Charts/ChartOne";
-import dynamic from "next/dynamic";
-import React from "react";
+'use client';
 
-const ChartThree = dynamic(() => import("@/components/Charts/ChartThree"), {
+import dynamic from 'next/dynamic';
+import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
+import ChartOne from '@/components/Charts/ChartOne';
+
+const ChartThree = dynamic(() => import('@/components/Charts/ChartThree'), {
   ssr: false,
 });
 
-const Chart: React.FC = () => {
+const Chart = () => {
   return (
     <>
       <Breadcrumb pageName="Chart" />
@@ -22,3 +22,4 @@ const Chart: React.FC = () => {
 };
 
 export default Chart;
+

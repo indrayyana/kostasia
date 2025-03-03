@@ -1,7 +1,6 @@
 'use client';
 
 import { ApexOptions } from 'apexcharts';
-import React from 'react';
 import dynamic from 'next/dynamic';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
@@ -121,7 +120,7 @@ const options: ApexOptions = {
   },
 };
 
-const ChartOne: React.FC = () => {
+const ChartOne = () => {
   const series = [
     {
       name: 'Product One',

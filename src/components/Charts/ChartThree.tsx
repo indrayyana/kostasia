@@ -1,5 +1,4 @@
 import { ApexOptions } from 'apexcharts';
-import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 const options: ApexOptions = {
@@ -45,7 +44,7 @@ const options: ApexOptions = {
   ],
 };
 
-const ChartThree: React.FC = () => {
+const ChartThree = () => {
   const series = [65, 34, 12, 56];
 
   return (

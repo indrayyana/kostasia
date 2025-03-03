@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { DoorOpen, Eye, DollarSign, Users } from 'lucide-react';
 // import dynamic from 'next/dynamic';
 // import ChartOne from '../Charts/ChartOne';
@@ -10,7 +9,7 @@ import CardDataStats from '../CardDataStats';
 //   ssr: false,
 // });
 
-const ECommerce: React.FC = () => {
+const ECommerce = () => {
   return (
     <>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-12 xl:grid-cols-2 2xl:gap-15">

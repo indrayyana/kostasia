@@ -18,13 +18,13 @@ interface ConfirmDialogProps {
   isLoading: boolean;
 }
 
-export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
+export const ConfirmDialog = ({
   dataName,
   open,
   onOpenChange,
   onConfirm,
   isLoading,
-}) => {
+}: ConfirmDialogProps) => {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent className="dark:text-white">
