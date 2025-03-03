@@ -156,6 +156,9 @@ export function DataTable<
       onSuccess: () => {
         refetch();
       },
+      onError: () => {
+        toast.error('Terjadi kesalahan saat menambahkan Notifikasi');
+      },
     });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {

@@ -25,7 +25,7 @@ export const useFetchNotificationsUser = (userId: string) => {
   });
 };
 
-export const useCreateNotification = ({ onSuccess }) => {
+export const useCreateNotification = ({ onSuccess, onError }) => {
   return useMutation({
     mutationFn: async (body) => {
       const response = await api.post('/notifications', body);
@@ -33,6 +33,7 @@ export const useCreateNotification = ({ onSuccess }) => {
       return response;
     },
     onSuccess,
+    onError,
   });
 };
 
