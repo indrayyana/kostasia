@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 
 export const POST = catchAsync(
   async (req: NextRequest): Promise<NextResponse> => {
-    // const body = await req.json();
+    const body = await req.json();
 
     //   const validation = notifValidation.createNotif.safeParse({
     //     judul: body.judul,
@@ -31,27 +31,23 @@ export const POST = catchAsync(
     const params = {
       transaction_details: {
         order_id: orderId,
-        gross_amount: 500000,
+        gross_amount: body.transaction.total,
       },
       customer_details: {
-        first_name: 'budi',
-        email: 'budi@example.com',
+        first_name: body.user.fullname,
+        email: body.user.email,
         phone: '08111222333',
       },
     };
 
-    createTransaction(
-      params,
-      (transaction: { token: string; redirect_url: string }) => {
-        console.log(transaction);
-      }
-    );
+    const resTransaction = await createTransaction(params);
 
     return NextResponse.json(
       {
         code: httpStatus.CREATED,
         status: 'success',
         message: 'Create transaction successfully',
+        transaction: resTransaction,
       },
       { status: httpStatus.CREATED }
     );

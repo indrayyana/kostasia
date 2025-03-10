@@ -4,7 +4,7 @@ import httpStatus from 'http-status';
 import prisma from '@/lib/prisma';
 import ApiError from '@/utils/ApiError';
 
-const notifService = {
+const notificationService = {
   getAllNotif: async () => {
     const notifications = await prisma.notifikasi.findMany({
       orderBy: {
@@ -85,5 +85,5 @@ const notifService = {
   },
 };
 
-export default notifService;
+export default notificationService;
 

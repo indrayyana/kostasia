@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import httpStatus from 'http-status';
 import catchAsync from '@/utils/catchAsync';
-import roomService from '@/services/rooms';
+import roomService from '@/services/room';
 
 export const dynamic = 'force-dynamic';
 

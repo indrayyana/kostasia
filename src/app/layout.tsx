@@ -62,8 +62,21 @@ export const metadata: Metadata = {
   classification:
     'Business, Rent House, Sewa Kost, Property, Rent Room, Info Kost, Information, Kost, Room, Cari Kost, Kost Murah, Kost Bebas, Application, Mobile Application, Kamar Kost, Kamar Kos, Kostan, Kos, Rumah Kost, Rumah Kos, Kost Harian',
   other: {
-    'mobile-web-app-capable': 'yes',
-    rating: 'general',
+    'apple-mobile-web-app-capable': 'yes',
+    'revisit-after': '2 days',
+    'place:location:latitude': '-8.518713',
+    'place:location:longitude': '115.396126',
+    'business:contact_data:website': `${process.env.BASE_URL}`,
+    'business:contact_data:street_address':
+      'Jl. DI Panjaitan, Dusun Gingsir, Desa Akah, Klungkung, Klungkung, Bali 80712',
+    'business:contact_data:postal_code': '80712',
+    'business:contact_data:locality': 'Klungkung',
+    'business:contact_data:region': 'Bali',
+    'business:contact_data:country_name': 'Indonesia',
+    'business:contact_data:email': 'info@kostasia.com',
+    'business:contact_data:phone_number': '+6287762642945',
+    'reply-to': 'info@kostasia.com',
+    rating: 'General',
     locale: 'in_ID',
     keyphrases:
       'Info Kost, Cari Kost, Sewa Kost, Kost Murah, Aplikasi Kost, Aplikasi Info Kost, Kost, Kost ASIA, Kamar Kost, Kamar Kos, Kostan, Kos, Rumah Kost, Rumah Kos, Kost Harian',

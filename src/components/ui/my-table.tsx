@@ -14,8 +14,8 @@ import {
   TableHeader,
   TableRow,
 } from './table';
-import TableLoader from '../common/TableLoader';
 import TablePagination from './table-pagination';
+import { Skeleton } from './skeleton';
 
 interface Props<TData extends { user_id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -72,7 +72,13 @@ export default function MyTable<
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableLoader colSpan={columns.length} />
+              Array.from({ length: 3 }).map((_, index) => (
+                <TableRow key={index} className="dark:border-gray-500">
+                  <TableCell colSpan={columns.length}>
+                    <Skeleton className="h-[40px] w-full" />
+                  </TableCell>
+                </TableRow>
+              ))
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

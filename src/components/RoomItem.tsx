@@ -23,7 +23,7 @@ const RoomItem = memo(({ room }: RoomItemProps) => {
         <h3 className="mt-6 text-black font-semibold mb-2 text-3xl">
           {room.nama}
         </h3>
-        {room.status === 'Kosong' ? (
+        {room.status === 'kosong' ? (
           <div
             className="bg-black text-white py-1 w-28 mx-auto"
             style={{
@@ -70,3 +70,4 @@ const RoomItem = memo(({ room }: RoomItemProps) => {
 RoomItem.displayName = 'RoomItem';
 
 export default RoomItem;
+

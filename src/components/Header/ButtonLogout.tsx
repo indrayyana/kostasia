@@ -8,9 +8,11 @@ import Swal from 'sweetalert2';
 import { deleteToken } from '@/utils/cookies';
 import api from '@/lib/axios';
 import { config } from '@/utils/config';
+import { useTheme } from 'next-themes';
 
 const ButtonLogout = () => {
   const router = useRouter();
+  const { theme } = useTheme();
 
   return (
     <button
@@ -19,6 +21,7 @@ const ButtonLogout = () => {
         Swal.fire({
           title: 'Apakah Anda yakin ingin logout ?',
           icon: 'warning',
+          theme: theme === 'dark' ? 'dark' : 'light',
           showCancelButton: true,
           cancelButtonText: 'Batal',
           confirmButtonText: 'Logout',

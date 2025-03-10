@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
 import { ContextParams } from '@/types/context';
-import roomService from '@/services/rooms';
+import roomService from '@/services/room';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';
 

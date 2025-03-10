@@ -25,9 +25,10 @@ model User {
   dibuat_pada DateTime @default(now())
   // updated_at DateTime @default(now()) @updatedAt
 
-  token Token[]
-  kamar Kamar?
-  notif Notifikasi[]
+  token     Token[]
+  kamar     Kamar?
+  notif     Notifikasi[]
+  transaksi Transaksi[]
 
   @@map("user")
 }
@@ -44,28 +45,41 @@ model Token {
 }
 
 model Kamar {
-  kamar_id Int     @id @default(autoincrement())
-  user_id  String? @unique @db.Uuid
-  user     User?   @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  nama     String  @db.VarChar(20)
-  harga    Int     @db.Integer
-  status   String  @db.VarChar(20)
-  gambar   String  @db.Text
+  kamar_id Int         @id @default(autoincrement())
+  user_id  String?     @unique @db.Uuid
+  user     User?       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  nama     String      @db.VarChar(20)
+  harga    Int         @db.Integer
+  status   StatusKamar @default(kosong)
+  gambar   String      @db.Text
   cabang   Cabang
 
   @@map("kamar")
 }
 
 model Notifikasi {
-  notifikasi_id Int      @id @default(autoincrement())
-  user_id       String   @db.Uuid
-  user          User     @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  judul         String   @db.VarChar(20)
-  deskripsi     String   @db.VarChar(250)
-  status        Status   @default(terkirim)
-  dibuat_pada   DateTime @default(now())
+  notifikasi_id Int              @id @default(autoincrement())
+  user_id       String           @db.Uuid
+  user          User             @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  judul         String           @db.VarChar(20)
+  deskripsi     String           @db.VarChar(250)
+  status        StatusNotifikasi @default(terkirim)
+  dibuat_pada   DateTime         @default(now())
 
   @@map("notifikasi")
+}
+
+model Transaksi {
+  transaksi_id String          @id @default(uuid()) @db.Uuid
+  user_id      String          @db.Uuid
+  user         User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  // kamar_id          Int     @db.Integer
+  // kamar          Kamar     @relation(fields: [kamar_id], references: [kamar_id], onDelete: Cascade)
+  total        Int             @db.Integer
+  status       StatusTransaksi @default(pending)
+  dibuat_pada  DateTime        @default(now())
+
+  @@map("transaksi")
 }
 
 enum Role {
@@ -85,7 +99,17 @@ enum Cabang {
   klungkung
 }
 
-enum Status {
+enum StatusKamar {
+  terisi
+  kosong
+}
+
+enum StatusNotifikasi {
   terkirim
   dibaca
+}
+
+enum StatusTransaksi {
+  pending
+  settlement
 }

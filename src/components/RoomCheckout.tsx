@@ -1,19 +1,29 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import { CabangType } from '@/types/room';
 import { useFetchRoomDetail } from '@/hooks/useRoom';
 import Loader from './common/Loader';
-import { notFound } from 'next/navigation';
+import { Button } from './ui/button';
+import { useCreateTransaction } from '../hooks/useTransaction';
+import toast from 'react-hot-toast';
 
-interface RoomDetailProps {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+declare global {
+  interface Window {
+    snap: any;
+  }
+}
+
+interface RoomCheckoutProps {
   id: string;
   cabang: CabangType;
 }
 
-export default function RoomDetail({ id, cabang }: RoomDetailProps) {
+export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
   const { data, isPending, isError } = useFetchRoomDetail(cabang, id);
+  const { mutate: createTransaction } = useCreateTransaction();
 
   if (isPending) {
     return <Loader />;
@@ -24,6 +34,40 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
   }
 
   const room = data.kamar || {};
+
+  const handleCheckout = async () => {
+    const payload = {
+      // fetch user profile
+      user: {
+        fullname: 'anonym 1',
+        email: 'anonym@email.com',
+        address: 'jl 403',
+      },
+      transaction: {
+        room: 'Kamar 2',
+        total: '500000',
+      },
+    };
+
+    // @ts-expect-error off
+    createTransaction(payload, {
+      onSuccess: (response) => {
+        console.log('response api', response);
+
+        if (response?.data?.transaction?.token) {
+          const transaction_token = response?.data.transaction.token;
+          console.log('Transaction Token:', transaction_token);
+          window.snap.pay(transaction_token);
+        } else {
+          console.error('Transaction token not found');
+        }
+      },
+      onError: (error) => {
+        console.log(error);
+        toast.error('Terjadi kesalahan saat pembayaran');
+      },
+    });
+  };
 
   return (
     <>
@@ -67,17 +111,13 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
               <li>Lemari pakaian</li>
               <li>Kamar mandi dalam</li>
             </ul>
-            <Link
-              href={
-                '/'
-                // `/${room.cabang}/kamar/${room.kamar_id}`
-              }
-              type="button"
-              title="Ajukan Sewa"
+            <Button
+              onClick={() => handleCheckout()}
+              title="Tombol Bayar Sewa"
               className="mt-4 max-w-md mx-auto text-white bg-purple-600 font-bold border-2 border-black shadow-solid-sm hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-7 py-3 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
             >
-              Ajukan Sewa
-            </Link>
+              Bayar Sewa
+            </Button>
           </section>
         )}
       </main>

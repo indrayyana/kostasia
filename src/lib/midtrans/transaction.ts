@@ -18,14 +18,9 @@ type TransactionResponse = {
 };
 
 const createTransaction = async (
-  params: ParamsType,
-  callback: (transaction: TransactionResponse) => void
-) => {
-  snap
-    .createTransaction(params)
-    .then((transaction: { token: string; redirect_url: string }) => {
-      callback(transaction);
-    });
+  params: ParamsType
+): Promise<TransactionResponse> => {
+  return snap.createTransaction(params);
 };
 
 export default createTransaction;

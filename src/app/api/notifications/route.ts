@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import httpStatus from 'http-status';
-import notifService from '@/services/notif';
+import notificationService from '@/services/notification';
 import notifValidation from '@/validations/notif';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';
@@ -8,7 +8,7 @@ import ApiError from '@/utils/ApiError';
 export const dynamic = 'force-dynamic';
 
 export const GET = catchAsync(async (): Promise<NextResponse> => {
-  const notifications = await notifService.getAllNotif();
+  const notifications = await notificationService.getAllNotif();
 
   return NextResponse.json(
     {
@@ -38,7 +38,7 @@ export const POST = catchAsync(
       );
     }
 
-    const notification = await notifService.createNotif(body);
+    const notification = await notificationService.createNotif(body);
 
     return NextResponse.json(
       {
@@ -64,7 +64,7 @@ export const DELETE = catchAsync(
       throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid ID format');
     }
 
-    await notifService.deleteAllNotifById(ids);
+    await notificationService.deleteAllNotifById(ids);
 
     return NextResponse.json(
       {

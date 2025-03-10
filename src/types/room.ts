@@ -1,4 +1,4 @@
-export type StatusType = 'Terisi' | 'Kosong';
+export type StatusType = 'terisi' | 'kosong';
 export type CabangType = 'denpasar' | 'klungkung';
 
 export interface RoomInterface {

@@ -1,11 +1,17 @@
+'use client';
+
 import Image from 'next/image';
-import { Mail, Upload, User } from 'lucide-react';
+import { Mail, Upload, User, Phone } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
 import UserLayout from '@/components/Layouts/UserLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useFetchUserProfile } from '@/hooks/useUser';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Profil = () => {
+  const { data, isPending } = useFetchUserProfile();
+
   return (
     <UserLayout>
       <div className="mx-auto max-w-270">
@@ -29,18 +35,25 @@ const Profil = () => {
                       >
                         Nama Lengkap
                       </label>
-                      <div className="relative">
-                        <span className="absolute left-4.5 top-2.5">
-                          <User size={20} />
-                        </span>
-                        <Input
-                          className="bg-gray pl-11.5 pr-4.5 text-black dark:border-strokedark dark:bg-meta-4 dark:text-white"
-                          type="text"
-                          id="fullName"
-                          name="fullName"
-                          placeholder="Putu Gede"
-                        />
-                      </div>
+                      {isPending ? (
+                        <div className="relative">
+                          <Skeleton className="h-10" />
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <span className="absolute left-4.5 top-2.5">
+                            <User size={20} />
+                          </span>
+                          <Input
+                            className="bg-gray pl-11.5 pr-4.5 text-black dark:border-strokedark dark:bg-meta-4 dark:text-white"
+                            type="text"
+                            id="fullName"
+                            name="fullName"
+                            placeholder="Putu Gede"
+                            value={data?.user?.nama}
+                          />
+                        </div>
+                      )}
                     </div>
 
                     <div className="w-full sm:w-1/2">
@@ -50,13 +63,25 @@ const Profil = () => {
                       >
                         Nomor Telepon
                       </label>
-                      <Input
-                        className="bg-gray text-black dark:border-strokedark dark:bg-meta-4 dark:text-white"
-                        type="number"
-                        id="phoneNumber"
-                        name="phoneNumber"
-                        placeholder="contoh: 08123456789"
-                      />
+                      {isPending ? (
+                        <div className="relative">
+                          <Skeleton className="h-10" />
+                        </div>
+                      ) : (
+                        <div className="relative">
+                          <span className="absolute left-4.5 top-2.5">
+                            <Phone size={20} />
+                          </span>
+                          <Input
+                            className="bg-gray pl-11.5 pr-4.5 text-black dark:border-strokedark dark:bg-meta-4 dark:text-white"
+                            type="number"
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            placeholder="contoh: 08123456789"
+                            value={data?.user?.telepon}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -67,18 +92,25 @@ const Profil = () => {
                     >
                       Email
                     </label>
-                    <div className="relative">
-                      <span className="absolute left-4.5 top-2.5">
-                        <Mail size={20} />
-                      </span>
-                      <Input
-                        className="bg-gray pl-11.5 pr-4.5 text-black dark:border-strokedark dark:bg-meta-4 dark:text-white"
-                        type="email"
-                        id="emailAddress"
-                        name="emailAddress"
-                        placeholder="tudebagus45@gmail.com"
-                      />
-                    </div>
+                    {isPending ? (
+                      <div className="relative">
+                        <Skeleton className="h-10" />
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <span className="absolute left-4.5 top-2.5">
+                          <Mail size={20} />
+                        </span>
+                        <Input
+                          className="bg-gray pl-11.5 pr-4.5 text-black dark:border-strokedark dark:bg-meta-4 dark:text-white"
+                          type="email"
+                          id="emailAddress"
+                          name="emailAddress"
+                          placeholder="tudebagus45@gmail.com"
+                          value={data?.user?.email}
+                        />
+                      </div>
+                    )}
                   </div>
 
                   <div className="mb-5.5">
@@ -132,13 +164,17 @@ const Profil = () => {
                 <form action="#">
                   <div className="mb-4 flex items-center gap-3">
                     <div className="h-14 w-14 rounded-full">
-                      <Image
-                        src={'/images/user/user-03.png'}
-                        width={55}
-                        height={55}
-                        alt="User"
-                        title="Foto Profil"
-                      />
+                      {isPending ? (
+                        <Skeleton className="rounded-none h-[55px] w-[55px]" />
+                      ) : (
+                        <Image
+                          src={data?.user?.foto ?? '/images/user/user-03.png'}
+                          width={55}
+                          height={55}
+                          alt="User"
+                          title="Foto Profil"
+                        />
+                      )}
                     </div>
                     <div>
                       <span className="mb-1.5 text-black dark:text-white">

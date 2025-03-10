@@ -11,7 +11,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table';
-
 import {
   Table,
   TableBody,
@@ -20,9 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
 import { Button } from '@/components/ui/button';
-import TableLoader from '@/components/common/TableLoader';
 import TableSearch from '@/components/ui/table-search';
 import TablePagination from '@/components/ui/table-pagination';
 import {
@@ -34,6 +31,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DataTableProps<TData extends { kamar_id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -134,7 +132,13 @@ export function DataTable<TData extends { kamar_id: string | number }, TValue>({
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableLoader colSpan={columns.length} />
+              Array.from({ length: 3 }).map((_, index) => (
+                <TableRow key={index} className="dark:border-gray-500">
+                  <TableCell colSpan={columns.length}>
+                    <Skeleton className="h-[40px] w-full" />
+                  </TableCell>
+                </TableRow>
+              ))
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow

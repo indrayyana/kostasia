@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import { ContextParams } from '@/types/context';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';
-import notifService from '@/services/notif';
+import notificationService from '@/services/notification';
 import notifValidation from '@/validations/notif';
 
 export const dynamic = 'force-dynamic';
@@ -21,7 +21,7 @@ export const GET = catchAsync(
       );
     }
 
-    const notifications = await notifService.getAllNotifByUserId(userId);
+    const notifications = await notificationService.getAllNotifByUserId(userId);
 
     return NextResponse.json(
       {
@@ -50,7 +50,7 @@ export const DELETE = catchAsync(
       );
     }
 
-    await notifService.deleteNotifById(id);
+    await notificationService.deleteNotifById(id);
 
     return NextResponse.json(
       {

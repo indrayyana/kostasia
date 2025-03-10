@@ -38,6 +38,7 @@ export const config = {
     merchantId: `${process.env.MIDTRANS_MERCHANT_ID}`,
     clientKey: `${process.env.MIDTRANS_CLIENT_KEY}`,
     serverKey: `${process.env.MIDTRANS_SERVER_KEY}`,
+    snapUrl: `${process.env.MIDTRANS_SNAP_URL}`,
   },
 };
 
