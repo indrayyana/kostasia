@@ -15,6 +15,15 @@ export const metadata: Metadata = {
     description:
       'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Denpasar dengan harga terjangkau',
   },
+  other: {
+    'place:location:latitude': '-8.676971',
+    'place:location:longitude': '115.224657',
+    'business:contact_data:street_address':
+      'Gg. XVII A, Jl. Waturenggong, Panjer, Denpasar Selatan, Kota Denpasar, Bali 80234',
+    'business:contact_data:postal_code': '80234',
+    'business:contact_data:locality': 'Denpasar',
+    'business:contact_data:phone_number': '+6281338516406',
+  }
 };
 
 export default function Denpasar() {

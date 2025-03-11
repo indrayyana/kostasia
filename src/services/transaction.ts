@@ -1,16 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-// import prisma from '@/lib/prisma';
+import prisma from "@/lib/prisma";
 
-// const transactionService = {
-//   createNotif: async (data: any) => {
-//     const notification = await prisma.transaksi.create({
-//       data,
-//     });
+const transactionService = {
+  createTransaction: async (data: any) => {
+    const transaction = await prisma.transaksi.create({
+      data,
+    });
 
-//     return notification;
-//   },
-// };
+    return transaction;
+  },
 
-// export default transactionService;
+  getAllTransactions: async () => {
+    const transactions = await prisma.transaksi.findMany({
+      orderBy: {
+        dibuat_pada: "desc",
+      },
+      include: {
+        user: {
+          select: {
+            nama: true,
+          },
+        },
+        kamar: {
+          select: {
+            nama: true,
+          },
+        },
+      },
+    });
 
+    return transactions;
+  },
+};
+
+export default transactionService;

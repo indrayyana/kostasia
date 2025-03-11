@@ -25,10 +25,10 @@ model User {
   dibuat_pada DateTime @default(now())
   // updated_at DateTime @default(now()) @updatedAt
 
-  token     Token[]
-  kamar     Kamar?
-  notif     Notifikasi[]
-  transaksi Transaksi[]
+  token      Token[]
+  kamar      Kamar?
+  notifikasi Notifikasi[]
+  transaksi  Transaksi[]
 
   @@map("user")
 }
@@ -54,6 +54,8 @@ model Kamar {
   gambar   String      @db.Text
   cabang   Cabang
 
+  transaksi Transaksi[]
+
   @@map("kamar")
 }
 
@@ -73,8 +75,8 @@ model Transaksi {
   transaksi_id String          @id @default(uuid()) @db.Uuid
   user_id      String          @db.Uuid
   user         User            @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
-  // kamar_id          Int     @db.Integer
-  // kamar          Kamar     @relation(fields: [kamar_id], references: [kamar_id], onDelete: Cascade)
+  kamar_id     Int             @db.Integer
+  kamar        Kamar           @relation(fields: [kamar_id], references: [kamar_id], onDelete: Cascade)
   total        Int             @db.Integer
   status       StatusTransaksi @default(pending)
   dibuat_pada  DateTime        @default(now())

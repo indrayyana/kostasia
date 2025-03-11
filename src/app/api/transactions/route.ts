@@ -1,56 +1,74 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { NextRequest, NextResponse } from 'next/server';
-import httpStatus from 'http-status';
-import { v4 as uuidv4 } from 'uuid';
+import { NextRequest, NextResponse } from "next/server";
+import httpStatus from "http-status";
+import { v4 as uuidv4 } from "uuid";
 
-import catchAsync from '@/utils/catchAsync';
-import ApiError from '@/utils/ApiError';
-import createTransaction from '@/lib/midtrans/transaction';
+import catchAsync from "@/utils/catchAsync";
+import ApiError from "@/utils/ApiError";
+import createTransaction from "@/lib/midtrans/transaction";
+import transactionService from "@/services/transaction";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-export const POST = catchAsync(
-  async (req: NextRequest): Promise<NextResponse> => {
-    const body = await req.json();
+export const GET = catchAsync(async (): Promise<NextResponse> => {
+  const transactions = await transactionService.getAllTransactions();
 
-    //   const validation = notifValidation.createNotif.safeParse({
-    //     judul: body.judul,
-    //     text: body.text,
-    //     user_id: body.user_id,
-    //   });
-    //   if (!validation.success) {
-    //     throw new ApiError(
-    //       httpStatus.BAD_REQUEST,
-    //       'Bad Request',
-    //       validation.error.flatten().fieldErrors
-    //     );
-    //   }
+  return NextResponse.json(
+    {
+      code: httpStatus.OK,
+      status: "success",
+      message: "Get transactions successfully",
+      transactions,
+    },
+    { status: httpStatus.OK }
+  );
+});
 
-    const orderId = uuidv4();
+export const POST = catchAsync(async (req: NextRequest): Promise<NextResponse> => {
+  const body = await req.json();
 
-    const params = {
-      transaction_details: {
-        order_id: orderId,
-        gross_amount: body.transaction.total,
-      },
-      customer_details: {
-        first_name: body.user.fullname,
-        email: body.user.email,
-        phone: '08111222333',
-      },
-    };
+  //   const validation = notifValidation.createNotif.safeParse({
+  //     judul: body.judul,
+  //     text: body.text,
+  //     user_id: body.user_id,
+  //   });
+  //   if (!validation.success) {
+  //     throw new ApiError(
+  //       httpStatus.BAD_REQUEST,
+  //       'Bad Request',
+  //       validation.error.flatten().fieldErrors
+  //     );
+  //   }
 
-    const resTransaction = await createTransaction(params);
+  const orderId = uuidv4();
 
-    return NextResponse.json(
-      {
-        code: httpStatus.CREATED,
-        status: 'success',
-        message: 'Create transaction successfully',
-        transaction: resTransaction,
-      },
-      { status: httpStatus.CREATED }
-    );
-  }
-);
+  const params = {
+    transaction_details: {
+      order_id: orderId,
+      gross_amount: body.transaction.total,
+    },
+    customer_details: {
+      first_name: body.user.fullname,
+      email: body.user.email,
+      phone: body.user.phone,
+    },
+  };
 
+  const resTransaction = await createTransaction(params);
+
+  await transactionService.createTransaction({
+    total: body.transaction.total,
+    user_id: body.user.id,
+    kamar_id: body.transaction.room,
+  });
+
+  return NextResponse.json(
+    {
+      code: httpStatus.CREATED,
+      status: "success",
+      message: "Create transaction successfully",
+      transaction: resTransaction,
+    },
+    { status: httpStatus.CREATED }
+  );
+});

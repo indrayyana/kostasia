@@ -1,13 +1,14 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { notFound } from 'next/navigation';
-import { CabangType } from '@/types/room';
-import { useFetchRoomDetail } from '@/hooks/useRoom';
-import Loader from './common/Loader';
-import { Button } from './ui/button';
-import { useCreateTransaction } from '../hooks/useTransaction';
-import toast from 'react-hot-toast';
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import toast from "react-hot-toast";
+import { CabangType } from "@/types/room";
+import { useFetchRoomDetail } from "@/hooks/useRoom";
+import Loader from "./common/Loader";
+import { Button } from "./ui/button";
+import { useCreateTransaction } from "@/hooks/useTransaction";
+import { useFetchUserProfile } from "@/hooks/useUser";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
@@ -23,9 +24,10 @@ interface RoomCheckoutProps {
 
 export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
   const { data, isPending, isError } = useFetchRoomDetail(cabang, id);
+  const { data: userData, isPending: userPending } = useFetchUserProfile();
   const { mutate: createTransaction } = useCreateTransaction();
 
-  if (isPending) {
+  if (isPending || userPending) {
     return <Loader />;
   }
 
@@ -37,34 +39,34 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
 
   const handleCheckout = async () => {
     const payload = {
-      // fetch user profile
       user: {
-        fullname: 'anonym 1',
-        email: 'anonym@email.com',
-        address: 'jl 403',
+        id: userData?.user?.user_id,
+        fullname: userData?.user?.nama,
+        email: userData?.user?.email,
+        phone: userData?.user?.telepon,
       },
       transaction: {
-        room: 'Kamar 2',
-        total: '500000',
+        room: room.kamar_id,
+        total: 500000,
       },
     };
 
     // @ts-expect-error off
     createTransaction(payload, {
       onSuccess: (response) => {
-        console.log('response api', response);
+        console.log("response api", response);
 
         if (response?.data?.transaction?.token) {
           const transaction_token = response?.data.transaction.token;
-          console.log('Transaction Token:', transaction_token);
+          console.log("Transaction Token:", transaction_token);
           window.snap.pay(transaction_token);
         } else {
-          console.error('Transaction token not found');
+          console.error("Transaction token not found");
         }
       },
       onError: (error) => {
         console.log(error);
-        toast.error('Terjadi kesalahan saat pembayaran');
+        toast.error("Terjadi kesalahan saat pembayaran");
       },
     });
   };
@@ -73,9 +75,7 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
     <>
       <main>
         {isError ? (
-          <p className="text-red-500 text-center">
-            Terjadi kesalahan saat menampilkan data
-          </p>
+          <p className="text-red-500 text-center">Terjadi kesalahan saat menampilkan data</p>
         ) : (
           <section
             id="tentang"
@@ -93,9 +93,7 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
               />
             )}
             {Number(id) > 10 ? (
-              <h2 className="text-2xl font-bold my-4">
-                Kamar {Number(id) - 10}
-              </h2>
+              <h2 className="text-2xl font-bold my-4">Kamar {Number(id) - 10}</h2>
             ) : (
               <h2 className="text-2xl font-bold my-4">Kamar {id}</h2>
             )}
@@ -124,4 +122,3 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
     </>
   );
 }
-

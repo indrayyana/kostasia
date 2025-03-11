@@ -8,7 +8,7 @@ import ApiError from '@/utils/ApiError';
 export const dynamic = 'force-dynamic';
 
 export const GET = catchAsync(async (): Promise<NextResponse> => {
-  const notifications = await notificationService.getAllNotif();
+  const notifications = await notificationService.getAllNotification();
 
   return NextResponse.json(
     {
@@ -38,7 +38,7 @@ export const POST = catchAsync(
       );
     }
 
-    const notification = await notificationService.createNotif(body);
+    const notification = await notificationService.createNotification(body);
 
     return NextResponse.json(
       {
@@ -64,7 +64,7 @@ export const DELETE = catchAsync(
       throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid ID format');
     }
 
-    await notificationService.deleteAllNotifById(ids);
+    await notificationService.deleteAllNotificationById(ids);
 
     return NextResponse.json(
       {

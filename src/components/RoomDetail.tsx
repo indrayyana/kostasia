@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { CabangType } from '@/types/room';
-import { useFetchRoomDetail } from '@/hooks/useRoom';
-import Loader from './common/Loader';
-import { notFound } from 'next/navigation';
+import Link from "next/link";
+import Image from "next/image";
+import { CabangType } from "@/types/room";
+import { useFetchRoomDetail } from "@/hooks/useRoom";
+import Loader from "./common/Loader";
+import { notFound } from "next/navigation";
 
 interface RoomDetailProps {
   id: string;
@@ -29,9 +29,7 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
     <>
       <main>
         {isError ? (
-          <p className="text-red-500 text-center">
-            Terjadi kesalahan saat menampilkan data
-          </p>
+          <p className="text-red-500 text-center">Terjadi kesalahan saat menampilkan data</p>
         ) : (
           <section
             id="tentang"
@@ -49,9 +47,7 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
               />
             )}
             {Number(id) > 10 ? (
-              <h2 className="text-2xl font-bold my-4">
-                Kamar {Number(id) - 10}
-              </h2>
+              <h2 className="text-2xl font-bold my-4">Kamar {Number(id) - 10}</h2>
             ) : (
               <h2 className="text-2xl font-bold my-4">Kamar {id}</h2>
             )}
@@ -68,10 +64,7 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
               <li>Kamar mandi dalam</li>
             </ul>
             <Link
-              href={
-                '/'
-                // `/${room.cabang}/kamar/${room.kamar_id}`
-              }
+              href={`/booking/${room.cabang}/${room.kamar_id}`}
               type="button"
               title="Ajukan Sewa"
               className="mt-4 max-w-md mx-auto text-white bg-purple-600 font-bold border-2 border-black shadow-solid-sm hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg px-7 py-3 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-800"
@@ -84,4 +77,3 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
     </>
   );
 }
-

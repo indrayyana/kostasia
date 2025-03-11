@@ -62,7 +62,7 @@ export const metadata: Metadata = {
   classification:
     'Business, Rent House, Sewa Kost, Property, Rent Room, Info Kost, Information, Kost, Room, Cari Kost, Kost Murah, Kost Bebas, Application, Mobile Application, Kamar Kost, Kamar Kos, Kostan, Kos, Rumah Kost, Rumah Kos, Kost Harian',
   other: {
-    'apple-mobile-web-app-capable': 'yes',
+    'mobile-web-app-capable': 'yes',
     'revisit-after': '2 days',
     'place:location:latitude': '-8.518713',
     'place:location:longitude': '115.396126',

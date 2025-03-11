@@ -5,7 +5,7 @@ import prisma from '@/lib/prisma';
 import ApiError from '@/utils/ApiError';
 
 const notificationService = {
-  getAllNotif: async () => {
+  getAllNotification: async () => {
     const notifications = await prisma.notifikasi.findMany({
       orderBy: {
         dibuat_pada: 'desc',
@@ -32,7 +32,7 @@ const notificationService = {
     return notifications;
   },
 
-  createNotif: async (data: any) => {
+  createNotification: async (data: any) => {
     const notification = await prisma.notifikasi.create({
       data,
     });
@@ -40,7 +40,7 @@ const notificationService = {
     return notification;
   },
 
-  deleteNotifById: async (id: number) => {
+  deleteNotificationById: async (id: number) => {
     const notification = await prisma.notifikasi.findFirst({
       where: {
         notifikasi_id: id,
@@ -48,7 +48,7 @@ const notificationService = {
     });
 
     if (!notification) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Notif not found');
+      throw new ApiError(httpStatus.NOT_FOUND, 'Notification not found');
     }
 
     await prisma.notifikasi.delete({
@@ -60,7 +60,7 @@ const notificationService = {
     return notification;
   },
 
-  deleteAllNotifById: async (ids: number[]) => {
+  deleteAllNotificationById: async (ids: number[]) => {
     return await prisma.$transaction(async (tx) => {
       const notifications = await tx.notifikasi.findMany({
         where: { notifikasi_id: { in: ids } },
@@ -72,7 +72,7 @@ const notificationService = {
       if (missingIds.length > 0) {
         throw new ApiError(
           httpStatus.NOT_FOUND,
-          `Notif(s) not found for ID(s): ${missingIds.join(', ')}`
+          `Notifications not found for ID(s): ${missingIds.join(', ')}`
         );
       }
 

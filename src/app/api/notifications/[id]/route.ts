@@ -50,7 +50,7 @@ export const DELETE = catchAsync(
       );
     }
 
-    await notificationService.deleteNotifById(id);
+    await notificationService.deleteNotificationById(id);
 
     return NextResponse.json(
       {
