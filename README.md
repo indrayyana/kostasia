@@ -3,6 +3,7 @@
 - Tailwind CSS
 - Shadcn UI
 - Next.js (App router)
+- Hono.js
 - Prisma
 - Supabase
 - Firebase (Storage, Cloud Messaging)

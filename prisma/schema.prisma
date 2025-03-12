@@ -79,6 +79,7 @@ model Transaksi {
   kamar        Kamar           @relation(fields: [kamar_id], references: [kamar_id], onDelete: Cascade)
   total        Int             @db.Integer
   status       StatusTransaksi @default(pending)
+  token        String          @db.Uuid
   dibuat_pada  DateTime        @default(now())
 
   @@map("transaksi")
