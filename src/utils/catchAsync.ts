@@ -1,21 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { Context, Next } from 'hono';
 import httpStatus from 'http-status';
-
+import { ContentfulStatusCode, StatusCode } from 'hono/utils/http-status';
 import ApiError from './ApiError';
-import { ContextParams } from '@/types/context';
 import logger from './logger';
 
-type RouteHandler = (
-  req: NextRequest,
-  ctx: ContextParams
-) => Promise<NextResponse>;
-
-const catchAsync = (fn: RouteHandler) => {
-  return async (req: NextRequest, ctx: ContextParams) => {
+export const catchAsync =
+  (fn: (c: Context, next: Next) => Promise<Response>) =>
+  async (c: Context, next: Next) => {
     try {
-      return await fn(req, ctx);
+      return await fn(c, next);
     } catch (error: any) {
       if (error instanceof ApiError) {
         logger.error('API error', {
@@ -23,34 +18,40 @@ const catchAsync = (fn: RouteHandler) => {
         });
 
         const responseBody: {
-          code: number;
+          code: StatusCode;
           status: string;
           message: string;
           errors?: any;
-        } = { code: error.statusCode, status: 'error', message: error.message };
+        } = {
+          code: error.statusCode,
+          status: 'error',
+          message: error.message,
+        };
 
         if (error.statusCode === httpStatus.BAD_REQUEST && error.errors) {
           responseBody.errors = error.errors;
         }
 
-        return NextResponse.json(responseBody, { status: error.statusCode });
+        return c.json(
+          responseBody,
+          error.statusCode as unknown as ContentfulStatusCode
+        );
       }
 
       logger.error('API error', {
         message: error.message,
       });
 
-      return NextResponse.json(
+      return c.json(
         {
           code: httpStatus.INTERNAL_SERVER_ERROR,
           status: 'error',
           message: 'Internal Server Error',
         },
-        { status: httpStatus.INTERNAL_SERVER_ERROR }
+        httpStatus.INTERNAL_SERVER_ERROR
       );
     }
   };
-};
 
 export default catchAsync;
 

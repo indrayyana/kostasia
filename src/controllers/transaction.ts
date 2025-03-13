@@ -2,8 +2,8 @@ import httpStatus from 'http-status';
 import { v4 as uuidv4 } from 'uuid';
 import { Context } from 'hono';
 import transactionService from '@/services/transaction';
-import { catchAsync } from '@/utils/catchAsyncHono';
 import { createTransaction } from '@/lib/midtrans/transaction';
+import catchAsync from '@/utils/catchAsync';
 
 export const getTransactions = catchAsync(async (c: Context) => {
   const transactions = await transactionService.getAllTransactions();
@@ -53,4 +53,3 @@ export const saveTransaction = catchAsync(async (c: Context) => {
     httpStatus.CREATED
   );
 });
-

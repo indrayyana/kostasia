@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-class ApiError extends Error {
-  statusCode: number;
+import { StatusCode } from 'hono/utils/http-status';
+
+export class ApiError extends Error {
+  statusCode: StatusCode;
   isOperational: boolean;
   errors?: any;
 
   constructor(
-    statusCode: number,
+    statusCode: StatusCode,
     message: string,
     errors?: any,
     isOperational: boolean = true,

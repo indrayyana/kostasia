@@ -1,9 +1,9 @@
 import httpStatus from 'http-status';
 import { Context } from 'hono';
 import roomService from '@/services/room';
-// import ApiError from '@/utils/ApiError';
-import { ApiError, catchAsync } from '@/utils/catchAsyncHono';
 import { CabangType } from '@/types/room';
+import catchAsync from '@/utils/catchAsync';
+import ApiError from '@/utils/ApiError';
 
 export const getRooms = catchAsync(async (c: Context) => {
   const kamar = await roomService.getAllRooms();
@@ -52,4 +52,3 @@ export const getRoomsByCabangId = catchAsync(async (c: Context) => {
     kamar,
   });
 });
-

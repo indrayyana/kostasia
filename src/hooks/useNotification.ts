@@ -22,6 +22,7 @@ export const useFetchNotificationsUser = (userId: string) => {
 
       return response.data;
     },
+    enabled: !!userId,
   });
 };
 
