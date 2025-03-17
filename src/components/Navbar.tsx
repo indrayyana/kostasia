@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   IconHome,
@@ -7,12 +8,22 @@ import {
   IconUser,
   IconLogin,
 } from '@tabler/icons-react';
-import { HiOutlineRefresh as RefreshIcon } from 'react-icons/hi';
 import Theme from './Theme';
-import { useFetchUserProfile } from '@/hooks/useUser';
+import { checkRefreshTokenExist } from '@/utils/cookies';
 
 export default function Navbar() {
-  const { data, isPending } = useFetchUserProfile();
+  const [hasToken, setHasToken] = useState<boolean>(false);
+
+  useEffect(() => {
+    async function getToken() {
+      const refreshToken = await checkRefreshTokenExist();
+      if (!!refreshToken) {
+        setHasToken(true);
+      }
+    }
+
+    getToken();
+  }, []);
 
   return (
     <nav className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
@@ -40,18 +51,7 @@ export default function Navbar() {
           </span>
         </Link>
         <Theme />
-        {isPending ? (
-          <a
-            href={'#'}
-            title="Google Login"
-            className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-          >
-            <RefreshIcon className="w-7 h-7 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-            <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-              Login
-            </span>
-          </a>
-        ) : data?.user?.nama ? (
+        {!!hasToken ? (
           <a
             href={'/dashboard/profil'}
             title="Profil"

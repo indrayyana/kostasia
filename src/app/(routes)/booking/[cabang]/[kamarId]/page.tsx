@@ -25,7 +25,6 @@ export default function Booking({ params }: BookingProps) {
       <Script
         src={config.midtrans.snapUrl}
         data-client-key={config.midtrans.clientKey}
-        strategy="lazyOnload"
       />
       <Header />
       <RoomCheckout id={params.kamarId} cabang={params.cabang as CabangType} />
@@ -33,4 +32,3 @@ export default function Booking({ params }: BookingProps) {
     </>
   );
 }
-

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { setToken, deleteToken } from '../utils/cookies';
+import { setToken, deleteToken } from '@/utils/cookies';
 
 const headers = {
   Accept: 'application/json',
@@ -33,7 +33,7 @@ api.interceptors.response.use(
         const { access, refresh } = response.data.tokens;
         setToken(access.token, refresh.token);
 
-        return axios(originalRequest);
+        return api(originalRequest);
       } catch (error) {
         console.log(error);
         deleteToken();
@@ -41,6 +41,14 @@ api.interceptors.response.use(
         if (typeof window !== 'undefined') {
           window.location.replace('/');
         }
+
+        return Promise.reject(error);
+      }
+    }
+
+    if (error.response?.status === 403) {
+      if (typeof window !== 'undefined') {
+        window.location.replace('/');
       }
     }
 

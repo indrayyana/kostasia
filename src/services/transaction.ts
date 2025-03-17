@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import prisma from '@/lib/prisma';
+import { StatusTransaksi } from '@/types/transaction';
 
 const transactionService = {
   saveTransaction: async (data: any) => {
@@ -25,12 +26,52 @@ const transactionService = {
         kamar: {
           select: {
             nama: true,
+            cabang: true,
           },
         },
       },
     });
 
     return transactions;
+  },
+
+  getTransactionById: async (transactionId: string) => {
+    const transactions = await prisma.transaksi.findFirst({
+      where: {
+        transaksi_id: transactionId,
+      },
+      include: {
+        user: {
+          select: {
+            nama: true,
+          },
+        },
+        kamar: {
+          select: {
+            nama: true,
+            cabang: true,
+          },
+        },
+      },
+    });
+
+    return transactions;
+  },
+
+  updateTransactionById: async (
+    transactionId: string,
+    status: StatusTransaksi
+  ) => {
+    const updateTransaction = await prisma.transaksi.update({
+      where: {
+        transaksi_id: transactionId,
+      },
+      data: {
+        status,
+      },
+    });
+
+    return updateTransaction;
   },
 };
 

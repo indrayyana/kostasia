@@ -76,7 +76,7 @@ export const getNotifications = catchAsync(async (c: Context) => {
 });
 
 export const getNotification = catchAsync(async (c: Context) => {
-  const userId = c.req.param('id');
+  const userId = c.req.param('userId');
 
   const validation = notifValidation.getNotif.safeParse({ user_id: userId });
   if (!validation.success) {
@@ -98,7 +98,7 @@ export const getNotification = catchAsync(async (c: Context) => {
 });
 
 export const getNotificationTokenUser = catchAsync(async (c: Context) => {
-  const userId = c.req.param('id');
+  const userId = c.req.param('userId');
 
   const validation = userValidation.getUser.safeParse({ user_id: userId });
   if (!validation.success) {

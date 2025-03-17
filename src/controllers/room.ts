@@ -34,13 +34,16 @@ export const getRoomsByCabang = catchAsync(async (c: Context) => {
 
 export const getRoomsByCabangId = catchAsync(async (c: Context) => {
   const cabang = c.req.param('cabang');
-  const id = c.req.param('id');
+  const roomId = c.req.param('roomId');
 
   if (!['denpasar', 'klungkung'].includes(cabang)) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Kamar not found');
   }
 
-  const kamar = await roomService.getRoomById(Number(id), cabang as CabangType);
+  const kamar = await roomService.getRoomById(
+    Number(roomId),
+    cabang as CabangType
+  );
   if (!kamar) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Kamar not found');
   }

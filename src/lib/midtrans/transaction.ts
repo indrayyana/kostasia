@@ -1,6 +1,7 @@
 import snap from './init';
+import { StatusTransaksi } from '@/types/transaction';
 
-type ParamsType = {
+interface ParamsType {
   transaction_details: {
     order_id: string;
     gross_amount: number;
@@ -10,12 +11,31 @@ type ParamsType = {
     email: string;
     phone: string;
   };
-};
+}
 
-type TransactionResponse = {
+interface TransactionResponse {
   token: string;
   redirect_url: string;
-};
+}
+
+interface DetailTransaction {
+  status_code: string;
+  transaction_id: string;
+  gross_amount: string;
+  currency: string;
+  order_id: string;
+  payment_type: string;
+  signature_key: string;
+  transaction_status: StatusTransaksi;
+  fraud_status: string;
+  status_message: string;
+  merchant_id: string;
+  bill_key: string;
+  biller_code: string;
+  transaction_time: string;
+  settlement_time: string;
+  expiry_time: string;
+}
 
 const createTransaction = async (
   params: ParamsType
@@ -23,11 +43,8 @@ const createTransaction = async (
   return snap.createTransaction(params);
 };
 
-// const getTransaction = async (token: string, callback: Function) => {
-//   snap.transaction.status(token).then((res: any) => {
-//     callback(res);
-//   });
-// };
+const getTransaction = async (token: string): Promise<DetailTransaction> => {
+  return await snap.transaction.status(token);
+};
 
-export { createTransaction };
-
+export { createTransaction, getTransaction };

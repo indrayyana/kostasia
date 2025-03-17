@@ -89,7 +89,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id" className="">
+    <html lang="id">
       <body className={`${inter.className} bg-white dark:bg-slate-800`}>
         <Providers>{children}</Providers>
         <SpeedInsights />
@@ -98,4 +98,3 @@ export default function RootLayout({
     </html>
   );
 }
-

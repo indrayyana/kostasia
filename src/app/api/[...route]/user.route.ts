@@ -1,16 +1,17 @@
 import { Hono } from 'hono';
 import * as userController from '@/controllers/user';
+import auth from '@/middlewares/auth';
 
 const app = new Hono();
 
-app.get('/profile', userController.getUserProfile);
+app.get('/profile', auth(), userController.getUserProfile);
 app
-  .get('/', userController.getUsers)
-  .post(userController.createUser);
+  .get('/', auth('getUsers'), userController.getUsers)
+  .post(auth('manageUsers'), userController.createUser);
 app
-  .get('/:id', userController.getUserById)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .get('/:userId', auth('getUsers'), userController.getUserById)
+  .patch(auth('manageUsers'), userController.updateUser)
+  .delete(auth('manageUsers'), userController.deleteUser);
 
 export default app;
 

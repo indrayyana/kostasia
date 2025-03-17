@@ -1,5 +1,5 @@
-import prisma from '@/lib/prisma';
 import httpStatus from 'http-status';
+import prisma from '@/lib/prisma';
 import ApiError from '@/utils/ApiError';
 import { RoleType } from '@/types/user';
 

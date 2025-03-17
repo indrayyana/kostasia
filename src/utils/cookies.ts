@@ -2,6 +2,10 @@
 
 import { cookies } from 'next/headers';
 
+export async function checkRefreshTokenExist() {
+  return cookies().has('refresh-token');
+}
+
 export async function setToken(accessToken: string, refreshToken: string) {
   cookies().set('access-token', accessToken, {
     path: '/',

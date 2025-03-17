@@ -9,4 +9,3 @@ app.post('/logout', authController.logout);
 app.post('/refresh-tokens', authController.refreshTokens);
 
 export default app;
-

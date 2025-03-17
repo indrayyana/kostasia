@@ -1,4 +1,5 @@
 export const config = {
+  env: `${process.env.NODE_ENV}`,
   app: {
     baseURL: `${process.env.BASE_URL}`,
     apiURL: `${process.env.NEXT_PUBLIC_API_URL}`,

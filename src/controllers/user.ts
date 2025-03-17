@@ -1,10 +1,7 @@
 import { Context } from 'hono';
-import { getCookie } from 'hono/cookie';
-import { jwtVerify } from 'jose';
 import httpStatus from 'http-status';
 import userService from '@/services/user';
 import userValidation from '@/validations/user';
-import { secretKey } from '@/services/token';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';
 
@@ -50,7 +47,7 @@ export const getUsers = catchAsync(async (c: Context) => {
 });
 
 export const getUserById = catchAsync(async (c: Context) => {
-  const id = c.req.param('id');
+  const id = c.req.param('userId');
 
   const validation = userValidation.getUser.safeParse({ user_id: id });
   if (!validation.success) {
@@ -75,20 +72,7 @@ export const getUserById = catchAsync(async (c: Context) => {
 });
 
 export const getUserProfile = catchAsync(async (c: Context) => {
-  const token = getCookie(c, 'access-token');
-  if (!token) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
-  }
-
-  const { payload } = await jwtVerify(token, secretKey);
-  if (!payload) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token');
-  }
-
-  const user = await userService.getUserById(payload.sub as string);
-  if (!user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Invalid token');
-  }
+  const user = c.get('user');
 
   return c.json({
     code: httpStatus.OK,
@@ -99,7 +83,7 @@ export const getUserProfile = catchAsync(async (c: Context) => {
 });
 
 export const updateUser = catchAsync(async (c: Context) => {
-  const id = c.req.param('id');
+  const id = c.req.param('userId');
   const body = await c.req.json();
 
   const validation = userValidation.updateUser.safeParse({
@@ -127,7 +111,7 @@ export const updateUser = catchAsync(async (c: Context) => {
 });
 
 export const deleteUser = catchAsync(async (c: Context) => {
-  const id = c.req.param('id');
+  const id = c.req.param('userId');
 
   const validation = userValidation.deleteUser.safeParse({ user_id: id });
   if (!validation.success) {

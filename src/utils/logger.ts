@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import winston from 'winston';
+import { format, addColors, createLogger, transports } from 'winston';
 
 const levels = {
   error: 0,
@@ -17,51 +17,51 @@ const colors = {
   debug: 'blue',
 };
 
-const format = winston.format.combine(
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-  winston.format.json(),
-  winston.format.errors({ stack: true })
+const customFormat = format.combine(
+  format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+  format.json(),
+  format.errors({ stack: true })
 );
 
-const devConsoleFormat = winston.format.combine(
-  winston.format.colorize({ all: true }),
-  winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-  winston.format.printf(
-    (info) => `${info.timestamp} ${info.level}: ${info.message} ${
+const devConsoleFormat = format.combine(
+  format.colorize({ all: true }),
+  format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
+  format.printf((info) => {
+    const metadata =
+      info.metadata && Object.keys(info.metadata).length
+        ? `\n${JSON.stringify(info.metadata, null, 2)}`
+        : '';
+
+    return `${info.timestamp} ${info.level}: ${info.message}${
       info.stack || ''
-    }
-        ${
-          Object.keys(info.metadata || {}).length
-            ? JSON.stringify(info.metadata)
-            : ''
-        }`
-  )
+    }${metadata}`;
+  })
 );
 
-winston.addColors(colors);
+addColors(colors);
 
-const transports = [
+const customTransports = [
   ...(process.env.NODE_ENV !== 'production'
     ? [
-        new winston.transports.Console({
+        new transports.Console({
           format: devConsoleFormat,
         }),
       ]
     : [
-        new winston.transports.Console({
+        new transports.Console({
           level: 'error',
         }),
       ]),
 ];
 
-const logger = winston.createLogger({
+const logger = createLogger({
   level:
     process.env.LOG_LEVEL ||
     (process.env.NODE_ENV === 'production' ? 'info' : 'debug'),
   levels,
-  format,
+  format: customFormat,
   defaultMeta: { service: 'next-app' },
-  transports,
+  transports: customTransports,
   exitOnError: false,
 });
 
@@ -99,3 +99,4 @@ export default {
     logger.debug(message, { metadata: sanitizeLog(meta) });
   },
 };
+
