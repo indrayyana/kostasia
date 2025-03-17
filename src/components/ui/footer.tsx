@@ -1,6 +1,7 @@
-import { IconBrandWhatsapp, IconMail } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { IconBrandWhatsapp, IconMail } from '@tabler/icons-react';
+import { config } from '@/utils/config';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,18 +11,18 @@ export default function Footer() {
       <div className="mx-auto max-w-screen-xl">
         <div className="md:flex grid grid-cols-2 gap-4 md:justify-around sm:gap-80">
           <div className="mb-6 md:mb-0">
-            <a href="https://www.kostasia.com" className="flex items-center">
+            <Link href={config.app.baseURL} className="flex items-center">
               <Image
                 src="https://www.kostasia.com/assets/logo.png"
                 width={250}
                 height={250}
                 className="mr-3 h-8 w-auto"
-                alt="FlowBite Logo"
+                alt="Kost ASIA Logo"
               />
               <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                 Kost ASIA
               </span>
-            </a>
+            </Link>
             <div className="mt-3 flex flex-col gap-4">
               <Link
                 href="#"

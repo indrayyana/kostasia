@@ -1,18 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import {
-  IconHome,
-  IconBrandWhatsapp,
-  IconUser,
-  IconLogin,
-} from '@tabler/icons-react';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import Theme from './Theme';
 import { checkRefreshTokenExist } from '@/utils/cookies';
+import { config } from '@/utils/config';
 
 export default function Navbar() {
+  const pathname = usePathname();
   const [hasToken, setHasToken] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     async function getToken() {
@@ -25,55 +25,127 @@ export default function Navbar() {
     getToken();
   }, []);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const menuItems = [
+    { name: 'Beranda', href: '/' },
+    { name: 'Denpasar', href: '/denpasar' },
+    { name: 'Klungkung', href: '/klungkung' },
+    { name: 'Kontak Kami', href: '/kontak' },
+  ];
+
   return (
-    <nav className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 dark:bg-gray-700 dark:border-gray-600">
-      <div className="grid h-full max-w-lg grid-cols-4 mx-auto font-medium">
+    <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
-          passHref
-          href={'/'}
-          title="Beranda"
-          className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
+          href={config.app.baseURL}
+          title="Kost ASIA"
+          prefetch={false}
+          className="flex items-center space-x-3 rtl:space-x-reverse"
         >
-          <IconHome className="w-7 h-7 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-            Beranda
+          <Image
+            src="https://www.kostasia.com/assets/logo.png"
+            height={250}
+            width={250}
+            className="h-8 w-auto"
+            alt="Kost ASIA Logo"
+          />
+          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+            Kost ASIA
           </span>
         </Link>
-        <Link
-          passHref
-          href={'#kontak'}
-          title="Kontak"
-          className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-        >
-          <IconBrandWhatsapp className="w-7 h-7 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-          <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
-            Kontak
-          </span>
-        </Link>
-        <Theme />
-        {!!hasToken ? (
-          <a
-            href={'/dashboard/profil'}
-            title="Profil"
-            className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-          >
-            <IconUser className="w-7 h-7 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-            <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+        <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          <div className="lg:mr-3 md:mr-3 flex justify-center items-center">
+            <Theme />
+          </div>
+          {!!hasToken ? (
+            <Link
+              href={'/dashboard/profil'}
+              title="Profil"
+              prefetch={false}
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
               Profil
-            </span>
-          </a>
-        ) : (
-          <a
-            href={'/api/auth/login'}
-            title="Google Login"
-            className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-          >
-            <IconLogin className="w-7 h-7 text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500" />
-            <span className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-500">
+            </Link>
+          ) : (
+            <Link
+              href={'/api/auth/login'}
+              title="Google Login"
+              prefetch={false}
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
               Login
-            </span>
-          </a>
-        )}
+            </Link>
+          )}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            data-collapse-toggle="navbar-sticky"
+            type="button"
+            className="inline-flex items-center w-9 h-9 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            aria-controls="navbar-sticky"
+            aria-expanded={isOpen}
+          >
+            <span className="sr-only">Open main menu</span>
+            <svg
+              className="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 17 14"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 1h15M1 7h15M1 13h15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          ref={menuRef}
+          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
+            isOpen ? 'block' : 'hidden'
+          }`}
+          id="navbar-sticky"
+        >
+          <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            {menuItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  title={item.name}
+                  className={`block py-2 px-3 rounded-sm md:p-0 ${
+                    pathname === item.href
+                      ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700 md:dark:text-blue-500'
+                      : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
+                  }`}
+                  aria-current={pathname === item.href ? 'page' : undefined}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </nav>
   );
