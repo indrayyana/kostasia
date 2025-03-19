@@ -34,6 +34,7 @@ export const useFetchUserProfile = () => {
 
       return response.data;
     },
+    retry: false,
   });
 };
 

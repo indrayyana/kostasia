@@ -12,6 +12,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const [hasToken, setHasToken] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [scrolled, setScrolled] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,15 +44,44 @@ export default function Navbar() {
     };
   }, [isOpen]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const menuItems = [
     { name: 'Beranda', href: '/' },
-    { name: 'Denpasar', href: '/denpasar' },
-    { name: 'Klungkung', href: '/klungkung' },
+    {
+      name: 'Denpasar',
+      href: '/denpasar',
+      regex: /^\/denpasar(\/kamar\/.*)?$|^\/booking\/denpasar\/.*$/,
+    },
+    {
+      name: 'Klungkung',
+      href: '/klungkung',
+      regex: /^\/klungkung(\/kamar\/.*)?$|^\/booking\/klungkung\/.*$/,
+    },
     { name: 'Kontak Kami', href: '/kontak' },
   ];
 
   return (
-    <nav className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-600">
+    <nav
+      className={`fixed w-full z-20 top-0 start-0 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white dark:bg-gray-900 shadow-md'
+          : 'bg-transparent dark:bg-transparent'
+      }`}
+    >
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
         <Link
           href={config.app.baseURL}
@@ -66,13 +96,17 @@ export default function Navbar() {
             className="h-8 w-auto"
             alt="Kost ASIA Logo"
           />
-          <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+          <span
+            className={`self-center text-2xl font-semibold whitespace-nowrap dark:text-white ${
+              scrolled ? '' : 'text-white'
+            }`}
+          >
             Kost ASIA
           </span>
         </Link>
         <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
           <div className="lg:mr-3 md:mr-3 flex justify-center items-center">
-            <Theme />
+            <Theme scrolled={scrolled} />
           </div>
           {!!hasToken ? (
             <Link
@@ -97,7 +131,9 @@ export default function Navbar() {
             onClick={() => setIsOpen(!isOpen)}
             data-collapse-toggle="navbar-sticky"
             type="button"
-            className="inline-flex items-center w-9 h-9 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+            className={`inline-flex items-center w-9 h-9 justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-white ${
+              scrolled ? '' : 'text-white'
+            }`}
             aria-controls="navbar-sticky"
             aria-expanded={isOpen}
           >
@@ -126,24 +162,37 @@ export default function Navbar() {
           }`}
           id="navbar-sticky"
         >
-          <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-            {menuItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  title={item.name}
-                  className={`block py-2 px-3 rounded-sm md:p-0 ${
-                    pathname === item.href
-                      ? 'text-white bg-blue-700 md:bg-transparent md:text-blue-700 md:dark:text-blue-500'
-                      : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700'
-                  }`}
-                  aria-current={pathname === item.href ? 'page' : undefined}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
+          <ul
+            className={`flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700 ${
+              scrolled
+                ? ''
+                : 'bg-white md:bg-transparent dark:md:bg-transparent dark:bg-black-2'
+            }`}
+          >
+            {menuItems.map((item) => {
+              const isActive =
+                item.regex?.test(pathname) || pathname === item.href;
+
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    title={item.name}
+                    className={`block py-1 px-3 rounded-sm ${
+                      scrolled ? '' : 'md:text-white'
+                    } ${
+                      isActive
+                        ? 'text-white bg-blue-700'
+                        : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-blue-700 md:dark:hover:bg-transparent dark:border-gray-700'
+                    }`}
+                    aria-current={isActive ? 'page' : undefined}
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

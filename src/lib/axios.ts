@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { setToken, deleteToken } from '@/utils/cookies';
 
 const headers = {
@@ -39,7 +40,25 @@ api.interceptors.response.use(
         deleteToken();
 
         if (typeof window !== 'undefined') {
-          window.location.replace('/');
+          Swal.fire({
+            title: 'Login Diperlukan',
+            text: 'Silahkan login terlebih dahulu untuk melanjutkan',
+            icon: 'warning',
+            theme: localStorage.getItem('theme') === 'dark' ? 'dark' : 'light',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+            customClass: {
+              popup: 'w-96 max-w-lg',
+              title: 'text-lg font-semibold',
+              actions: 'flex justify-around',
+              confirmButton: 'text-sm px-4 py-2 bg-primary',
+              cancelButton: 'text-sm px-4 py-2 bg-danger',
+            },
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.replace('/');
+            }
+          });
         }
 
         return Promise.reject(error);

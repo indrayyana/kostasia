@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import Header from '@/components/ui/header';
 import Footer from '@/components/ui/footer';
+import ScrollToTop from '@/components/ScrollToTop';
+import CallToAction from '@/components/CallToAction';
 
 export const metadata: Metadata = {
   title: 'Kost Klungkung - Kost ASIA',
@@ -31,8 +33,12 @@ export default function KlungkungLayout({
 }>) {
   return (
     <>
-      <Header />
-      {children}
+      <Header title="Kost Klungkung" />
+      <main>
+        {children}
+        <CallToAction />
+        <ScrollToTop />
+      </main>
       <Footer />
     </>
   );

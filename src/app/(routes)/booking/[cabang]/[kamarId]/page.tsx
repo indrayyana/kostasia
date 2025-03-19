@@ -26,7 +26,7 @@ export default function Booking({ params }: BookingProps) {
         src={config.midtrans.snapUrl}
         data-client-key={config.midtrans.clientKey}
       />
-      <Header />
+      <Header title={`Kost ${params.cabang}`} />
       <RoomCheckout id={params.kamarId} cabang={params.cabang as CabangType} />
       <Footer />
     </>

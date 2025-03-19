@@ -9,6 +9,7 @@ import Loader from './common/Loader';
 import { Button } from './ui/button';
 import { useCreateTransaction } from '@/hooks/useTransaction';
 import { useFetchUserProfile } from '@/hooks/useUser';
+import { isBrowser } from '@/utils/browser';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
@@ -56,6 +57,7 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
       onSuccess: (response) => {
         if (response?.data?.transaction?.token) {
           const transaction_token = response?.data.transaction.token;
+          if (!isBrowser()) return;
           window.snap.pay(transaction_token);
         } else {
           console.error('Transaction token not found');
