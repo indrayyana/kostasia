@@ -4,6 +4,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/Provider';
+import AOSInit from '@/lib/aos';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -15,8 +16,8 @@ const inter = Inter({
 export const viewport: Viewport = {
   themeColor: '#4285f4',
   width: 'device-width',
-  initialScale: 1,
-  minimumScale: 1,
+  initialScale: 1.0,
+  minimumScale: 1.0,
 };
 
 export const metadata: Metadata = {
@@ -91,6 +92,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body className={`${inter.className} bg-white dark:bg-slate-800`}>
+        <AOSInit />
         <Providers>{children}</Providers>
         <SpeedInsights />
         <Analytics />

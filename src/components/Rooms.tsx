@@ -41,15 +41,18 @@ export default async function Rooms({ endpoint }: RoomsProps) {
 
   return (
     <>
-      <div
-        className={`grid grid-cols-1 sm:grid-cols-2 ${
-          rooms.length === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
-        } gap-5 sm:gap-6 lg:gap-8`}
-      >
-        {rooms.map((room: RoomInterface) => (
-          <RoomItem key={room.kamar_id} room={room} />
-        ))}
-      </div>
+      <section className="flex flex-col p-12">
+        <p className="text-3xl font-bold my-4">Kamar</p>
+        <div
+          className={`grid grid-cols-1 sm:grid-cols-2 ${
+            rooms.length === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+          } gap-5 sm:gap-6 lg:gap-8`}
+        >
+          {rooms.map((room: RoomInterface) => (
+            <RoomItem key={room.kamar_id} room={room} />
+          ))}
+        </div>
+      </section>
     </>
   );
 }

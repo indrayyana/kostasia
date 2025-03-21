@@ -22,7 +22,7 @@ export default function Header({ title }: { title?: string }) {
           className="pb-12 relative w-full h-60 bg-cover bg-center bg-no-repeat flex flex-col items-center justify-end text-white"
           style={{ backgroundImage: "url('/assets/breadcrumb-bg.webp')" }}
         >
-          <div className="absolute inset-0 bg-black/75"></div>
+          <div className="absolute inset-0 bg-black/90"></div>
           <h1 className="text-4xl text-center font-bold text-white relative z-10">
             {title}
           </h1>

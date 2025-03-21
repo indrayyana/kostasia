@@ -14,10 +14,11 @@
 ## Libraries & Tools
 
 - Next PWA
+- SweetAlert2
+- AOS
+- axios
 - Husky
 - Jest
-- axios
-- SweetAlert2
 - Winston
 - Zod
 
@@ -49,4 +50,3 @@ npm install -D jest jest-environment-jsdom @testing-library/react @testing-libra
 
 npm init jest@latest
 ```
-

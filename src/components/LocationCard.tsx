@@ -6,15 +6,17 @@ interface LocationCardProps {
   name: string;
   route: string;
   imageUrl: string;
+  aosAnimate: string;
 }
 
 export default function LocationCard({
   name,
   route,
   imageUrl,
+  aosAnimate,
 }: LocationCardProps) {
   return (
-    <Link href={route}>
+    <Link href={route} data-aos={`${aosAnimate}`}>
       <Card className="relative overflow-hidden">
         <CardContent className="p-0 relative">
           <div className="relative w-full">

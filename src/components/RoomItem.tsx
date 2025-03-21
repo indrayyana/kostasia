@@ -19,13 +19,13 @@ interface RoomItemProps {
 
 const RoomItem = memo(({ room }: RoomItemProps) => {
   const statusStyles = {
-    kosong: 'border-green-500 text-green-600',
-    terisi: 'border-red-500 text-red-500',
+    kosong: 'bg-green-100 text-green-800',
+    terisi: 'bg-red-100 text-red-800',
   };
 
   return (
-    <Link href={`/${room.cabang}/kamar/${room.kamar_id}`}>
-      <Card className="dark:bg-gray-900">
+    <Link href={`/${room.cabang}/kamar/${room.kamar_id}`} data-aos="flip-left">
+      <Card className="dark:bg-slate-800 dark:border-slate-900">
         <CardHeader className="p-0">
           <Image
             src={room.gambar}
@@ -40,10 +40,8 @@ const RoomItem = memo(({ room }: RoomItemProps) => {
         <CardContent>
           <CardDescription>
             <Badge
-              variant="outline"
-              className={`font-bold text-sm px-2 my-3 capitalize ${
-                statusStyles[room.status] || ''
-              }`}
+              variant="custom"
+              className={`${statusStyles[room.status] || ''}`}
             >
               {room.status}
             </Badge>

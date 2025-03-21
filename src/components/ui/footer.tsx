@@ -40,9 +40,9 @@ export default function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+            <p className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
               Hubungi Kami
-            </h2>
+            </p>
             <ul className="text-gray-600 dark:text-gray-400">
               <li className="mb-3 flex items-center gap-2">
                 <IconBrandWhatsapp size={20} />

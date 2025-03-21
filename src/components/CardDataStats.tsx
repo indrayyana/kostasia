@@ -25,9 +25,9 @@ const CardDataStats = ({
 
       <div className="mt-4 flex items-end justify-between">
         <div>
-          <h4 className="text-title-md font-bold text-black dark:text-white">
+          <p className="text-title-md font-bold text-black dark:text-white">
             {total}
-          </h4>
+          </p>
           <span className="text-sm font-medium">{title}</span>
         </div>
 

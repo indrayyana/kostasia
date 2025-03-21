@@ -94,11 +94,9 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
               />
             )}
             {Number(id) > 10 ? (
-              <h2 className="text-2xl font-bold my-4">
-                Kamar {Number(id) - 10}
-              </h2>
+              <p className="text-2xl font-bold my-4">Kamar {Number(id) - 10}</p>
             ) : (
-              <h2 className="text-2xl font-bold my-4">Kamar {id}</h2>
+              <p className="text-2xl font-bold my-4">Kamar {id}</p>
             )}
             <p className="font-bold my-4">Spesifikasi Tipe Kamar</p>
             <ul className="list-disc">

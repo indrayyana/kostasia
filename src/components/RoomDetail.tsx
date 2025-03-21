@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { CabangType } from "@/types/room";
-import { useFetchRoomDetail } from "@/hooks/useRoom";
-import Loader from "./common/Loader";
-import { notFound } from "next/navigation";
+import Link from 'next/link';
+import Image from 'next/image';
+import { CabangType } from '@/types/room';
+import { useFetchRoomDetail } from '@/hooks/useRoom';
+import Loader from './common/Loader';
+import { notFound } from 'next/navigation';
 
 interface RoomDetailProps {
   id: string;
@@ -29,7 +29,9 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
     <>
       <main>
         {isError ? (
-          <p className="text-red-500 text-center">Terjadi kesalahan saat menampilkan data</p>
+          <p className="text-red-500 text-center">
+            Terjadi kesalahan saat menampilkan data
+          </p>
         ) : (
           <section
             id="tentang"
@@ -47,9 +49,9 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
               />
             )}
             {Number(id) > 10 ? (
-              <h2 className="text-2xl font-bold my-4">Kamar {Number(id) - 10}</h2>
+              <p className="text-2xl font-bold my-4">Kamar {Number(id) - 10}</p>
             ) : (
-              <h2 className="text-2xl font-bold my-4">Kamar {id}</h2>
+              <p className="text-2xl font-bold my-4">Kamar {id}</p>
             )}
             <p className="font-bold my-4">Spesifikasi Tipe Kamar</p>
             <ul className="list-disc">

@@ -38,7 +38,7 @@ const DropdownNotification = ({ user }: { user: UserInterface }) => {
             className={`absolute -right-27 mt-2.5 flex h-90 w-75 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark sm:right-0 sm:w-80`}
           >
             <div className="px-4.5 py-3">
-              <h5 className="text-sm font-medium text-bodydark2">Notifikasi</h5>
+              <p className="text-sm font-medium text-bodydark2">Notifikasi</p>
             </div>
 
             <ul className="flex h-auto flex-col overflow-y-auto">

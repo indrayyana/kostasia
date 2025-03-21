@@ -32,7 +32,7 @@ const SidebarLoading = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               title="Gambar Logo"
               priority
             />
-            <h1 className="text-white font-semibold text-3xl">KostASIA</h1>
+            <p className="text-white font-semibold text-3xl">KostASIA</p>
           </Link>
 
           <button
@@ -49,9 +49,9 @@ const SidebarLoading = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           {/* <!-- Sidebar Menu --> */}
           <nav className="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
             <div>
-              <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
+              <p className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
                 MENU
-              </h3>
+              </p>
 
               <ul className="mb-6 flex flex-col gap-1.5">
                 {Array.from({ length: 4 }).map((_, menuIndex) => (

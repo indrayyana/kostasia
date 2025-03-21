@@ -104,8 +104,8 @@ export default function Navbar() {
             Kost ASIA
           </span>
         </Link>
-        <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          <div className="lg:mr-3 md:mr-3 flex justify-center items-center">
+        <div className="flex lg:order-2 space-x-3 lg:space-x-0 rtl:space-x-reverse">
+          <div className="lg:mr-3 flex justify-center items-center">
             <Theme scrolled={scrolled} />
           </div>
           {!!hasToken ? (
@@ -131,7 +131,7 @@ export default function Navbar() {
             onClick={() => setIsOpen(!isOpen)}
             data-collapse-toggle="navbar-sticky"
             type="button"
-            className={`inline-flex items-center w-9 h-9 justify-center text-sm text-gray-500 rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-white ${
+            className={`inline-flex items-center w-9 h-9 justify-center text-sm text-gray-500 rounded-lg lg:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-white ${
               scrolled ? '' : 'text-white'
             }`}
             aria-controls="navbar-sticky"
@@ -157,16 +157,16 @@ export default function Navbar() {
         </div>
         <div
           ref={menuRef}
-          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
+          className={`items-center justify-between w-full lg:flex lg:w-auto lg:order-1 ${
             isOpen ? 'block' : 'hidden'
           }`}
           id="navbar-sticky"
         >
           <ul
-            className={`flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:border-gray-700 ${
+            className={`flex flex-col p-4 lg:p-0 mt-4 font-medium border border-gray-100 rounded-lg lg:space-x-8 rtl:space-x-reverse lg:flex-row lg:mt-0 lg:border-0 dark:border-gray-700 ${
               scrolled
                 ? ''
-                : 'bg-white md:bg-transparent dark:md:bg-transparent dark:bg-black-2'
+                : 'bg-white lg:bg-transparent dark:lg:bg-transparent dark:bg-black-2'
             }`}
           >
             {menuItems.map((item) => {
@@ -178,13 +178,11 @@ export default function Navbar() {
                   <Link
                     href={item.href}
                     title={item.name}
-                    className={`block py-1 px-3 rounded-sm ${
-                      scrolled ? '' : 'md:text-white'
-                    } ${
+                    className={`block py-1 px-3  ${
                       isActive
-                        ? 'text-white bg-blue-700'
-                        : 'text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white dark:hover:bg-gray-700 dark:hover:text-blue-700 md:dark:hover:bg-transparent dark:border-gray-700'
-                    }`}
+                        ? 'text-white max-lg:text-white max-lg:bg-blue-700 lg:text-blue-600 lg:font-bold lg:border-y-2 lg:border-blue-600'
+                        : 'text-gray-900 hover:bg-gray-100 lg:hover:bg-transparent lg:hover:text-blue-600 dark:text-white dark:hover:bg-gray-700 dark:hover:text-blue-600 lg:dark:hover:bg-transparent dark:border-gray-700'
+                    } ${scrolled ? '' : 'text-white max-lg:text-gray-900'}`}
                     aria-current={isActive ? 'page' : undefined}
                     onClick={() => setIsOpen(false)}
                   >

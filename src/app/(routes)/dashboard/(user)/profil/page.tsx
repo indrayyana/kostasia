@@ -21,9 +21,9 @@ const Profil = () => {
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">
+                <p className="font-medium text-black dark:text-white">
                   Informasi Pribadi
-                </h3>
+                </p>
               </div>
               <div className="p-7">
                 <form action="#">
@@ -156,9 +156,9 @@ const Profil = () => {
           <div className="col-span-5 xl:col-span-2">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
-                <h3 className="font-medium text-black dark:text-white">
+                <p className="font-medium text-black dark:text-white">
                   Foto Profil
-                </h3>
+                </p>
               </div>
               <div className="p-7">
                 <form action="#">
