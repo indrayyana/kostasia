@@ -1,16 +1,22 @@
+// import Image from 'next/image';
 import Rooms from '@/components/Rooms';
 import GoogleMaps from '@/components/GoogleMaps';
-// import Image from 'next/image';
+import Header from '@/components/ui/header';
+import Footer from '@/components/ui/footer';
+import ScrollToTop from '@/components/ScrollToTop';
+import CallToAction from '@/components/CallToAction';
 
 export default function Klungkung() {
   return (
     <>
-      <section className="w-full p-12 bg-blue-600">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-          <div className="">
-            <div className="w-full h-100 bg-gray-600" />
+      <Header title="Kost Klungkung" />
+      <main>
+        <section className="w-full p-12 bg-blue-600">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+            <div className="">
+              <div className="w-full h-100 bg-gray-600" />
 
-            {/* <Image
+              {/* <Image
               src={'/assets/dummy.jpg'}
               loading="lazy"
               width={200}
@@ -18,30 +24,34 @@ export default function Klungkung() {
               alt="Gambar kost"
               className="w-full h-auto rounded-2xl"
             /> */}
-          </div>
+            </div>
 
-          <div className="text-white flex flex-col gap-5">
-            <h2 className="text-4xl font-bold">Tentang Kami</h2>
-            <p className="text-justify">
-              Kami menawarkan pilihan fleksibel bagi para penghuni dengan
-              penyewaan harian, mingguan, dan bulanan, sesuai kebutuhan Anda.
-              Tersedia 6 kamar yang dirancang untuk kenyamanan maksimal,
-              masing-masing dilengkapi dengan kamar mandi dalam untuk privasi
-              dan kemudahan Anda. Nikmati pengalaman tinggal yang menyenangkan
-              dan praktis bersama kami!
-            </p>
-            <p>Fasilitas:</p>
-            <ul className="list-disc">
-              <li>Kamar mandi dalam</li>
-              <li>Lemari</li>
-              <li>Kasur</li>
-            </ul>
+            <div className="text-white flex flex-col gap-5">
+              <h2 className="text-4xl font-bold">Tentang Kami</h2>
+              <p className="text-justify">
+                Kami menawarkan pilihan fleksibel bagi para penghuni dengan
+                penyewaan harian, mingguan, dan bulanan, sesuai kebutuhan Anda.
+                Tersedia 6 kamar yang dirancang untuk kenyamanan maksimal,
+                masing-masing dilengkapi dengan kamar mandi dalam untuk privasi
+                dan kemudahan Anda. Nikmati pengalaman tinggal yang menyenangkan
+                dan praktis bersama kami!
+              </p>
+              <p>Fasilitas:</p>
+              <ul className="list-disc">
+                <li>Kamar mandi dalam</li>
+                <li>Lemari</li>
+                <li>Kasur</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <Rooms endpoint="klungkung" />
-      <GoogleMaps />
+        <Rooms cabang="klungkung" />
+        <GoogleMaps />
+        <CallToAction />
+        <ScrollToTop />
+      </main>
+      <Footer />
     </>
   );
 }

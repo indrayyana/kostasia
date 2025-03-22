@@ -16,6 +16,25 @@ export const useFetchRooms = () => {
   });
 };
 
+export const useFetchRoomsByCabang = (cabang: CabangType) => {
+  return useQuery({
+    queryKey: ['room', cabang],
+    queryFn: async () => {
+      try {
+        const response = await api.get(`/rooms/${cabang}`);
+
+        return response.data;
+      } catch (error) {
+        const err = error as ErrorInterface;
+        if (err.response?.status === 404) {
+          return null;
+        }
+        throw error;
+      }
+    },
+  });
+};
+
 export const useFetchRoomDetail = (cabang: CabangType, id: string) => {
   return useQuery({
     queryKey: ['room', cabang, id],

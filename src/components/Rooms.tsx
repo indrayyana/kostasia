@@ -1,36 +1,22 @@
-import { RoomInterface } from '@/types/room';
+'use client';
+
+import { CabangType, RoomInterface } from '@/types/room';
+import { useFetchRoomsByCabang } from '@/hooks/useRoom';
 import RoomItem from './RoomItem';
-import logger from '@/utils/logger';
+import { Skeleton } from './ui/skeleton';
+import { Card, CardContent, CardHeader } from './ui/card';
 
 interface RoomsProps {
-  endpoint: string;
+  cabang: CabangType;
 }
 
-async function getRooms(endpoint: string) {
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/rooms/${endpoint}`,
-      {
-        cache: 'no-store',
-      }
-    );
+export default function Rooms({ cabang }: RoomsProps) {
+  const { data, isPending, isError } = useFetchRoomsByCabang(cabang);
 
-    if (!res.ok) {
-      throw new Error('Failed to fetch data');
-    }
-
-    return res.json();
-  } catch (error) {
-    logger.error(`failed to get all rooms ${error}`, { message: error });
-    return { kamar: [] };
-  }
-}
-
-export default async function Rooms({ endpoint }: RoomsProps) {
-  const data = await getRooms(endpoint);
+  const skeletonCount = cabang === 'klungkung' ? 6 : 8;
   const rooms = data?.kamar || [];
 
-  if (rooms.length < 1) {
+  if (isError) {
     return (
       <div className="text-center">
         <p>Terjadi kesalahan saat menampilkan data kamar</p>
@@ -45,12 +31,31 @@ export default async function Rooms({ endpoint }: RoomsProps) {
         <p className="text-3xl font-bold my-4">Kamar</p>
         <div
           className={`grid grid-cols-1 sm:grid-cols-2 ${
-            rooms.length === 6 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+            cabang === 'klungkung' ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
           } gap-5 sm:gap-6 lg:gap-8`}
         >
-          {rooms.map((room: RoomInterface) => (
-            <RoomItem key={room.kamar_id} room={room} />
-          ))}
+          {isPending
+            ? Array.from({ length: skeletonCount }).map((_, index) => (
+                <Card
+                  key={index}
+                  className="dark:bg-slate-800 dark:border-slate-900 max-w-lg"
+                >
+                  <CardHeader className="p-0">
+                    <Skeleton className="h-[14rem] w-full max-w-lg" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="mt-2 flex flex-col gap-2">
+                      <Skeleton className="rounded-full h-[1.5rem] w-[4rem] max-w-lg" />
+                      <Skeleton className="h-[1.5rem] w-[8rem] max-w-lg" />
+                      <Skeleton className="h-[1rem] w-[15rem] max-w-lg" />
+                      <Skeleton className="mt-4 h-[2rem] w-full max-w-lg" />
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            : rooms.map((room: RoomInterface) => (
+                <RoomItem key={room.kamar_id} room={room} />
+              ))}
         </div>
       </section>
     </>

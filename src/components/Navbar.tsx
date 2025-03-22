@@ -8,7 +8,11 @@ import Theme from './Theme';
 import { checkRefreshTokenExist } from '@/utils/cookies';
 import { config } from '@/utils/config';
 
-export default function Navbar() {
+interface NavbarProps {
+  hasBreadcrumb?: boolean;
+}
+
+export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
   const pathname = usePathname();
   const [hasToken, setHasToken] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -77,7 +81,7 @@ export default function Navbar() {
   return (
     <nav
       className={`fixed w-full z-20 top-0 start-0 transition-all duration-300 ${
-        scrolled
+        scrolled || !hasBreadcrumb
           ? 'bg-white dark:bg-gray-900 shadow-md'
           : 'bg-transparent dark:bg-transparent'
       }`}
@@ -98,7 +102,7 @@ export default function Navbar() {
           />
           <span
             className={`self-center text-2xl font-semibold whitespace-nowrap dark:text-white ${
-              scrolled ? '' : 'text-white'
+              scrolled || !hasBreadcrumb ? '' : 'text-white'
             }`}
           >
             Kost ASIA
@@ -106,12 +110,12 @@ export default function Navbar() {
         </Link>
         <div className="flex lg:order-2 space-x-3 lg:space-x-0 rtl:space-x-reverse">
           <div className="lg:mr-3 flex justify-center items-center">
-            <Theme scrolled={scrolled} />
+            <Theme scrolled={scrolled || !hasBreadcrumb} />
           </div>
           {!!hasToken ? (
             <Link
               href={'/dashboard/profil'}
-              title="Profil"
+              title="Tombol Profil"
               prefetch={false}
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
@@ -120,7 +124,7 @@ export default function Navbar() {
           ) : (
             <Link
               href={'/api/auth/login'}
-              title="Google Login"
+              title="Tombol Google Login"
               prefetch={false}
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
@@ -182,7 +186,11 @@ export default function Navbar() {
                       isActive
                         ? 'text-white max-lg:text-white max-lg:bg-blue-700 lg:text-blue-600 lg:font-bold lg:border-y-2 lg:border-blue-600'
                         : 'text-gray-900 hover:bg-gray-100 lg:hover:bg-transparent lg:hover:text-blue-600 dark:text-white dark:hover:bg-gray-700 dark:hover:text-blue-600 lg:dark:hover:bg-transparent dark:border-gray-700'
-                    } ${scrolled ? '' : 'text-white max-lg:text-gray-900'}`}
+                    } ${
+                      scrolled || !hasBreadcrumb
+                        ? ''
+                        : 'text-white max-lg:text-gray-900'
+                    }`}
                     aria-current={isActive ? 'page' : undefined}
                     onClick={() => setIsOpen(false)}
                   >

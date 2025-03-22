@@ -24,8 +24,8 @@ const RoomItem = memo(({ room }: RoomItemProps) => {
   };
 
   return (
-    <Link href={`/${room.cabang}/kamar/${room.kamar_id}`} data-aos="flip-left">
-      <Card className="dark:bg-slate-800 dark:border-slate-900">
+    <Link href={`/${room.cabang}/kamar/${room.kamar_id}`} data-aos="zoom-in-up">
+      <Card className="dark:bg-slate-800 dark:border-slate-900 max-w-lg">
         <CardHeader className="p-0">
           <Image
             src={room.gambar}
@@ -33,8 +33,8 @@ const RoomItem = memo(({ room }: RoomItemProps) => {
             title={`Foto ${room.nama}`}
             width={500}
             height={500}
-            priority
-            className="rounded-t-lg object-cover object-top aspect-[1.40/1] w-full"
+            priority={true}
+            className="rounded-t-lg object-cover object-top aspect-[1.40/1] w-full max-w-lg"
           />
         </CardHeader>
         <CardContent>

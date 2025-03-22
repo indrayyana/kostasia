@@ -1,8 +1,4 @@
 import type { Metadata } from 'next';
-import Header from '@/components/ui/header';
-import Footer from '@/components/ui/footer';
-import ScrollToTop from '@/components/ScrollToTop';
-import CallToAction from '@/components/CallToAction';
 
 export const metadata: Metadata = {
   title: 'Kost Denpasar - Kost ASIA',
@@ -31,16 +27,6 @@ export default function DenpasarLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <>
-      <Header title="Kost Denpasar" />
-      <main>
-        {children}
-        <CallToAction />
-        <ScrollToTop />
-      </main>
-      <Footer />
-    </>
-  );
+  return <>{children}</>;
 }
 

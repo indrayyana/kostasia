@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/ui/footer';
 
 export default function NotFound() {
   return (
@@ -26,7 +25,6 @@ export default function NotFound() {
           </Link>
         </div>
       </div>
-      <Footer />
     </>
   );
 }
