@@ -17,15 +17,12 @@ const ButtonLogout = () => {
 
   return (
     <Button
-      className="bg-white text-[#64748B] h-auto flex items-center hover:bg-white justify-start gap-4.5 px-7 py-3 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+      className="bg-white text-gray-500 h-auto flex items-center hover:bg-white justify-start gap-4.5 px-7 py-3 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
       onClick={() => {
         Swal.fire({
           title: 'Apakah Anda yakin ingin logout ?',
           icon: 'warning',
-          theme:
-            theme === 'dark' || (theme === 'system' && systemTheme === 'dark')
-              ? 'dark'
-              : 'light',
+          theme: theme === 'dark' || (theme === 'system' && systemTheme === 'dark') ? 'dark' : 'light',
           showCancelButton: true,
           cancelButtonText: 'Batal',
           confirmButtonText: 'Logout',
@@ -39,7 +36,9 @@ const ButtonLogout = () => {
           },
           preConfirm: async () => {
             try {
-              Swal.getConfirmButton().innerHTML = `
+              const confirmButton = Swal.getConfirmButton();
+              if (confirmButton) {
+                confirmButton.innerHTML = `
                 <div class="flex items-center gap-2">
                   <svg aria-hidden="true" role="status" class="w-4 h-4 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
@@ -48,8 +47,8 @@ const ButtonLogout = () => {
                   <span>Loading</span>
                 </div>
               `;
-              Swal.getConfirmButton().setAttribute('disabled', 'true');
-
+                confirmButton.setAttribute('disabled', 'true');
+              }
               const res = await api.post(`${config.app.apiURL}/auth/logout`);
               if (res.status !== 200) {
                 throw new Error('Gagal logout, coba lagi.');

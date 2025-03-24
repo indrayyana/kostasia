@@ -1,28 +1,15 @@
 import { Context } from 'hono';
 import httpStatus from 'http-status';
-import userService from '@/services/user';
-import userValidation from '@/validations/user';
+import * as userService from '@/services/user';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';
+import { createUserBodyType, updateUserBodyType, userParamsType } from '@/validations/user';
 
 export const createUser = catchAsync(async (c: Context) => {
-  const body = await c.req.json();
+  // @ts-expect-error off
+  const validatedBody: createUserBodyType = c.req.valid('json');
 
-  const validation = userValidation.createUser.safeParse({
-    nama: body.nama,
-    email: body.email,
-    telepon: body.telepon,
-    role: body.role,
-  });
-  if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Bad Request',
-      validation.error.flatten().fieldErrors
-    );
-  }
-
-  const user = await userService.createUser(body);
+  const user = await userService.createUser(validatedBody);
 
   return c.json(
     {
@@ -47,18 +34,10 @@ export const getUsers = catchAsync(async (c: Context) => {
 });
 
 export const getUserById = catchAsync(async (c: Context) => {
-  const id = c.req.param('userId');
+  // @ts-expect-error off
+  const validatedParam: userParamsType = c.req.valid('param');
 
-  const validation = userValidation.getUser.safeParse({ user_id: id });
-  if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Invalid user ID',
-      validation.error.flatten().fieldErrors
-    );
-  }
-
-  const user = await userService.getUserById(id);
+  const user = await userService.getUserById(validatedParam.userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -83,24 +62,12 @@ export const getUserProfile = catchAsync(async (c: Context) => {
 });
 
 export const updateUser = catchAsync(async (c: Context) => {
-  const id = c.req.param('userId');
-  const body = await c.req.json();
+  // @ts-expect-error off
+  const validatedParam: userParamsType = c.req.valid('param');
+  // @ts-expect-error off
+  const validatedBody: updateUserBodyType = c.req.valid('json');
 
-  const validation = userValidation.updateUser.safeParse({
-    user_id: id,
-    nama: body.nama,
-    email: body.email,
-    telepon: body.telepon,
-  });
-  if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Invalid user ID',
-      validation.error.flatten().fieldErrors
-    );
-  }
-
-  const user = await userService.updateUserById(id, body);
+  const user = await userService.updateUserById(validatedParam.userId, validatedBody);
 
   return c.json({
     code: httpStatus.OK,
@@ -111,18 +78,10 @@ export const updateUser = catchAsync(async (c: Context) => {
 });
 
 export const deleteUser = catchAsync(async (c: Context) => {
-  const id = c.req.param('userId');
+  // @ts-expect-error off
+  const validatedParam: userParamsType = c.req.valid('param');
 
-  const validation = userValidation.deleteUser.safeParse({ user_id: id });
-  if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Invalid user ID',
-      validation.error.flatten().fieldErrors
-    );
-  }
-
-  await userService.deleteUserById(id);
+  await userService.deleteUserById(validatedParam.userId);
 
   return c.json({
     code: httpStatus.OK,

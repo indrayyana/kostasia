@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { CellAction } from "./cell-action";
-import dateFormat from "@/utils/dateFormat";
+import { ColumnDef } from '@tanstack/react-table';
+import { Checkbox } from '@/components/ui/checkbox';
+import { CellAction } from './cell-action';
+import dateFormat from '@/utils/dateFormat';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -11,12 +11,11 @@ import dateFormat from "@/utils/dateFormat";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const columns = (refetch: () => void): ColumnDef<any>[] => [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         className="mt-1"
-        // @ts-expect-error off
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
@@ -33,31 +32,31 @@ export const columns = (refetch: () => void): ColumnDef<any>[] => [
     enableHiding: false,
   },
   {
-    accessorKey: "total",
-    header: "Total",
+    accessorKey: 'total',
+    header: 'Total',
   },
   {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: 'status',
+    header: 'Status',
   },
   {
-    accessorKey: "user.nama",
-    header: "Oleh",
+    accessorKey: 'user.nama',
+    header: 'Oleh',
   },
   {
-    accessorKey: "kamar.nama",
-    header: "Kamar",
+    accessorKey: 'kamar.nama',
+    header: 'Kamar',
   },
   {
-    accessorKey: "dibuat_pada",
-    header: "Tanggal",
+    accessorKey: 'dibuat_pada',
+    header: 'Tanggal',
     cell: ({ row }) => {
-      const rowDate = row.getValue<string>("dibuat_pada");
+      const rowDate = row.getValue<string>('dibuat_pada');
       return <p>{dateFormat(rowDate)}</p>;
     },
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => <CellAction data={row.original} refecth={refetch} />,
   },
 ];

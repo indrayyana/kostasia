@@ -17,6 +17,8 @@ const verifyToken = async (token: string): Promise<JWTPayload> => {
     } else if (error instanceof errors.JWSSignatureVerificationFailed) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
     }
+
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
   }
 };
 

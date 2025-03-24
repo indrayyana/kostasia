@@ -1,10 +1,8 @@
 import { z } from 'zod';
 
-const tokenValidation = {
-  refreshToken: z.object({
-    refreshToken: z.string(),
-  }),
-};
+export const refreshToken = z.object({
+  refreshToken: z.string(),
+});
 
-export default tokenValidation;
+export type refreshTokenBodyType = z.infer<typeof refreshToken>;
 

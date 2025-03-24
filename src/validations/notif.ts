@@ -1,25 +1,25 @@
 import { z } from 'zod';
 
-const notifValidation = {
-  saveNotifToken: z.object({
-    token: z.string(),
-    user_id: z.string().uuid(),
-  }),
+export const saveNotifToken = z.object({
+  token: z.string(),
+  user_id: z.string().uuid(),
+});
 
-  createNotif: z.object({
-    judul: z.string().max(50),
-    deskripsi: z.string().max(250),
-    user_id: z.string().uuid(),
-  }),
+export const createNotif = z.object({
+  judul: z.string().max(50),
+  deskripsi: z.string().max(250),
+  user_id: z.string().uuid(),
+});
 
-  getNotif: z.object({
-    user_id: z.string().uuid(),
-  }),
+export const getNotif = z.object({
+  user_id: z.string().uuid(),
+});
 
-  deleteNotif: z.object({
-    notifikasi_id: z.number(),
-  }),
-};
+export const notifParams = z.object({
+  notificationId: z.number(),
+});
 
-export default notifValidation;
+export type saveNotifTokenBodyType = z.infer<typeof saveNotifToken>;
+export type NotifParamsType = z.infer<typeof notifParams>;
+export type createNotifBodyType = z.infer<typeof createNotif>;
 

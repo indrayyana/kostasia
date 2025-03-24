@@ -17,11 +17,7 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
     header: ({ table }) => (
       <Checkbox
         className="mt-1"
-        // @ts-expect-error off
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />
@@ -47,11 +43,7 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
     cell: ({ row }) => {
       if (row.getValue('telepon')) {
       }
-      return (
-        <p>
-          {row.getValue('telepon') ? `+${row.getValue('telepon')}` : 'kosong'}
-        </p>
-      );
+      return <p>{row.getValue('telepon') ? `+${row.getValue('telepon')}` : 'kosong'}</p>;
     },
   },
   {
@@ -70,10 +62,7 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
       };
 
       return (
-        <Badge
-          variant="outline"
-          className={`font-bold shadow capitalize ${roleStyles[role] || ''}`}
-        >
+        <Badge variant="outline" className={`font-bold shadow capitalize ${roleStyles[role] || ''}`}>
           {role}
         </Badge>
       );

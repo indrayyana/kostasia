@@ -11,6 +11,7 @@ export const useFetchNotifications = () => {
 
       return response.data;
     },
+    retry: false,
   });
 };
 
@@ -23,6 +24,7 @@ export const useFetchNotificationsUser = (userId: string) => {
       return response.data;
     },
     enabled: !!userId,
+    retry: false,
   });
 };
 
@@ -33,6 +35,7 @@ export const useCreateNotification = ({ onSuccess, onError }) => {
 
       return response;
     },
+    retry: false,
     onSuccess,
     onError,
   });
@@ -45,6 +48,7 @@ export const useDeleteNotification = ({ onSuccess, onError }) => {
 
       return response;
     },
+    retry: false,
     onSuccess,
     onError,
   });
@@ -57,6 +61,7 @@ export const useBulkDeleteNotification = ({ onSuccess, onError }) => {
 
       return response;
     },
+    retry: false,
     onSuccess,
     onError,
   });
@@ -70,6 +75,7 @@ export const useFetchUsersWithNotification = () => {
 
       return response.data;
     },
+    retry: false,
   });
 };
 

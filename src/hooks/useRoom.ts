@@ -13,6 +13,7 @@ export const useFetchRooms = () => {
 
       return response.data;
     },
+    retry: false,
   });
 };
 
@@ -32,6 +33,7 @@ export const useFetchRoomsByCabang = (cabang: CabangType) => {
         throw error;
       }
     },
+    retry: false,
   });
 };
 
@@ -51,6 +53,7 @@ export const useFetchRoomDetail = (cabang: CabangType, id: string) => {
         throw error;
       }
     },
+    retry: false,
   });
 };
 

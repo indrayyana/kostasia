@@ -1,27 +1,23 @@
 import httpStatus from 'http-status';
 import { Context } from 'hono';
 import notificationService from '@/services/notification';
-import notifValidation from '@/validations/notif';
-import userService from '@/services/user';
+import * as userService from '@/services/user';
 import tokenService from '@/services/token';
-import userValidation from '@/validations/user';
+import * as userValidation from '@/validations/user';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';
+import { createNotif, getNotif, NotifParamsType, saveNotifToken } from '../validations/notif';
 
 export const createNotification = catchAsync(async (c: Context) => {
   const body = await c.req.json();
 
-  const validation = notifValidation.createNotif.safeParse({
+  const validation = createNotif.safeParse({
     judul: body.judul,
     deskripsi: body.deskripsi,
     user_id: body.user_id,
   });
   if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Bad Request',
-      validation.error.flatten().fieldErrors
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Bad Request', validation.error.flatten().fieldErrors);
   }
 
   const notification = await notificationService.createNotification(body);
@@ -40,16 +36,12 @@ export const createNotification = catchAsync(async (c: Context) => {
 export const createNotificationToken = catchAsync(async (c: Context) => {
   const { token, user_id } = await c.req.json();
 
-  const validation = notifValidation.saveNotifToken.safeParse({
+  const validation = saveNotifToken.safeParse({
     token,
     user_id,
   });
   if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Bad Request',
-      validation.error.flatten().fieldErrors
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Bad Request', validation.error.flatten().fieldErrors);
   }
 
   await tokenService.saveToken(token, user_id, null, 'notification');
@@ -78,13 +70,9 @@ export const getNotifications = catchAsync(async (c: Context) => {
 export const getNotification = catchAsync(async (c: Context) => {
   const userId = c.req.param('userId');
 
-  const validation = notifValidation.getNotif.safeParse({ user_id: userId });
+  const validation = getNotif.safeParse({ user_id: userId });
   if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Invalid ID',
-      validation.error.flatten().fieldErrors
-    );
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid ID', validation.error.flatten().fieldErrors);
   }
 
   const notifications = await notificationService.getAllNotifByUserId(userId);
@@ -98,18 +86,10 @@ export const getNotification = catchAsync(async (c: Context) => {
 });
 
 export const getNotificationTokenUser = catchAsync(async (c: Context) => {
-  const userId = c.req.param('userId');
+  // @ts-expect-error off
+  const validatedParam: userValidation.userParamsType = c.req.valid('param');
 
-  const validation = userValidation.getUser.safeParse({ user_id: userId });
-  if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Invalid user ID',
-      validation.error.flatten().fieldErrors
-    );
-  }
-
-  const token = await tokenService.getNotificationToken(userId);
+  const token = await tokenService.getNotificationToken(validatedParam.userId);
 
   return c.json({
     code: httpStatus.OK,
@@ -131,20 +111,10 @@ export const getNotificationTokenWithUsers = catchAsync(async (c: Context) => {
 });
 
 export const deleteNotification = catchAsync(async (c: Context) => {
-  const id = parseInt(c.req.param('id'), 10);
+  // @ts-expect-error off
+  const validatedParam: NotifParamsType = c.req.valid('param');
 
-  const validation = notifValidation.deleteNotif.safeParse({
-    notifikasi_id: id,
-  });
-  if (!validation.success) {
-    throw new ApiError(
-      httpStatus.BAD_REQUEST,
-      'Invalid ID',
-      validation.error.flatten().fieldErrors
-    );
-  }
-
-  await notificationService.deleteNotificationById(id);
+  await notificationService.deleteNotificationById(validatedParam.notificationId);
 
   return c.json({
     code: httpStatus.OK,

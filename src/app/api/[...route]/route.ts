@@ -2,14 +2,16 @@ import { Hono } from 'hono';
 import { compress } from 'hono/compress';
 import { secureHeaders } from 'hono/secure-headers';
 import { handle } from 'hono/vercel';
+import { timeout } from 'hono/timeout';
 import httpStatus from 'http-status';
+import { authLimiter } from '@/middlewares/rateLimiter';
 import auth from './auth.route';
 import user from './user.route';
 import room from './room.route';
 import notification from './notification.route';
 import transaction from './transaction.route';
 import { UserInterface } from '@/types/user';
-import { errorConverter, errorHandler } from '@/middlewares/error';
+import { errorHandler } from '@/middlewares/error';
 import ApiError from '@/utils/ApiError';
 
 export const dynamic = 'force-dynamic';
@@ -23,6 +25,13 @@ const app = new Hono<{ Variables: Variables }>().basePath('/api');
 app.use(secureHeaders());
 app.use(compress());
 
+// Applying a 10-second timeout
+app.use('/', timeout(10000));
+
+// limit repeated failed requests to auth endpoints
+app.use('/auth/*', authLimiter);
+
+// API routes
 app.route('/auth', auth);
 app.route('/users', user);
 app.route('/rooms', room);
@@ -33,9 +42,6 @@ app.route('/transactions', transaction);
 app.notFound((c) => {
   throw new ApiError(httpStatus.NOT_FOUND, 'Route not found');
 });
-
-// convert error to ApiError, if needed
-app.use(errorConverter);
 
 // handle error
 app.onError(errorHandler);

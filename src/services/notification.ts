@@ -40,10 +40,10 @@ const notificationService = {
     return notification;
   },
 
-  deleteNotificationById: async (id: number) => {
+  deleteNotificationById: async (notificationId: number) => {
     const notification = await prisma.notifikasi.findFirst({
       where: {
-        notifikasi_id: id,
+        notifikasi_id: notificationId,
       },
     });
 
@@ -53,31 +53,28 @@ const notificationService = {
 
     await prisma.notifikasi.delete({
       where: {
-        notifikasi_id: id,
+        notifikasi_id: notificationId,
       },
     });
 
     return notification;
   },
 
-  deleteAllNotificationById: async (ids: number[]) => {
+  deleteAllNotificationById: async (notificationsId: number[]) => {
     return await prisma.$transaction(async (tx) => {
       const notifications = await tx.notifikasi.findMany({
-        where: { notifikasi_id: { in: ids } },
+        where: { notifikasi_id: { in: notificationsId } },
       });
 
       const foundIds = notifications.map((notif) => notif.notifikasi_id);
-      const missingIds = ids.filter((id) => !foundIds.includes(id));
+      const missingIds = notificationsId.filter((id) => !foundIds.includes(id));
 
       if (missingIds.length > 0) {
-        throw new ApiError(
-          httpStatus.NOT_FOUND,
-          `Notifications not found for ID(s): ${missingIds.join(', ')}`
-        );
+        throw new ApiError(httpStatus.NOT_FOUND, `Notifications not found for ID(s): ${missingIds.join(', ')}`);
       }
 
       const deletedNotifications = await tx.notifikasi.deleteMany({
-        where: { notifikasi_id: { in: ids } },
+        where: { notifikasi_id: { in: notificationsId } },
       });
 
       return deletedNotifications;
@@ -86,4 +83,3 @@ const notificationService = {
 };
 
 export default notificationService;
-

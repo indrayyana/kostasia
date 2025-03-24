@@ -10,6 +10,7 @@ export const useCreateTransaction = () => {
 
       return response;
     },
+    retry: false,
   });
 };
 
@@ -21,6 +22,7 @@ export const useFetchTransactions = () => {
 
       return response.data;
     },
+    retry: false,
   });
 };
 
@@ -33,5 +35,6 @@ export const useUpdateTransaction = () => {
 
       return response;
     },
+    retry: false,
   });
 };

@@ -11,7 +11,7 @@ export async function setToken(accessToken: string, refreshToken: string) {
     path: '/',
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24 * 30, // 30 hari
+    maxAge: 60 * 30, // 30 menit
   });
 
   cookies().set('refresh-token', refreshToken, {

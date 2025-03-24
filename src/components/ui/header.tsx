@@ -34,7 +34,7 @@ export default function Header({ title, title2 }: HeaderProps) {
               className="object-cover object-center"
             />
             <div className="absolute inset-0 bg-black/90"></div>
-            <h1 className="text-4xl text-center font-bold text-white relative z-10">
+            <h1 className="text-4xl text-center font-bold text-white relative z-10 capitalize">
               {title}
             </h1>
             <Breadcrumb className="mt-4 relative z-10">
@@ -52,7 +52,7 @@ export default function Header({ title, title2 }: HeaderProps) {
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
                     <Link
-                      className="text-white"
+                      className="text-white capitalize"
                       href={`/${title
                         .replace('Kost', '')
                         .toLowerCase()

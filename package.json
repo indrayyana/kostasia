@@ -15,6 +15,7 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.4.3",
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^6.3.0",
     "@radix-ui/react-alert-dialog": "^1.1.2",
@@ -41,7 +42,8 @@
     "flatpickr": "^4.6.13",
     "framer-motion": "^11.11.9",
     "googleapis": "^144.0.0",
-    "hono": "^4.7.4",
+    "hono": "^4.7.5",
+    "hono-rate-limiter": "^0.4.2",
     "http-status": "^2.0.0",
     "jose": "^5.9.6",
     "jsvectormap": "^1.6.0",

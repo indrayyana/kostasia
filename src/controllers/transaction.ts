@@ -20,7 +20,7 @@ export const getTransactions = catchAsync(async (c: Context) => {
 export const getTransactionByOrderId = catchAsync(async (c: Context) => {
   const transaksi_id = c.req.query('order_id');
 
-  const transaction = await transactionService.getTransactionById(transaksi_id);
+  const transaction = await transactionService.getTransactionById(transaksi_id as string);
   if (!transaction) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Transaction not found');
   }
@@ -79,7 +79,7 @@ export const saveTransaction = catchAsync(async (c: Context) => {
 export const updateTransactionByOrderId = catchAsync(async (c: Context) => {
   const transaksi_id = c.req.query('order_id');
 
-  const transaction = await transactionService.getTransactionById(transaksi_id);
+  const transaction = await transactionService.getTransactionById(transaksi_id as string);
   if (!transaction) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Transaction not found');
   }

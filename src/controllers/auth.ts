@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import { Context } from 'hono';
 import { getCookie } from 'hono/cookie';
 import tokenService from '@/services/token';
-import userService from '@/services/user';
+import * as userService from '@/services/user';
 import { RoleType } from '@/types/user';
 import { setToken } from '@/utils/cookies';
 import { authorizationUrl, google, oauth2Client } from '@/lib/oauth';
@@ -24,9 +24,7 @@ export const loginWithGoogle = catchAsync(async (c: Context) => {
 
   oauth2Client.setCredentials(googleTokens);
 
-  const { data } = await google
-    .oauth2({ auth: oauth2Client, version: 'v2' })
-    .userinfo.get();
+  const { data } = await google.oauth2({ auth: oauth2Client, version: 'v2' }).userinfo.get();
 
   if (!data.email || !data.name) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Login failed');
@@ -82,10 +80,7 @@ export const refreshTokens = catchAsync(async (c: Context) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
   }
 
-  const refreshTokenDoc = await tokenService.verifyToken(
-    refreshToken,
-    'refresh'
-  );
+  const refreshTokenDoc = await tokenService.verifyToken(refreshToken, 'refresh');
   if (!refreshTokenDoc) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid Token');
   }

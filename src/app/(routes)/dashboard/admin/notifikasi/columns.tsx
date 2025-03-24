@@ -15,11 +15,7 @@ export const columns = (refetch: () => void): ColumnDef<NotifInterface>[] => [
     header: ({ table }) => (
       <Checkbox
         className="mt-1"
-        // @ts-expect-error off
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && 'indeterminate')
-        }
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate')}
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
       />

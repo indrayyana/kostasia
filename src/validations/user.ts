@@ -1,27 +1,29 @@
 import { z } from 'zod';
 
-const userValidation = {
-  createUser: z.object({
+export const createUserBody = z
+  .object({
     nama: z.string().max(20),
     email: z.string().email().max(64),
     telepon: z.string().max(20),
     role: z.enum(['pengunjung', 'penyewa', 'admin']),
-  }),
+  })
+  .strict();
 
-  updateUser: z.object({
-    user_id: z.string().uuid(),
+export const updateUserBody = z
+  .object({
     nama: z.string().max(20).optional(),
     email: z.string().email().max(64).optional(),
     telepon: z.string().max(20).optional(),
-  }),
+  })
+  .strict();
 
-  getUser: z.object({
-    user_id: z.string().uuid(),
-  }),
+export const userParams = z
+  .object({
+    userId: z.string().uuid(),
+  })
+  .strict();
 
-  deleteUser: z.object({
-    user_id: z.string().uuid(),
-  }),
-};
+export type userParamsType = z.infer<typeof userParams>;
+export type createUserBodyType = z.infer<typeof createUserBody>;
+export type updateUserBodyType = z.infer<typeof updateUserBody>;
 
-export default userValidation;

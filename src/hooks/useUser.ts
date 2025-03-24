@@ -11,6 +11,7 @@ export const useFetchUsers = () => {
 
       return response.data;
     },
+    retry: false,
   });
 };
 
@@ -21,6 +22,7 @@ export const useDeleteUser = ({ onSuccess, onError }) => {
 
       return response;
     },
+    retry: false,
     onSuccess,
     onError,
   });

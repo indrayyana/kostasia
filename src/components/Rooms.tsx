@@ -41,7 +41,7 @@ export default function Rooms({ cabang }: RoomsProps) {
                   className="dark:bg-slate-800 dark:border-slate-900 max-w-lg"
                 >
                   <CardHeader className="p-0">
-                    <Skeleton className="h-[14rem] w-full max-w-lg" />
+                    <Skeleton className="h-[14rem] w-full rounded-b-none max-w-lg" />
                   </CardHeader>
                   <CardContent>
                     <div className="mt-2 flex flex-col gap-2">
