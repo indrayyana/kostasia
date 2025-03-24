@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const saveNotifToken = z.object({
   token: z.string(),
@@ -16,10 +16,9 @@ export const getNotif = z.object({
 });
 
 export const notifParams = z.object({
-  notificationId: z.number(),
+  notificationId: z.coerce.number(),
 });
 
 export type saveNotifTokenBodyType = z.infer<typeof saveNotifToken>;
 export type NotifParamsType = z.infer<typeof notifParams>;
 export type createNotifBodyType = z.infer<typeof createNotif>;
-

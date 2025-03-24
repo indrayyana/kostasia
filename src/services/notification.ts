@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import httpStatus from 'http-status';
-import prisma from '@/lib/prisma';
-import ApiError from '@/utils/ApiError';
+import httpStatus from "http-status";
+import prisma from "@/lib/prisma";
+import ApiError from "@/utils/ApiError";
 
 const notificationService = {
   getAllNotification: async () => {
     const notifications = await prisma.notifikasi.findMany({
       orderBy: {
-        dibuat_pada: 'desc',
+        dibuat_pada: "desc",
       },
       include: {
         user: {
@@ -48,7 +48,7 @@ const notificationService = {
     });
 
     if (!notification) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Notification not found');
+      throw new ApiError(httpStatus.NOT_FOUND, "Notification not found");
     }
 
     await prisma.notifikasi.delete({
@@ -70,7 +70,7 @@ const notificationService = {
       const missingIds = notificationsId.filter((id) => !foundIds.includes(id));
 
       if (missingIds.length > 0) {
-        throw new ApiError(httpStatus.NOT_FOUND, `Notifications not found for ID(s): ${missingIds.join(', ')}`);
+        throw new ApiError(httpStatus.NOT_FOUND, `Notifications not found for ID: ${missingIds.join(", ")}`);
       }
 
       const deletedNotifications = await tx.notifikasi.deleteMany({

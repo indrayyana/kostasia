@@ -1,11 +1,11 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const createUserBody = z
   .object({
     nama: z.string().max(20),
     email: z.string().email().max(64),
     telepon: z.string().max(20),
-    role: z.enum(['pengunjung', 'penyewa', 'admin']),
+    role: z.enum(["pengunjung", "penyewa", "admin"]),
   })
   .strict();
 
@@ -23,7 +23,16 @@ export const userParams = z
   })
   .strict();
 
+export const bulkDeleteUserQuery = z
+  .object({
+    id: z
+      .string()
+      .transform((val) => val.split(","))
+      .pipe(z.array(z.string().uuid())),
+  })
+  .strict();
+
 export type userParamsType = z.infer<typeof userParams>;
 export type createUserBodyType = z.infer<typeof createUserBody>;
 export type updateUserBodyType = z.infer<typeof updateUserBody>;
-
+export type bulkDeleteUserQueryType = z.infer<typeof bulkDeleteUserQuery>;
