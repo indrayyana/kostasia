@@ -1,13 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import {
-  Download,
-  FileDown,
-  FileSpreadsheet,
-  FileText,
-  Plus,
-} from 'lucide-react';
+import { Download, FileDown, FileSpreadsheet, FileText, Loader2, Plus, Trash2 } from 'lucide-react';
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -15,8 +9,8 @@ import {
   useReactTable,
   getFilteredRowModel,
   getPaginationRowModel,
+  flexRender,
 } from '@tanstack/react-table';
-
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -25,25 +19,62 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import TableSearch from '@/components/ui/table-search';
-import MyTable from '@/components/ui/my-table';
+import { useBulkDeleteUsers, useCreateUser } from '@/hooks/useUser';
+import toast from 'react-hot-toast';
+import { Skeleton } from '@/components/ui/skeleton';
+import TablePagination from '@/components/ui/table-pagination';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Input } from '@/components/ui/input';
+import { createUserBody } from '@/validations/user';
+import Image from 'next/image';
 
-interface DataTableProps<TData extends { user_id: string | number }, TValue> {
+interface DataTableProps<TData extends { user_id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading: boolean;
+  refetch: () => void;
 }
 
-export function DataTable<TData extends { user_id: string | number }, TValue>({
+export function DataTable<TData extends { user_id: string }, TValue>({
   columns,
   data = [],
   isLoading,
+  refetch,
 }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
+  const [open, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [previewProfile, setPreviewProfile] = React.useState<string | null>(null);
+  const [previewKtp, setPreviewKtp] = React.useState<string | null>(null);
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const [imageProfile, setImageProfile] = React.useState<File | null>(null);
+  const [fotoKtp, setFotoKtp] = React.useState<File | null>(null);
 
   const table = useReactTable({
     data,
@@ -60,6 +91,77 @@ export function DataTable<TData extends { user_id: string | number }, TValue>({
       rowSelection,
     },
   });
+
+  const selectedRows = table.getSelectedRowModel().rows;
+
+  const { mutate: bulkDeleteUser, isPending: bulkDeleteUserIsLoading } = useBulkDeleteUsers({
+    onSuccess: () => {
+      refetch();
+      setRowSelection({});
+      setIsOpen(false);
+      toast.success('User berhasil dihapus', { duration: 3000 });
+    },
+    onError: () => {
+      toast.error('Terjadi kesalahan saat menghapus user', { duration: 3000 });
+    },
+  });
+
+  const handleDelete = () => {
+    const ids = selectedRows.map((row) => row.original.user_id);
+    bulkDeleteUser({ id: ids });
+  };
+
+  const { mutate: createUser, isPending: createUserIsLoading } = useCreateUser({
+    onSuccess: () => {
+      form.reset();
+      toast.success('Berhasil menambahkan user baru', { duration: 3000 });
+      refetch();
+      setOpen(false);
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.response?.data?.code === 400 ? error.response?.data?.message : 'Terjadi kesalahan saat menambahkan user';
+      toast.error(errorMessage, { duration: 3000 });
+    },
+  });
+
+  const form = useForm<z.infer<typeof createUserBody>>({
+    resolver: zodResolver(createUserBody),
+    defaultValues: {
+      nama: '',
+      email: '',
+      telepon: '',
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof createUserBody>) {
+    createUser({
+      nama: values.nama,
+      email: values.email,
+      telepon: values.telepon,
+      role: values.role,
+    });
+
+    // if (image) {
+
+    // }
+  }
+
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageProfile(file);
+      setPreviewProfile(URL.createObjectURL(file));
+    }
+  };
+
+  const handleKtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFotoKtp(file);
+      setPreviewKtp(URL.createObjectURL(file));
+    }
+  };
 
   const fileDownload = (format: string) => {
     alert(`Download file ${format} berhasil`);
@@ -94,14 +196,244 @@ export function DataTable<TData extends { user_id: string | number }, TValue>({
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button size={'sm'} className="dark:text-white font-bold">
-            <Plus />
-            Tambah
-          </Button>
+          <Dialog
+            open={open}
+            onOpenChange={(open) => {
+              if (!open) {
+                form.reset();
+              }
+              setOpen(open);
+            }}
+          >
+            <DialogTrigger asChild>
+              <Button size={'sm'} className="dark:text-white font-bold">
+                <Plus />
+                Tambah
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="xsm:max-w-100 max-h-115 text-black-2 dark:text-white overflow-y-scroll">
+              <DialogHeader>
+                <DialogTitle>Tambah User Baru</DialogTitle>
+                <DialogDescription>
+                  Tambahkan data user baru. Klik simpan jika sudah selesai memasukkan data.
+                </DialogDescription>
+              </DialogHeader>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <div className="flex flex-col gap-5 pb-8">
+                    {!!previewProfile && (
+                      <Image
+                        src={previewProfile}
+                        alt="foto profile"
+                        width={20}
+                        height={20}
+                        className="w-auto h-30 mx-auto"
+                      />
+                    )}
+                    <FormField
+                      control={form.control}
+                      name="foto"
+                      render={() => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Foto Profil</FormLabel>
+                          <FormControl>
+                            <Input id="foto" type="file" onChange={handleProfileChange} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="nama"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Nama</FormLabel>
+                          <FormControl>
+                            <Input id="nama" placeholder="Nama" autoComplete="off" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input id="email" type="email" placeholder="Email" autoComplete="off" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="telepon"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Telepon</FormLabel>
+                          <FormControl>
+                            <Input id="telepon" type="number" placeholder="Telepon" autoComplete="off" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="role"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Role</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Pilih role" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="pengunjung">{'Pengunjung'}</SelectItem>
+                              <SelectItem value="penyewa">{'Penyewa'}</SelectItem>
+                              <SelectItem value="admin">{'Admin'}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="ktp"
+                      render={() => (
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Foto KTP</FormLabel>
+                          <FormControl>
+                            <Input id="ktp" type="file" onChange={handleKtpChange} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    {!!previewKtp && (
+                      <Image
+                        src={previewKtp}
+                        alt="foto profile"
+                        width={20}
+                        height={20}
+                        className="w-auto h-30 mx-auto"
+                      />
+                    )}
+                  </div>
+                  <DialogFooter>
+                    <Button type="submit" className="dark:text-white font-bold" disabled={createUserIsLoading}>
+                      {createUserIsLoading ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="animate-spin" />
+                          <span>Loading</span>
+                        </div>
+                      ) : (
+                        'Simpan'
+                      )}
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
-      <MyTable table={table} columns={columns} isLoading={isLoading} />
+      <div className="rounded-md border bg-white mt-5 dark:bg-boxdark dark:text-white dark:border-gray-500">
+        <div className="w-full h-9 m-2">
+          {selectedRows.length > 0 && (
+            <div>
+              <Button
+                size={'sm'}
+                variant="destructive"
+                onClick={() => {
+                  setIsOpen(true);
+                }}
+                className="bg-red-600 hover:bg-red-700"
+              >
+                <Trash2 />
+                Hapus
+              </Button>
+            </div>
+          )}
+        </div>
+        <Table>
+          <TableHeader className="bg-gray-50 dark:bg-black">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow className="dark:border-gray-500" key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id} className="font-bold text-black-2 dark:text-white">
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {isLoading ? (
+              Array.from({ length: 3 }).map((_, index) => (
+                <TableRow key={index} className="dark:border-gray-500">
+                  <TableCell colSpan={columns.length}>
+                    <Skeleton className="h-[40px] w-full" />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow className="dark:border-gray-500" key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="h-24 text-center">
+                  Tidak ada hasil.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      <TablePagination table={table} />
+
+      <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+        {/* <AlertDialogTrigger>Open</AlertDialogTrigger> */}
+        <AlertDialogContent className="dark:text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Apakah Anda yakin ingin menghapus {table.getFilteredSelectedRowModel().rows.length} data yang dipilih ?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data secara permanen.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={bulkDeleteUserIsLoading}>Batal</AlertDialogCancel>
+            <Button variant={'destructive'} onClick={handleDelete} disabled={bulkDeleteUserIsLoading}>
+              {bulkDeleteUserIsLoading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="animate-spin" />
+                  <span>Loading</span>
+                </div>
+              ) : (
+                'Hapus'
+              )}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

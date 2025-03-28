@@ -40,10 +40,7 @@ export const getRoomsByCabangId = catchAsync(async (c: Context) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Kamar not found');
   }
 
-  const kamar = await roomService.getRoomById(
-    Number(roomId),
-    cabang as CabangType
-  );
+  const kamar = await roomService.getRoomById(Number(roomId), cabang as CabangType);
   if (!kamar) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Kamar not found');
   }

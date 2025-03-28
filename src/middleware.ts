@@ -19,7 +19,10 @@ export async function middleware(req: NextRequest) {
 
   const token = req.cookies.get('access-token')?.value;
   if (!token) {
-    return NextResponse.next();
+    const url = new URL('/', req.url);
+    url.searchParams.set('is_login', 'false');
+
+    return NextResponse.redirect(url);
   }
 
   try {

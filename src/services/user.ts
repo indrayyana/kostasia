@@ -1,7 +1,7 @@
-import httpStatus from "http-status";
-import prisma from "@/lib/prisma";
-import ApiError from "@/utils/ApiError";
-import { createUserBodyType, updateUserBodyType } from "@/validations/user";
+import httpStatus from 'http-status';
+import prisma from '@/lib/prisma';
+import ApiError from '@/utils/ApiError';
+import { createUserBodyType, updateUserBodyType } from '@/validations/user';
 
 interface GoogleLoginInterface {
   name?: string | null;
@@ -32,13 +32,13 @@ export const createGoogleUser = async (userBody: GoogleLoginInterface) => {
 export const getAllUsers = async () => {
   return await prisma.user.findMany({
     orderBy: {
-      dibuat_pada: "desc",
+      dibuat_pada: 'desc',
     },
   });
 };
 
 export const getUserById = async (userId: string) => {
-  const user = await prisma.user.findFirst({
+  const user = await prisma.user.findUnique({
     where: {
       user_id: userId,
     },
@@ -60,7 +60,7 @@ export const getUserByEmail = async (email: string) => {
 export const getUserWithPermission = async () => {
   const users = await prisma.token.findMany({
     where: {
-      tipe: "notification",
+      tipe: 'notification',
     },
     select: {
       user_id: true,
@@ -79,7 +79,7 @@ export const getUserWithPermission = async () => {
 export const updateUserById = async (userId: string, updateBody: updateUserBodyType) => {
   let user = await getUserById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   user = await prisma.user.update({
@@ -95,18 +95,23 @@ export const updateUserById = async (userId: string, updateBody: updateUserBodyT
 export const updateGoogleUserById = async (userId: string, updateBody: GoogleLoginInterface) => {
   let user = await getUserById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  const data: updateUserBodyType = {
+    nama: updateBody.name as string,
+    email: updateBody.email as string,
+  };
+
+  if (!user.foto) {
+    data.foto = updateBody.picture;
   }
 
   user = await prisma.user.update({
     where: {
       user_id: userId,
     },
-    data: {
-      nama: updateBody.name as string,
-      email: updateBody.email as string,
-      foto: updateBody.picture || null,
-    },
+    data,
   });
 
   return user;
@@ -115,7 +120,7 @@ export const updateGoogleUserById = async (userId: string, updateBody: GoogleLog
 export const deleteUserById = async (userId: string) => {
   const user = await getUserById(userId);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, "User not found");
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
   return await prisma.user.delete({
@@ -135,7 +140,7 @@ export const deleteAllUserById = async (userId: string[]) => {
     const missingIds = userId.filter((id) => !foundIds.includes(id));
 
     if (missingIds.length > 0) {
-      throw new ApiError(httpStatus.NOT_FOUND, `users not found for ID: ${missingIds.join(", ")}`);
+      throw new ApiError(httpStatus.NOT_FOUND, `users not found for ID: ${missingIds.join(', ')}`);
     }
 
     const deletedUsers = await tx.user.deleteMany({

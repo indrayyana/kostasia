@@ -10,20 +10,20 @@ import { ConfirmDialog } from '@/components/ConfirmDialog';
 
 interface CellActionProps {
   data: NotifInterface;
-  refecth: () => void;
+  refetch: () => void;
 }
 
-export const CellAction = ({ data, refecth }: CellActionProps) => {
+export const CellAction = ({ data, refetch }: CellActionProps) => {
   const [open, setOpen] = useState(false);
 
   const { mutate: deleteNotif, isPending } = useDeleteNotification({
     onSuccess: () => {
-      refecth();
+      toast.success('Notifikasi berhasil dihapus', { duration: 3000 });
+      refetch();
       setOpen(false);
-      toast.success('Notifikasi berhasil dihapus');
     },
     onError: () => {
-      toast.error('Terjadi kesalahan saat menghapus notifikasi');
+      toast.error('Terjadi kesalahan saat menghapus notifikasi', { duration: 3000 });
     },
   });
 

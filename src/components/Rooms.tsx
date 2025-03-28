@@ -18,7 +18,7 @@ export default function Rooms({ cabang }: RoomsProps) {
 
   if (isError) {
     return (
-      <div className="text-center">
+      <div className="text-center my-20">
         <p>Terjadi kesalahan saat menampilkan data kamar</p>
         <p>Silakan coba refresh halaman atau coba lagi nanti.</p>
       </div>
@@ -36,10 +36,7 @@ export default function Rooms({ cabang }: RoomsProps) {
         >
           {isPending
             ? Array.from({ length: skeletonCount }).map((_, index) => (
-                <Card
-                  key={index}
-                  className="dark:bg-slate-800 dark:border-slate-900 max-w-lg"
-                >
+                <Card key={index} className="dark:bg-slate-800 dark:border-slate-900 max-w-lg">
                   <CardHeader className="p-0">
                     <Skeleton className="h-[14rem] w-full rounded-b-none max-w-lg" />
                   </CardHeader>
@@ -53,9 +50,7 @@ export default function Rooms({ cabang }: RoomsProps) {
                   </CardContent>
                 </Card>
               ))
-            : rooms.map((room: RoomInterface) => (
-                <RoomItem key={room.kamar_id} room={room} />
-              ))}
+            : rooms.map((room: RoomInterface) => <RoomItem key={room.kamar_id} room={room} />)}
         </div>
       </section>
     </>

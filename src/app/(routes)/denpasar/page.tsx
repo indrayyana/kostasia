@@ -29,12 +29,10 @@ export default function Denpasar() {
             <div className="text-white flex flex-col gap-5">
               <h2 className="text-4xl font-bold">Tentang Kami</h2>
               <p className="text-justify">
-                Kami menawarkan pilihan fleksibel bagi para penghuni dengan
-                penyewaan harian, mingguan, dan bulanan, sesuai kebutuhan Anda.
-                Tersedia 10 kamar yang dirancang untuk kenyamanan maksimal,
-                masing-masing dilengkapi dengan kamar mandi dalam untuk privasi
-                dan kemudahan Anda. Nikmati pengalaman tinggal yang menyenangkan
-                dan praktis bersama kami!
+                Kami menawarkan pilihan fleksibel bagi para penghuni dengan penyewaan harian, mingguan, dan bulanan,
+                sesuai kebutuhan Anda. Tersedia 10 kamar yang dirancang untuk kenyamanan maksimal, masing-masing
+                dilengkapi dengan kamar mandi dalam untuk privasi dan kemudahan Anda. Nikmati pengalaman tinggal yang
+                menyenangkan dan praktis bersama kami!
               </p>
               <p>Fasilitas:</p>
               <ul className="list-disc">
@@ -47,7 +45,7 @@ export default function Denpasar() {
         </section>
 
         <Rooms cabang="denpasar" />
-        <GoogleMaps />
+        <GoogleMaps cabang="denpasar" />
         <CallToAction />
         <ScrollToTop />
       </main>

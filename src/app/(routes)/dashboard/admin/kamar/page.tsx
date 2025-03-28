@@ -14,15 +14,9 @@ export default function KamarPage() {
       <Breadcrumb pageName="Kamar" />
       <div className="flex flex-col text-black-2">
         {isError ? (
-          <p className="text-red-500 text-center">
-            Terjadi kesalahan saat menampilkan data
-          </p>
+          <p className="text-red-500 text-center my-20">Terjadi kesalahan saat menampilkan data</p>
         ) : (
-          <DataTable
-            columns={columns}
-            data={data?.kamar || []}
-            isLoading={isPending}
-          />
+          <DataTable columns={columns} data={data?.kamar || []} isLoading={isPending} />
         )}
       </div>
     </DefaultLayout>

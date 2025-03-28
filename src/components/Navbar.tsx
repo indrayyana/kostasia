@@ -5,30 +5,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import Theme from './Theme';
-import { checkRefreshTokenExist } from '@/utils/cookies';
 import { config } from '@/utils/config';
+import { useAuth } from './AuthProvider';
 
 interface NavbarProps {
   hasBreadcrumb?: boolean;
 }
 
 export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
-  const pathname = usePathname();
-  const [hasToken, setHasToken] = useState<boolean>(false);
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [scrolled, setScrolled] = useState<boolean>(false);
+  const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    async function getToken() {
-      const refreshToken = await checkRefreshTokenExist();
-      if (!!refreshToken) {
-        setHasToken(true);
-      }
-    }
-
-    getToken();
-  }, []);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -81,9 +70,7 @@ export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
   return (
     <nav
       className={`fixed w-full z-20 top-0 start-0 transition-all duration-300 ${
-        scrolled || !hasBreadcrumb
-          ? 'bg-white dark:bg-gray-900 shadow-md'
-          : 'bg-transparent dark:bg-transparent'
+        scrolled || !hasBreadcrumb ? 'bg-white dark:bg-gray-900 shadow-md' : 'bg-transparent dark:bg-transparent'
       }`}
     >
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -112,16 +99,7 @@ export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
           <div className="lg:mr-3 flex justify-center items-center">
             <Theme scrolled={scrolled || !hasBreadcrumb} />
           </div>
-          {!!hasToken ? (
-            <Link
-              href={'/dashboard/profil'}
-              title="Tombol Profil"
-              prefetch={false}
-              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              Profil
-            </Link>
-          ) : (
+          {!user ? (
             <Link
               href={'/api/auth/login'}
               title="Tombol Google Login"
@@ -129,6 +107,15 @@ export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
               className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               Login
+            </Link>
+          ) : (
+            <Link
+              href={'/dashboard/profil'}
+              title="Tombol Profil"
+              prefetch={false}
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Profil
             </Link>
           )}
           <button
@@ -161,21 +148,16 @@ export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
         </div>
         <div
           ref={menuRef}
-          className={`items-center justify-between w-full lg:flex lg:w-auto lg:order-1 ${
-            isOpen ? 'block' : 'hidden'
-          }`}
+          className={`items-center justify-between w-full lg:flex lg:w-auto lg:order-1 ${isOpen ? 'block' : 'hidden'}`}
           id="navbar-sticky"
         >
           <ul
             className={`flex flex-col p-4 lg:p-0 mt-4 font-medium border border-gray-100 rounded-lg lg:space-x-8 rtl:space-x-reverse lg:flex-row lg:mt-0 lg:border-0 dark:border-gray-700 ${
-              scrolled
-                ? ''
-                : 'bg-white lg:bg-transparent dark:lg:bg-transparent dark:bg-black-2'
+              scrolled ? '' : 'bg-white lg:bg-transparent dark:lg:bg-transparent dark:bg-black-2'
             }`}
           >
             {menuItems.map((item) => {
-              const isActive =
-                item.regex?.test(pathname) || pathname === item.href;
+              const isActive = item.regex?.test(pathname) || pathname === item.href;
 
               return (
                 <li key={item.href}>
@@ -186,11 +168,7 @@ export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
                       isActive
                         ? 'text-white max-lg:text-white max-lg:bg-blue-700 lg:text-blue-600 lg:font-bold lg:border-y-2 lg:border-blue-600'
                         : 'text-gray-900 hover:bg-gray-100 lg:hover:bg-transparent lg:hover:text-blue-600 dark:text-white dark:hover:bg-gray-700 dark:hover:text-blue-600 lg:dark:hover:bg-transparent dark:border-gray-700'
-                    } ${
-                      scrolled || !hasBreadcrumb
-                        ? ''
-                        : 'text-white max-lg:text-gray-900'
-                    }`}
+                    } ${scrolled || !hasBreadcrumb ? '' : 'text-white max-lg:text-gray-900'}`}
                     aria-current={isActive ? 'page' : undefined}
                     onClick={() => setIsOpen(false)}
                   >

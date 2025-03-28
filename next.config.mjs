@@ -22,11 +22,20 @@ const nextConfig = {
     UNIVERSE_DOMAIN: process.env.UNIVERSE_DOMAIN,
     VAPID_KEY: process.env.VAPID_KEY,
   },
+  experimental: {
+    turbo: {
+      resolveExtensions: ['.mdx', '.tsx', '.ts', '.jsx', '.js', '.mjs', '.json'],
+    },
+  },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
       },
       {
         protocol: 'https',

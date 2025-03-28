@@ -4,40 +4,26 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ClickOutside from '@/components/ClickOutside';
 import ButtonLogout from './ButtonLogout';
-import { UserInterface } from '@/types/user';
 import { Skeleton } from '../ui/skeleton';
+import { useAuth } from '../AuthProvider';
 
-interface DropdownUserProps {
-  user: UserInterface;
-}
-
-const DropdownUser = memo(({ user }: DropdownUserProps) => {
+const DropdownUser = memo(() => {
+  const { user } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
-      <button
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="flex items-center gap-4"
-      >
+      <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center gap-4">
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {user?.nama ? (
-              user.nama
-            ) : (
-              <Skeleton className="h-[20px] w-[100px]" />
-            )}
+            {user?.nama ? user.nama : <Skeleton className="h-[20px] w-[100px]" />}
           </span>
           <span className="block text-xs capitalize text-[#64748B]">
-            {user?.role ? (
-              user.role
-            ) : (
-              <Skeleton className="mt-[2px] h-[15px] w-[50px] ml-auto" />
-            )}
+            {user?.role ? user.role : <Skeleton className="mt-[2px] h-[15px] w-[50px] ml-auto" />}
           </span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
+        <span className="h-12 w-12 rounded-full flex items-center justify-center">
           {user?.foto ? (
             <Image
               className="rounded-full"
@@ -50,7 +36,6 @@ const DropdownUser = memo(({ user }: DropdownUserProps) => {
               }}
               alt="User"
               title="Foto Profil"
-              priority
             />
           ) : (
             <Skeleton className="rounded-full h-[48px] w-[48px]" />

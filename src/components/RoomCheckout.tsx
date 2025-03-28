@@ -8,8 +8,8 @@ import { useFetchRoomDetail } from '@/hooks/useRoom';
 import Loader from './common/Loader';
 import { Button } from './ui/button';
 import { useCreateTransaction } from '@/hooks/useTransaction';
-import { useFetchUserProfile } from '@/hooks/useUser';
 import { isBrowser } from '@/utils/browser';
+import { useAuth } from './AuthProvider';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
@@ -24,8 +24,8 @@ interface RoomCheckoutProps {
 }
 
 export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
+  const { user, isPending: userPending } = useAuth();
   const { data, isPending, isError } = useFetchRoomDetail(cabang, id);
-  const { data: userData, isPending: userPending } = useFetchUserProfile();
   const { mutate: createTransaction } = useCreateTransaction();
 
   if (isPending || userPending) {
@@ -41,10 +41,10 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
   const handleCheckout = async () => {
     const payload = {
       user: {
-        id: userData?.user?.user_id,
-        fullname: userData?.user?.nama,
-        email: userData?.user?.email,
-        phone: userData?.user?.telepon,
+        id: user?.user_id,
+        fullname: user?.nama,
+        email: user?.email,
+        phone: user?.telepon,
       },
       transaction: {
         room: room.kamar_id,
@@ -74,9 +74,7 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
     <>
       <main>
         {isError ? (
-          <p className="text-red-500 text-center">
-            Terjadi kesalahan saat menampilkan data
-          </p>
+          <p className="text-red-500 text-center">Terjadi kesalahan saat menampilkan data</p>
         ) : (
           <section
             id="tentang"

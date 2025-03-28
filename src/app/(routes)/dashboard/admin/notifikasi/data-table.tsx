@@ -2,7 +2,7 @@
 'use client';
 
 import * as React from 'react';
-import { Loader2, Plus, Trash2 } from 'lucide-react';
+import { Check, ChevronsUpDown, Loader2, Plus, Trash2 } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
@@ -16,14 +16,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import TableSearch from '@/components/ui/table-search';
 import TablePagination from '@/components/ui/table-pagination';
@@ -47,21 +40,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { sendPushNotification } from '@/utils/firebase-admin';
 import { UserNotificationInterface } from '@/types/notif';
 import {
@@ -70,11 +49,11 @@ import {
   useFetchUsersWithNotification,
 } from '@/hooks/useNotification';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 
-interface DataTableProps<
-  TData extends { notifikasi_id: string | number },
-  TValue
-> {
+interface DataTableProps<TData extends { notifikasi_id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading: boolean;
@@ -95,20 +74,20 @@ export const formSchema = z.object({
   kepada: z.string().min(3, { message: '"Kepada" tidak boleh kosong.' }),
 });
 
-export function DataTable<
-  TData extends { notifikasi_id: string | number },
-  TValue
->({ columns, data = [], isLoading, refetch }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+export function DataTable<TData extends { notifikasi_id: string | number }, TValue>({
+  columns,
+  data = [],
+  isLoading,
+  refetch,
+}: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [open, setOpen] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
 
-  const { data: dataUser, isPending: isLoadingUser } =
-    useFetchUsersWithNotification();
+  const { data: dataUser, isPending: isLoadingUser } = useFetchUsersWithNotification();
   const users: UserNotificationInterface[] = dataUser?.users || [];
 
   const table = useReactTable({
@@ -129,24 +108,35 @@ export function DataTable<
 
   const selectedRows = table.getSelectedRowModel().rows;
 
-  const { mutate: bulkDeleteNotif, isPending: bulkDeleteNotifIsLoading } =
-    useBulkDeleteNotification({
-      onSuccess: () => {
-        refetch();
-        setRowSelection({});
-        setIsOpen(false);
-        toast.success('Notifikasi berhasil dihapus');
-      },
-      onError: () => {
-        toast.error('Terjadi kesalahan saat menghapus notifikasi');
-      },
-    });
+  const { mutate: bulkDeleteNotif, isPending: bulkDeleteNotifIsLoading } = useBulkDeleteNotification({
+    onSuccess: () => {
+      refetch();
+      setRowSelection({});
+      setIsOpen(false);
+      toast.success('Notifikasi berhasil dihapus', { duration: 3000 });
+    },
+    onError: () => {
+      toast.error('Terjadi kesalahan saat menghapus notifikasi', { duration: 3000 });
+    },
+  });
 
   const handleDelete = () => {
     const ids = selectedRows.map((row) => row.original.notifikasi_id);
     // @ts-expect-error off
     bulkDeleteNotif(ids);
   };
+
+  const { mutate: createNotification, isPending: createNotificationIsLoading } = useCreateNotification({
+    onSuccess: () => {
+      form.reset();
+      toast.success('Notifikasi berhasil dikirim', { duration: 3000 });
+      refetch();
+      setOpen(false);
+    },
+    onError: () => {
+      toast.error('Terjadi kesalahan saat menambahkan notifikasi', { duration: 3000 });
+    },
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -157,20 +147,10 @@ export function DataTable<
     },
   });
 
-  const { mutate: createNotification, isPending: createNotificationIsLoading } =
-    useCreateNotification({
-      onSuccess: () => {
-        refetch();
-      },
-      onError: () => {
-        toast.error('Terjadi kesalahan saat menambahkan notifikasi');
-      },
-    });
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const selectedUser = users.find((user) => user.user_id === values.kepada);
     if (!selectedUser) {
-      toast.error('Token tidak ditemukan untuk user yang dipilih.');
+      toast.error('Token tidak ditemukan untuk user yang dipilih.', { duration: 3000 });
       return;
     }
 
@@ -182,11 +162,8 @@ export function DataTable<
       deskripsi: values.deskripsi,
       user_id: values.kepada,
     });
-    await sendPushNotification(token, values);
 
-    form.reset();
-    setOpen(false);
-    toast.success('Notifikasi berhasil dikirim');
+    await sendPushNotification(token, values);
   }
 
   return (
@@ -201,37 +178,31 @@ export function DataTable<
               Tambah
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] text-black-2 dark:text-white">
+          <DialogContent className="xsm:max-w-100 max-h-115 text-black-2 dark:text-white overflow-y-scroll">
+            <DialogHeader>
+              <DialogTitle>Tambah Notifikasi</DialogTitle>
+              <DialogDescription>
+                Kirim notifikasi kepada penyewa. Klik kirim jika sudah selesai memasukkan data.
+              </DialogDescription>
+            </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
-                <DialogHeader>
-                  <DialogTitle>Tambah Notifikasi</DialogTitle>
-                  <DialogDescription>
-                    Kirim notifikasi kepada penyewa. Klik kirim jika sudah
-                    selesai memasukkan data.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
+                <div className="flex flex-col gap-5 py-8">
                   <FormField
                     control={form.control}
                     name="judul"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <FormLabel htmlFor="judul" className="text-right">
-                            Judul
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              id="judul"
-                              className="col-span-3"
-                              placeholder="Judul notifikasi"
-                              autoComplete="off"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="col-span-3" />
-                        </div>
+                        <FormControl>
+                          <Input
+                            id="judul"
+                            className="col-span-3"
+                            placeholder="Judul notifikasi"
+                            autoComplete="off"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="col-span-3" />
                       </FormItem>
                     )}
                   />
@@ -240,21 +211,16 @@ export function DataTable<
                     name="deskripsi"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <FormLabel htmlFor="text" className="text-right">
-                            Deskripsi
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Deskripsi notifikasi"
-                              id="text"
-                              className="col-span-3"
-                              autoComplete="off"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className="col-span-3" />
-                        </div>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Deskripsi notifikasi"
+                            id="text"
+                            className="col-span-3"
+                            autoComplete="off"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className="col-span-3" />
                       </FormItem>
                     )}
                   />
@@ -263,55 +229,63 @@ export function DataTable<
                     control={form.control}
                     name="kepada"
                     render={({ field }) => (
-                      <FormItem>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                          <FormLabel htmlFor="user_id" className="text-right">
-                            Kepada
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                      <FormItem className="flex flex-col">
+                        <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+                          <PopoverTrigger asChild>
                             <FormControl>
-                              <SelectTrigger className="col-span-3">
-                                <SelectValue
-                                  placeholder={
-                                    isLoadingUser
-                                      ? 'Loading...'
-                                      : 'Pilih penyewa'
-                                  }
-                                />
-                              </SelectTrigger>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                className={cn('w-full justify-between', !field.value && 'text-muted-foreground')}
+                                onClick={() => setIsPopoverOpen(!isPopoverOpen)}
+                              >
+                                {field.value
+                                  ? users.find((user) => user.user_id === field.value)?.user.nama
+                                  : 'Pilih penyewa'}
+                                <ChevronsUpDown className="opacity-50" />
+                              </Button>
                             </FormControl>
-                            <SelectContent>
-                              {isLoadingUser ? (
-                                <div className="p-4 text-center">
-                                  Loading...
-                                </div>
-                              ) : (
-                                users.map((user) => (
-                                  <SelectItem
-                                    key={user.user_id}
-                                    value={user.user_id}
-                                  >
-                                    {user.user.nama}
-                                  </SelectItem>
-                                ))
-                              )}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage className="col-span-3" />
-                        </div>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full xsm:w-[335px] p-0">
+                            <Command>
+                              <CommandInput placeholder="Cari penyewa..." className="h-9" />
+                              <CommandList>
+                                <CommandEmpty>Tidak ada data user.</CommandEmpty>
+                                <CommandGroup>
+                                  {isLoadingUser ? (
+                                    <CommandItem>Loading...</CommandItem>
+                                  ) : (
+                                    users.map((user) => (
+                                      <CommandItem
+                                        value={user.user.nama}
+                                        key={user.user_id.toString()}
+                                        onSelect={() => {
+                                          form.setValue('kepada', user.user_id);
+                                          setIsPopoverOpen(false);
+                                        }}
+                                      >
+                                        {user.user.nama}
+                                        <Check
+                                          className={cn(
+                                            'ml-auto',
+                                            user.user_id === field.value ? 'opacity-100' : 'opacity-0'
+                                          )}
+                                        />
+                                      </CommandItem>
+                                    ))
+                                  )}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
                       </FormItem>
                     )}
                   />
                 </div>
                 <DialogFooter>
-                  <Button
-                    type="submit"
-                    className="dark:text-white font-bold"
-                    disabled={createNotificationIsLoading}
-                  >
+                  <Button type="submit" className="dark:text-white font-bold" disabled={createNotificationIsLoading}>
                     {createNotificationIsLoading ? (
                       <div className="flex items-center gap-2">
                         <Loader2 className="animate-spin" />
@@ -352,16 +326,8 @@ export function DataTable<
               <TableRow className="dark:border-gray-500" key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      className="font-bold text-black-2 dark:text-white"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <TableHead key={header.id} className="font-bold text-black-2 dark:text-white">
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -379,27 +345,15 @@ export function DataTable<
               ))
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className="dark:border-gray-500"
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
+                <TableRow className="dark:border-gray-500" key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   Tidak ada hasil.
                 </TableCell>
               </TableRow>
@@ -415,22 +369,15 @@ export function DataTable<
         <AlertDialogContent className="dark:text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Apakah Anda yakin ingin menghapus data yang dipilih ?
+              Apakah Anda yakin ingin menghapus {table.getFilteredSelectedRowModel().rows.length} data yang dipilih ?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data
-              secara permanen.
+              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data secara permanen.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleteNotifIsLoading}>
-              Batal
-            </AlertDialogCancel>
-            <Button
-              variant={'destructive'}
-              onClick={handleDelete}
-              disabled={bulkDeleteNotifIsLoading}
-            >
+            <AlertDialogCancel disabled={bulkDeleteNotifIsLoading}>Batal</AlertDialogCancel>
+            <Button variant={'destructive'} onClick={handleDelete} disabled={bulkDeleteNotifIsLoading}>
               {bulkDeleteNotifIsLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="animate-spin" />

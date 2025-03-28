@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
-import React from "react";
-import { LogOut } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
-import { deleteToken } from "@/utils/cookies";
-import api from "@/lib/axios";
-import { config } from "@/utils/config";
-import { Button } from "../ui/button";
+import React from 'react';
+import { LogOut } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import Swal from 'sweetalert2';
+import { Button } from '../ui/button';
+import { useAuth } from '../AuthProvider';
 
 const ButtonLogout = () => {
-  const router = useRouter();
+  const { logout } = useAuth();
   const { theme, systemTheme } = useTheme();
 
   return (
@@ -20,19 +17,19 @@ const ButtonLogout = () => {
       className="bg-white dark:bg-boxdark text-gray-500 dark:text-gray-400 h-auto flex items-center hover:bg-white justify-start gap-4.5 px-7 py-3 text-sm font-medium duration-300 ease-in-out hover:text-primary dark:hover:text-primary lg:text-base"
       onClick={() => {
         Swal.fire({
-          title: "Apakah Anda yakin ingin logout ?",
-          icon: "warning",
-          theme: theme === "dark" || (theme === "system" && systemTheme === "dark") ? "dark" : "light",
+          title: 'Apakah Anda yakin ingin logout ?',
+          icon: 'warning',
+          theme: theme === 'dark' || (theme === 'system' && systemTheme === 'dark') ? 'dark' : 'light',
           showCancelButton: true,
-          cancelButtonText: "Batal",
-          confirmButtonText: "Logout",
+          cancelButtonText: 'Batal',
+          confirmButtonText: 'Logout',
           allowOutsideClick: () => !Swal.isLoading(),
           customClass: {
-            popup: "w-96 max-w-lg",
-            title: "text-lg font-semibold",
-            actions: "flex justify-around",
-            confirmButton: "text-sm px-4 py-2 bg-primary",
-            cancelButton: "text-sm px-4 py-2 bg-danger",
+            popup: 'w-96 max-w-lg',
+            title: 'text-lg font-semibold',
+            actions: 'flex justify-around',
+            confirmButton: 'text-sm px-4 py-2 bg-primary',
+            cancelButton: 'text-sm px-4 py-2 bg-danger',
           },
           preConfirm: async () => {
             try {
@@ -47,17 +44,13 @@ const ButtonLogout = () => {
                   <span>Loading</span>
                 </div>
               `;
-                confirmButton.setAttribute("disabled", "true");
+                confirmButton.setAttribute('disabled', 'true');
               }
-              const res = await api.post(`${config.app.apiURL}/auth/logout`);
-              if (res.status !== 200) {
-                throw new Error("Gagal logout, coba lagi.");
-              }
-              deleteToken();
-              router.push("/");
+
+              await logout();
             } catch (error: any) {
               console.log(error.message);
-              Swal.showValidationMessage("Terjadi kesalahan saat logout");
+              Swal.showValidationMessage('Terjadi kesalahan saat logout');
             }
           },
         });

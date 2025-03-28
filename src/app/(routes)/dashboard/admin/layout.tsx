@@ -21,7 +21,7 @@ export default function DashboardLayout({
 }>) {
   return (
     <>
-      <div className="dark:bg-boxdark-2 dark:text-bodydark">{children}</div>
+      <div className="bg-gray-100 w-fit xl:w-full dark:bg-boxdark-2 dark:text-bodydark">{children}</div>
     </>
   );
 }

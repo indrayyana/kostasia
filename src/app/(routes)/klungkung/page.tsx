@@ -29,12 +29,10 @@ export default function Klungkung() {
             <div className="text-white flex flex-col gap-5">
               <h2 className="text-4xl font-bold">Tentang Kami</h2>
               <p className="text-justify">
-                Kami menawarkan pilihan fleksibel bagi para penghuni dengan
-                penyewaan harian, mingguan, dan bulanan, sesuai kebutuhan Anda.
-                Tersedia 6 kamar yang dirancang untuk kenyamanan maksimal,
-                masing-masing dilengkapi dengan kamar mandi dalam untuk privasi
-                dan kemudahan Anda. Nikmati pengalaman tinggal yang menyenangkan
-                dan praktis bersama kami!
+                Kami menawarkan pilihan fleksibel bagi para penghuni dengan penyewaan harian, mingguan, dan bulanan,
+                sesuai kebutuhan Anda. Tersedia 6 kamar yang dirancang untuk kenyamanan maksimal, masing-masing
+                dilengkapi dengan kamar mandi dalam untuk privasi dan kemudahan Anda. Nikmati pengalaman tinggal yang
+                menyenangkan dan praktis bersama kami!
               </p>
               <p>Fasilitas:</p>
               <ul className="list-disc">
@@ -47,7 +45,7 @@ export default function Klungkung() {
         </section>
 
         <Rooms cabang="klungkung" />
-        <GoogleMaps />
+        <GoogleMaps cabang="klungkung" />
         <CallToAction />
         <ScrollToTop />
       </main>

@@ -14,9 +14,7 @@ export default function NotifikasiPage() {
       <Breadcrumb pageName="Notifikasi" />
       <div className="flex flex-col text-black-2">
         {isError ? (
-          <p className="text-red-500 text-center">
-            Terjadi kesalahan saat menampilkan data
-          </p>
+          <p className="text-red-500 text-center my-20">Terjadi kesalahan saat menampilkan data</p>
         ) : (
           <DataTable
             columns={columns(refetch)}

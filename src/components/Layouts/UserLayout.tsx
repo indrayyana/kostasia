@@ -7,18 +7,11 @@ import Header from '@/components/Header';
 import useFCM from '@/hooks/useFCM';
 import api from '@/lib/axios';
 import { ErrorInterface } from '@/types/error';
-import { useFetchUserProfile } from '@/hooks/useUser';
-import DropdownUser from '../Header/DropdownUser';
 import SidebarLoading from '../Sidebar/loading';
-import DropdownNotification from '../Header/DropdownNotification';
+import { useAuth } from '../AuthProvider';
 
-export default function UserLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const { data, isPending } = useFetchUserProfile();
-  const user = data?.user;
+export default function UserLayout({ children }: { children: React.ReactNode }) {
+  const { user, isPending } = useAuth();
 
   const { fcmToken } = useFCM();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -59,17 +52,11 @@ export default function UserLayout({
       <div className="flex min-h-screen">
         {/* <!-- ===== Sidebar Start ===== --> */}
         {isPending ? (
-          <SidebarLoading
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-          />
+          <SidebarLoading sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         ) : user?.role === 'admin' ? (
           <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         ) : (
-          <UserSidebar
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-          />
+          <UserSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         )}
 
         {/* <!-- ===== Sidebar End ===== --> */}
@@ -77,19 +64,12 @@ export default function UserLayout({
         {/* <!-- ===== Content Area Start ===== --> */}
         <div className="relative flex flex-1 flex-col lg:ml-72.5">
           {/* <!-- ===== Header Start ===== --> */}
-          <Header
-            sidebarOpen={sidebarOpen}
-            setSidebarOpen={setSidebarOpen}
-            notification={<DropdownNotification user={user} />}
-            user={<DropdownUser user={user} />}
-          ></Header>
+          <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}></Header>
           {/* <!-- ===== Header End ===== --> */}
 
           {/* <!-- ===== Main Content Start ===== --> */}
           <main>
-            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 dark:bg-boxdark-2">
-              {children}
-            </div>
+            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10 dark:bg-boxdark-2">{children}</div>
           </main>
           {/* <!-- ===== Main Content End ===== --> */}
         </div>

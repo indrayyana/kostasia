@@ -2,8 +2,8 @@
 
 import { cookies } from 'next/headers';
 
-export async function checkRefreshTokenExist() {
-  return cookies().has('refresh-token');
+export async function getToken() {
+  return cookies().get('access-token')?.value || null;
 }
 
 export async function setToken(accessToken: string, refreshToken: string) {
@@ -11,7 +11,8 @@ export async function setToken(accessToken: string, refreshToken: string) {
     path: '/',
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 30, // 30 menit
+    maxAge: 60 * 60 * 2, // 2 jam
+    sameSite: 'strict',
   });
 
   cookies().set('refresh-token', refreshToken, {
@@ -19,6 +20,7 @@ export async function setToken(accessToken: string, refreshToken: string) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 60 * 60 * 24 * 30, // 30 hari
+    sameSite: 'strict',
   });
 }
 

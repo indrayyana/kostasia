@@ -57,6 +57,6 @@ export const columns = (refetch: () => void): ColumnDef<NotifInterface>[] => [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} refecth={refetch} />,
+    cell: ({ row }) => <CellAction data={row.original} refetch={refetch} />,
   },
 ];

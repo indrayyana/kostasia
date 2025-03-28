@@ -43,7 +43,7 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
     cell: ({ row }) => {
       if (row.getValue('telepon')) {
       }
-      return <p>{row.getValue('telepon') ? `+${row.getValue('telepon')}` : 'kosong'}</p>;
+      return <p>{row.getValue('telepon') ? row.getValue('telepon') : 'kosong'}</p>;
     },
   },
   {
@@ -80,13 +80,13 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
           <DialogTrigger asChild>
             {fotoUrl ? (
               <Image
-                className="h-10 w-auto cursor-pointer rounded-full"
+                className="h-auto w-10 cursor-pointer rounded-full"
                 src={fotoUrl}
                 width={40}
                 height={40}
                 alt={`Foto ${nama}`}
                 title="Foto Profil"
-                priority
+                priority={true}
               />
             ) : (
               <p>kosong</p>
@@ -101,6 +101,7 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
                 height={400}
                 alt={`Foto ${nama}`}
                 title="Foto Profil"
+                priority={true}
               />
             </DialogContent>
           )}
@@ -126,7 +127,7 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
                 height={40}
                 alt={`KTP ${nama}`}
                 title="Foto KTP"
-                priority
+                priority={true}
               />
             ) : (
               <p>kosong</p>
@@ -141,6 +142,7 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
                 height={400}
                 alt={`KTP ${nama}`}
                 title="Foto KTP"
+                priority={true}
               />
             </DialogContent>
           )}
@@ -150,6 +152,6 @@ export const columns = (refetch: () => void): ColumnDef<UserInterface>[] => [
   },
   {
     id: 'actions',
-    cell: ({ row }) => <CellAction data={row.original} refecth={refetch} />,
+    cell: ({ row }) => <CellAction data={row.original} refetch={refetch} />,
   },
 ];

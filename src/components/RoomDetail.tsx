@@ -24,20 +24,12 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
 
   return (
     <>
-      <Header
-        title={`Kost ${cabang}`}
-        title2={Number(id) > 10 ? `Kamar ${Number(id) - 10}` : `Kamar ${id}`}
-      />
+      <Header title={`Kost ${cabang}`} title2={Number(id) > 10 ? `Kamar ${Number(id) - 10}` : `Kamar ${id}`} />
       <main>
         {isError ? (
-          <p className="text-red-500 text-center">
-            Terjadi kesalahan saat menampilkan data
-          </p>
+          <p className="text-red-500 text-center">Terjadi kesalahan saat menampilkan data</p>
         ) : (
-          <section
-            id="tentang"
-            className="w-full p-12 text-white flex flex-col bg-blue-600"
-          >
+          <section id="tentang" className="w-full p-12 text-white flex flex-col bg-blue-600">
             {isPending ? (
               <Skeleton className="rounded-2xl w-[16rem] h-[11rem] sm:w-[25rem] sm:h-[17rem] aspect-[1.48/1]" />
             ) : (
@@ -60,7 +52,7 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
             <ul className="list-disc">
               <li>3 x 4 meter</li>
               <li>Listrik token</li>
-              <li>Sumur bor</li>
+              <li>Air Sumur bor</li>
             </ul>
             <p className="font-bold my-4">Fasilitas Pilihan</p>
             <ul className="list-disc">

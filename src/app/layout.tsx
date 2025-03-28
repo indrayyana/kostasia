@@ -1,12 +1,12 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { Poppins } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/Provider';
 import AOSInit from '@/lib/aos';
 
-const inter = Inter({
+const poppins = Poppins({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   display: 'swap',
@@ -91,7 +91,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <body className={`${inter.className} bg-white dark:bg-slate-800`}>
+      <body className={`${poppins.className} bg-white dark:bg-slate-800`}>
         <AOSInit />
         <Providers>{children}</Providers>
         <SpeedInsights />

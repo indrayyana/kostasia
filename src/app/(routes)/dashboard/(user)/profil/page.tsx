@@ -1,16 +1,16 @@
 'use client';
 
 import Image from 'next/image';
-import { Mail, Upload, User, Phone } from 'lucide-react';
+import { Mail, Upload, User, Phone, CircleUserRound } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
 import UserLayout from '@/components/Layouts/UserLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { useFetchUserProfile } from '@/hooks/useUser';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAuth } from '@/components/AuthProvider';
 
 const Profil = () => {
-  const { data, isPending } = useFetchUserProfile();
+  const { user, isPending } = useAuth();
 
   return (
     <UserLayout>
@@ -21,18 +21,13 @@ const Profil = () => {
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
-                <p className="font-medium text-black dark:text-white">
-                  Informasi Pribadi
-                </p>
+                <p className="font-medium text-black dark:text-white">Informasi Pribadi</p>
               </div>
               <div className="p-7">
                 <form action="#">
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
-                      <label
-                        className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="fullName"
-                      >
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white" htmlFor="fullName">
                         Nama Lengkap
                       </label>
                       {isPending ? (
@@ -50,7 +45,7 @@ const Profil = () => {
                             id="fullName"
                             name="fullName"
                             placeholder="Putu Gede"
-                            value={data?.user?.nama}
+                            value={user?.nama}
                           />
                         </div>
                       )}
@@ -78,7 +73,7 @@ const Profil = () => {
                             id="phoneNumber"
                             name="phoneNumber"
                             placeholder="contoh: 08123456789"
-                            value={data?.user?.telepon}
+                            value={user?.telepon}
                           />
                         </div>
                       )}
@@ -86,10 +81,7 @@ const Profil = () => {
                   </div>
 
                   <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="emailAddress"
-                    >
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white" htmlFor="emailAddress">
                       Email
                     </label>
                     {isPending ? (
@@ -107,17 +99,14 @@ const Profil = () => {
                           id="emailAddress"
                           name="emailAddress"
                           placeholder="tudebagus45@gmail.com"
-                          value={data?.user?.email}
+                          value={user?.email}
                         />
                       </div>
                     )}
                   </div>
 
                   <div className="mb-5.5">
-                    <label
-                      className="mb-3 block text-sm font-medium text-black dark:text-white"
-                      htmlFor="KTP"
-                    >
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white" htmlFor="KTP">
                       Kartu Tanda Penduduk (KTP)
                     </label>
                     <div
@@ -134,10 +123,7 @@ const Profil = () => {
                           <Upload size={20} />
                         </span>
                         <p>
-                          <span className="text-primary">
-                            Klik untuk upload
-                          </span>{' '}
-                          atau drag & drop
+                          <span className="text-primary">Klik untuk upload</span> atau drag & drop
                         </p>
                         <p className="mt-1.5">SVG, PNG, atau JPG</p>
                         <p>(max, 800 X 800px)</p>
@@ -156,9 +142,7 @@ const Profil = () => {
           <div className="col-span-5 xl:col-span-2">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
               <div className="border-b border-stroke px-7 py-4 dark:border-strokedark">
-                <p className="font-medium text-black dark:text-white">
-                  Foto Profil
-                </p>
+                <p className="font-medium text-black dark:text-white">Foto Profil</p>
               </div>
               <div className="p-7">
                 <form action="#">
@@ -166,34 +150,28 @@ const Profil = () => {
                     <div className="h-14 w-14 rounded-full">
                       {isPending ? (
                         <Skeleton className="rounded-none h-[55px] w-[55px]" />
-                      ) : (
+                      ) : user?.foto ? (
                         <Image
-                          src={data?.user?.foto ?? '/images/user/user-03.png'}
+                          src={user?.foto ?? '/images/user/user-03.png'}
                           width={55}
                           height={55}
                           alt="User"
                           title="Foto Profil"
                         />
+                      ) : (
+                        <CircleUserRound size={50} />
                       )}
                     </div>
                     <div>
-                      <span className="mb-1.5 text-black dark:text-white">
-                        Edit foto profil
-                      </span>
+                      <span className="mb-1.5 text-black dark:text-white">Edit foto profil</span>
                       <span className="flex gap-2.5">
                         {/* <button className="text-sm hover:text-primary">
                           Hapus
                         </button> */}
-                        <Button
-                          className="text-red-600 p-0 size-fit"
-                          variant={'link'}
-                        >
+                        <Button className="text-red-600 p-0 size-fit" variant={'link'}>
                           Hapus
                         </Button>
-                        <Button
-                          className="text-yellow-600 p-0 size-fit"
-                          variant={'link'}
-                        >
+                        <Button className="text-yellow-600 p-0 size-fit" variant={'link'}>
                           Update
                         </Button>
                       </span>
@@ -214,8 +192,7 @@ const Profil = () => {
                         <Upload size={20} />
                       </span>
                       <p>
-                        <span className="text-primary">Klik untuk upload</span>{' '}
-                        atau drag & drop
+                        <span className="text-primary">Klik untuk upload</span> atau drag & drop
                       </p>
                       <p className="mt-1.5">SVG, PNG, atau JPG</p>
                       <p>(max, 800 X 800px)</p>

@@ -74,7 +74,8 @@ const handlePrismaClientError = (err: any) => {
       // handling duplicate key errors
       return new ApiError(
         httpStatus.BAD_REQUEST,
-        `Duplicate field value: ${err.meta.target} (${err.meta.target} is already in use)`,
+        // `Duplicate field value: ${err.meta.target} (${err.meta.target} is already in use)`,
+        `${err.meta.target} sudah digunakan`,
         [],
         false,
         err.stack

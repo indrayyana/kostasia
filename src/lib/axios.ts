@@ -1,17 +1,10 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { setToken, deleteToken } from '@/utils/cookies';
-
-const headers = {
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  'Cache-Control': 'no-cache',
-  Expires: 0,
-};
+import { config } from '@/utils/config';
 
 const api = axios.create({
-  baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
-  headers,
+  baseURL: `${config.app.apiURL}`,
   timeout: 60 * 1000, // 1 minute timeout
   withCredentials: true,
 });
@@ -25,11 +18,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-tokens`,
-          {},
-          { withCredentials: true }
-        );
+        const response = await axios.post(`${config.app.apiURL}/auth/refresh-tokens`, {}, { withCredentials: true });
 
         const { access, refresh } = response.data.tokens;
         setToken(access.token, refresh.token);

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { DataTable } from "./data-table";
-import { columns } from "./columns";
-import { useFetchTransactions } from "@/hooks/useTransaction";
+import DefaultLayout from '@/components/Layouts/DefaultLayout';
+import Breadcrumb from '@/components/Breadcrumbs/Breadcrumb';
+import { DataTable } from './data-table';
+import { columns } from './columns';
+import { useFetchTransactions } from '@/hooks/useTransaction';
 
 export default function PembayaranPage() {
   const { data, refetch, isPending, isError } = useFetchTransactions();
@@ -14,7 +14,7 @@ export default function PembayaranPage() {
       <Breadcrumb pageName="Pembayaran" />
       <div className="flex flex-col text-black-2">
         {isError ? (
-          <p className="text-red-500 text-center">Terjadi kesalahan saat menampilkan data</p>
+          <p className="text-red-500 text-center my-20">Terjadi kesalahan saat menampilkan data</p>
         ) : (
           <DataTable
             columns={columns(refetch)}

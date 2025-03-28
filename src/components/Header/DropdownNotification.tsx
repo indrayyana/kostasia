@@ -3,14 +3,15 @@ import Link from 'next/link';
 import { Bell } from 'lucide-react';
 import ClickOutside from '@/components/ClickOutside';
 import { useFetchNotificationsUser } from '@/hooks/useNotification';
-import { UserInterface } from '@/types/user';
 import dateFormat from '@/utils/dateFormat';
 import { Skeleton } from '../ui/skeleton';
+import { useAuth } from '../AuthProvider';
 
-const DropdownNotification = ({ user }: { user: UserInterface }) => {
+const DropdownNotification = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [notifying, setNotifying] = useState(true);
-  const { data, isPending } = useFetchNotificationsUser(user?.user_id);
+  const { user } = useAuth();
+  const { data, isPending } = useFetchNotificationsUser(user?.user_id as string);
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -69,22 +70,16 @@ const DropdownNotification = ({ user }: { user: UserInterface }) => {
                       href="#"
                     >
                       <p className="text-sm">
-                        <span className="text-black dark:text-white">
-                          {message?.judul || 'Notifikasi Baru'}
-                        </span>{' '}
+                        <span className="text-black dark:text-white">{message?.judul || 'Notifikasi Baru'}</span>{' '}
                         {message?.deskripsi || 'Tidak ada deskripsi.'}
                       </p>
 
-                      <p className="text-xs">
-                        {dateFormat(message?.dibuat_pada)}
-                      </p>
+                      <p className="text-xs">{dateFormat(message?.dibuat_pada)}</p>
                     </Link>
                   </li>
                 ))
               ) : (
-                <p className="px-4.5 py-3 text-sm text-bodydark2">
-                  Tidak ada notifikasi.
-                </p>
+                <p className="px-4.5 py-3 text-sm text-bodydark2">Tidak ada notifikasi.</p>
               )}
             </ul>
           </div>
