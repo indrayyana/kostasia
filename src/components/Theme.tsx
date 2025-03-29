@@ -17,6 +17,7 @@ export default function Theme({ scrolled }: { scrolled: boolean }) {
     return (
       <button
         type="button"
+        title="Light Mode"
         onClick={() => setTheme('light')}
         className="inline-flex flex-col items-center justify-center group"
       >
@@ -33,6 +34,7 @@ export default function Theme({ scrolled }: { scrolled: boolean }) {
     return (
       <button
         type="button"
+        title="Dark Mode"
         onClick={() => setTheme('dark')}
         className="inline-flex flex-col items-center justify-center group"
       >

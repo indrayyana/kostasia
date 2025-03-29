@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Eye, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { NotifInterface } from '@/types/notif';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { TransactionInterface } from '@/types/transaction';
 
 interface CellActionProps {
-  data: NotifInterface;
+  data: TransactionInterface;
   refecth: () => void;
 }
 

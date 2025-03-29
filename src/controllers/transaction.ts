@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { v4 as uuidv4 } from 'uuid';
 import { Context } from 'hono';
-import transactionService from '@/services/transaction';
+import * as transactionService from '@/services/transaction';
 import { createTransaction, getTransaction } from '@/lib/midtrans/transaction';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';

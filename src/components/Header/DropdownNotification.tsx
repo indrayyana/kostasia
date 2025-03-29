@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Bell } from 'lucide-react';
 import ClickOutside from '@/components/ClickOutside';
 import { useFetchNotificationsUser } from '@/hooks/useNotification';
-import dateFormat from '@/utils/dateFormat';
+import { dateFormat } from '@/utils/format';
 import { Skeleton } from '../ui/skeleton';
 import { useAuth } from '../AuthProvider';
 

@@ -4,7 +4,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { NotifInterface } from '@/types/notif';
 import { CellAction } from './cell-action';
-import dateFormat from '@/utils/dateFormat';
+import { dateFormat } from '@/utils/format';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.

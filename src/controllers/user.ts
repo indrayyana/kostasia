@@ -30,7 +30,9 @@ export const createUser = catchAsync(async (c: Context) => {
 });
 
 export const getUsers = catchAsync(async (c: Context) => {
-  const user = await userService.getAllUsers();
+  const { cache, user } = await userService.getAllUsers();
+
+  if (cache) c.header('X-Data-Source', 'cache');
 
   return c.json({
     code: httpStatus.OK,

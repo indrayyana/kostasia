@@ -3,13 +3,13 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { CellAction } from './cell-action';
-import dateFormat from '@/utils/dateFormat';
+import { dateFormat, priceFormat } from '@/utils/format';
+import { TransactionInterface } from '@/types/transaction';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export const columns = (refetch: () => void): ColumnDef<any>[] => [
+export const columns = (refetch: () => void): ColumnDef<TransactionInterface>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -34,6 +34,10 @@ export const columns = (refetch: () => void): ColumnDef<any>[] => [
   {
     accessorKey: 'total',
     header: 'Total',
+    cell: ({ row }) => {
+      const rowTotal = row.getValue<number>('total');
+      return <p>{priceFormat(rowTotal)}</p>;
+    },
   },
   {
     accessorKey: 'status',

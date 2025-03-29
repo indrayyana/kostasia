@@ -1,4 +1,4 @@
-const dateFormat = (strDate: string) => {
+export const dateFormat = (strDate: string) => {
   const date = new Date(strDate);
   const dateFormatted = date.toLocaleDateString('id-ID', {
     day: '2-digit',
@@ -17,5 +17,14 @@ const dateFormat = (strDate: string) => {
   return `${dateFormatted} ${timeFormatted}`;
 };
 
-export default dateFormat;
+export const priceFormat = (angka: number) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+  })
+    .format(angka)
+    .replace(/,00$/, '')
+    .replace(/\s+/g, '');
+};
 

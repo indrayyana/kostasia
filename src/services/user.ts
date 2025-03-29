@@ -2,6 +2,8 @@ import httpStatus from 'http-status';
 import prisma from '@/lib/prisma';
 import ApiError from '@/utils/ApiError';
 import { createUserBodyType, updateUserBodyType } from '@/validations/user';
+import * as cacheService from './cache';
+import { UserDBInterface } from '@/types/user';
 
 interface GoogleLoginInterface {
   name?: string | null;
@@ -9,10 +11,17 @@ interface GoogleLoginInterface {
   picture?: string | null;
 }
 
+interface UsersWithCacheInterface {
+  cache: boolean;
+  user: UserDBInterface[] | null;
+}
+
 export const createUser = async (userBody: createUserBodyType) => {
   const user = await prisma.user.create({
     data: userBody,
   });
+
+  await cacheService.del('users');
 
   return user;
 };
@@ -26,18 +35,32 @@ export const createGoogleUser = async (userBody: GoogleLoginInterface) => {
     },
   });
 
+  await cacheService.del('users');
+
   return user;
 };
 
-export const getAllUsers = async () => {
-  return await prisma.user.findMany({
+export const getAllUsers = async (): Promise<UsersWithCacheInterface> => {
+  const cachedUsers = await cacheService.get('users');
+  if (cachedUsers) {
+    return {
+      cache: true,
+      user: cachedUsers as UserDBInterface[],
+    };
+  }
+
+  const user = await prisma.user.findMany({
     orderBy: {
       dibuat_pada: 'desc',
     },
   });
+
+  await cacheService.set('users', user);
+
+  return { cache: false, user };
 };
 
-export const getUserById = async (userId: string) => {
+export const getUserById = async (userId: string): Promise<UserDBInterface | null> => {
   const user = await prisma.user.findUnique({
     where: {
       user_id: userId,
@@ -47,7 +70,7 @@ export const getUserById = async (userId: string) => {
   return user;
 };
 
-export const getUserByEmail = async (email: string) => {
+export const getUserByEmail = async (email: string): Promise<UserDBInterface | null> => {
   const user = await prisma.user.findUnique({
     where: {
       email,
@@ -58,6 +81,7 @@ export const getUserByEmail = async (email: string) => {
 };
 
 export const getUserWithPermission = async () => {
+  // TODO: add cache
   const users = await prisma.token.findMany({
     where: {
       tipe: 'notification',
@@ -89,6 +113,8 @@ export const updateUserById = async (userId: string, updateBody: updateUserBodyT
     data: updateBody,
   });
 
+  await cacheService.del('users');
+
   return user;
 };
 
@@ -114,20 +140,26 @@ export const updateGoogleUserById = async (userId: string, updateBody: GoogleLog
     data,
   });
 
+  await cacheService.del('users');
+
   return user;
 };
 
 export const deleteUserById = async (userId: string) => {
-  const user = await getUserById(userId);
+  let user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  return await prisma.user.delete({
+  user = await prisma.user.delete({
     where: {
       user_id: userId,
     },
   });
+
+  await cacheService.del('users');
+
+  return user;
 };
 
 export const deleteAllUserById = async (userId: string[]) => {
@@ -142,6 +174,8 @@ export const deleteAllUserById = async (userId: string[]) => {
     if (missingIds.length > 0) {
       throw new ApiError(httpStatus.NOT_FOUND, `users not found for ID: ${missingIds.join(', ')}`);
     }
+
+    await cacheService.del('users');
 
     const deletedUsers = await tx.user.deleteMany({
       where: { user_id: { in: userId } },

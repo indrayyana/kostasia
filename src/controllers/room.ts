@@ -1,12 +1,14 @@
 import httpStatus from 'http-status';
 import { Context } from 'hono';
-import roomService from '@/services/room';
+import * as roomService from '@/services/room';
 import { CabangType } from '@/types/room';
 import catchAsync from '@/utils/catchAsync';
 import ApiError from '@/utils/ApiError';
 
 export const getRooms = catchAsync(async (c: Context) => {
-  const kamar = await roomService.getAllRooms();
+  const { cache, kamar } = await roomService.getAllRooms();
+
+  if (cache) c.header('X-Data-Source', 'cache');
 
   return c.json({
     code: httpStatus.OK,
@@ -22,7 +24,9 @@ export const getRoomsByCabang = catchAsync(async (c: Context) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Kamar not found');
   }
 
-  const kamar = await roomService.getRoomsByCabang(cabang as CabangType);
+  const { cache, kamar } = await roomService.getRoomsByCabang(cabang as CabangType);
+
+  if (cache) c.header('X-Data-Source', 'cache');
 
   return c.json({
     code: httpStatus.OK,

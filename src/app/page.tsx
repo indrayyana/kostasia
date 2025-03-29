@@ -270,8 +270,7 @@ function HomeContent() {
             <Image
               src="/assets/room.webp"
               alt="Room Interior"
-              width={2400}
-              height={1350}
+              layout="fill"
               priority={true}
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -299,8 +298,8 @@ function HomeContent() {
               <Image
                 src="/assets/shoji-right.webp"
                 alt="Shoji Right"
-                width={979}
-                height={1099}
+                layout="fill"
+                priority={true}
                 className="h-full w-full object-cover object-left"
               />
             </div>
@@ -315,8 +314,8 @@ function HomeContent() {
               <Image
                 src="/assets/shoji-left.webp"
                 alt="Shoji Left"
-                width={979}
-                height={1099}
+                layout="fill"
+                priority={true}
                 className="h-full w-full object-cover object-right"
               />
             </div>
@@ -366,7 +365,7 @@ function HomeContent() {
             </div>
           </div>
         </section>
-        <section className="p-4 sm:p-8 md:p-12 bg-gray-200">
+        <section className="p-4 sm:p-8 md:p-12 bg-gray-200 dark:bg-gray-900">
           <p className="mt-4 mb-10 text-xl sm:text-4xl text-center font-bold bg-gradient-to-r from-blue-600 to-cyan-400 bg-clip-text text-transparent">
             Pilih Lokasi Kost
           </p>
@@ -402,3 +401,4 @@ export default function Home() {
     </>
   );
 }
+

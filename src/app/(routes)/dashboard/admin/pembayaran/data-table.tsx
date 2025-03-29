@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import * as React from 'react';
@@ -16,14 +15,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import TableSearch from '@/components/ui/table-search';
 import TablePagination from '@/components/ui/table-pagination';
@@ -47,21 +39,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { sendPushNotification } from '@/utils/firebase-admin';
 import { UserNotificationInterface } from '@/types/notif';
 import {
@@ -71,10 +50,7 @@ import {
 } from '@/hooks/useNotification';
 import { Skeleton } from '@/components/ui/skeleton';
 
-interface DataTableProps<
-  TData extends { notifikasi_id: string | number },
-  TValue
-> {
+interface DataTableProps<TData extends { transaksi_id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   isLoading: boolean;
@@ -89,20 +65,19 @@ export const formSchema = z.object({
   kepada: z.string().min(3, { message: '"Kepada" tidak boleh kosong.' }),
 });
 
-export function DataTable<
-  TData extends { notifikasi_id: string | number },
-  TValue
->({ columns, data = [], isLoading, refetch }: DataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
+export function DataTable<TData extends { transaksi_id: string | number }, TValue>({
+  columns,
+  data = [],
+  isLoading,
+  refetch,
+}: DataTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = React.useState([]);
   const [rowSelection, setRowSelection] = React.useState({});
   const [open, setOpen] = React.useState(false);
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const { data: dataUser, isPending: isLoadingUser } =
-    useFetchUsersWithNotification();
+  const { data: dataUser, isPending: isLoadingUser } = useFetchUsersWithNotification();
   const users: UserNotificationInterface[] = dataUser?.users || [];
 
   const table = useReactTable({
@@ -123,21 +98,20 @@ export function DataTable<
 
   const selectedRows = table.getSelectedRowModel().rows;
 
-  const { mutate: bulkDeleteNotif, isPending: bulkDeleteNotifIsLoading } =
-    useBulkDeleteNotification({
-      onSuccess: () => {
-        refetch();
-        setRowSelection({});
-        setIsOpen(false);
-        toast.success('Notifikasi berhasil dihapus');
-      },
-      onError: () => {
-        toast.error('Terjadi kesalahan saat menghapus notifikasi');
-      },
-    });
+  const { mutate: bulkDeleteNotif, isPending: bulkDeleteNotifIsLoading } = useBulkDeleteNotification({
+    onSuccess: () => {
+      refetch();
+      setRowSelection({});
+      setIsOpen(false);
+      toast.success('Notifikasi berhasil dihapus');
+    },
+    onError: () => {
+      toast.error('Terjadi kesalahan saat menghapus notifikasi');
+    },
+  });
 
   const handleDelete = () => {
-    const ids = selectedRows.map((row) => row.original.notifikasi_id);
+    const ids = selectedRows.map((row) => row.original.transaksi_id);
     // @ts-expect-error off
     bulkDeleteNotif(ids);
   };
@@ -151,15 +125,14 @@ export function DataTable<
     },
   });
 
-  const { mutate: createNotification, isPending: createNotificationIsLoading } =
-    useCreateNotification({
-      onSuccess: () => {
-        refetch();
-      },
-      onError: () => {
-        toast.error('Terjadi kesalahan saat menambahkan Notifikasi');
-      },
-    });
+  const { mutate: createNotification, isPending: createNotificationIsLoading } = useCreateNotification({
+    onSuccess: () => {
+      refetch();
+    },
+    onError: () => {
+      toast.error('Terjadi kesalahan saat menambahkan Notifikasi');
+    },
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const selectedUser = users.find((user) => user.user_id === values.kepada);
@@ -201,8 +174,7 @@ export function DataTable<
                 <DialogHeader>
                   <DialogTitle>Tambah Notifikasi</DialogTitle>
                   <DialogDescription>
-                    Kirim notifikasi kepada penyewa. Klik kirim jika sudah
-                    selesai memasukkan data.
+                    Kirim notifikasi kepada penyewa. Klik kirim jika sudah selesai memasukkan data.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -262,32 +234,18 @@ export function DataTable<
                           <FormLabel htmlFor="user_id" className="text-right">
                             Kepada
                           </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger className="col-span-3">
-                                <SelectValue
-                                  placeholder={
-                                    isLoadingUser
-                                      ? 'Loading...'
-                                      : 'Pilih penyewa'
-                                  }
-                                />
+                                <SelectValue placeholder={isLoadingUser ? 'Loading...' : 'Pilih penyewa'} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               {isLoadingUser ? (
-                                <div className="p-4 text-center">
-                                  Loading...
-                                </div>
+                                <div className="p-4 text-center">Loading...</div>
                               ) : (
                                 users.map((user) => (
-                                  <SelectItem
-                                    key={user.user_id}
-                                    value={user.user_id}
-                                  >
+                                  <SelectItem key={user.user_id} value={user.user_id}>
                                     {user.user.nama}
                                   </SelectItem>
                                 ))
@@ -301,11 +259,7 @@ export function DataTable<
                   />
                 </div>
                 <DialogFooter>
-                  <Button
-                    type="submit"
-                    className="dark:text-white font-bold"
-                    disabled={createNotificationIsLoading}
-                  >
+                  <Button type="submit" className="dark:text-white font-bold" disabled={createNotificationIsLoading}>
                     {createNotificationIsLoading ? (
                       <div className="flex items-center gap-2">
                         <Loader2 className="animate-spin" />
@@ -346,16 +300,8 @@ export function DataTable<
               <TableRow className="dark:border-gray-500" key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      className="font-bold text-black-2 dark:text-white"
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                    <TableHead key={header.id} className="font-bold text-black-2 dark:text-white">
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
                   );
                 })}
@@ -373,27 +319,15 @@ export function DataTable<
               ))
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className="dark:border-gray-500"
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
+                <TableRow className="dark:border-gray-500" key={row.id} data-state={row.getIsSelected() && 'selected'}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
+                <TableCell colSpan={columns.length} className="h-24 text-center">
                   Tidak ada hasil.
                 </TableCell>
               </TableRow>
@@ -408,23 +342,14 @@ export function DataTable<
         {/* <AlertDialogTrigger>Open</AlertDialogTrigger> */}
         <AlertDialogContent className="dark:text-white">
           <AlertDialogHeader>
-            <AlertDialogTitle>
-              Apakah Anda yakin ingin menghapus data yang dipilih ?
-            </AlertDialogTitle>
+            <AlertDialogTitle>Apakah Anda yakin ingin menghapus data yang dipilih ?</AlertDialogTitle>
             <AlertDialogDescription>
-              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data
-              secara permanen.
+              Tindakan ini tidak dapat dibatalkan. Ini akan menghapus data secara permanen.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={bulkDeleteNotifIsLoading}>
-              Batal
-            </AlertDialogCancel>
-            <Button
-              variant={'destructive'}
-              onClick={handleDelete}
-              disabled={bulkDeleteNotifIsLoading}
-            >
+            <AlertDialogCancel disabled={bulkDeleteNotifIsLoading}>Batal</AlertDialogCancel>
+            <Button variant={'destructive'} onClick={handleDelete} disabled={bulkDeleteNotifIsLoading}>
               {bulkDeleteNotifIsLoading ? (
                 <div className="flex items-center gap-2">
                   <Loader2 className="animate-spin" />

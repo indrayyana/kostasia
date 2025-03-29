@@ -9,24 +9,18 @@ interface LocationCardProps {
   aosAnimate: string;
 }
 
-export default function LocationCard({
-  name,
-  route,
-  imageUrl,
-  aosAnimate,
-}: LocationCardProps) {
+export default function LocationCard({ name, route, imageUrl, aosAnimate }: LocationCardProps) {
   return (
     <Link href={route} data-aos={`${aosAnimate}`}>
       <Card className="relative overflow-hidden">
         <CardContent className="p-0 relative">
-          <div className="relative w-full">
+          <div className="relative h-100 w-full">
             <Image
               src={imageUrl}
               alt={`Foto kota ${name}`}
               title={`Foto kota ${name}`}
-              width={500}
-              height={500}
-              priority
+              layout="fill"
+              priority={true}
               className="rounded-t-lg object-cover object-top transition-opacity duration-500 aspect-[1.40/1] w-full"
             />
             <div className="absolute inset-0 bg-black/65"></div>

@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { Context } from 'hono';
 import { getCookie } from 'hono/cookie';
-import tokenService from '@/services/token';
+import * as tokenService from '@/services/token';
 import * as userService from '@/services/user';
 import { RoleType } from '@/types/user';
 import { setToken } from '@/utils/cookies';

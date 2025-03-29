@@ -1,18 +1,16 @@
-## Tech Stack
+## Tech Stack & Libraries
 
 - Tailwind CSS
 - Shadcn UI
 - Next.js (App router)
 - Hono.js
-- Prisma
+- Redis
 - Supabase
-- Firebase (Storage, Cloud Messaging)
+- Firebase (Storage & Cloud Messaging)
 - Midtrans
-- TanStack Query
 - Vercel
-
-## Libraries & Tools
-
+- TanStack Query
+- Prisma
 - Next PWA
 - SweetAlert2
 - AOS
