@@ -11,6 +11,7 @@
     "lint": "next lint",
     "prepare": "husky",
     "test": "jest --passWithNoTests -u",
+    "test:api": "vitest run src/__tests__/api",
     "test:cover": "npm run test -- --coverage",
     "test:watch": "jest --watch"
   },
@@ -92,6 +93,8 @@
     "prisma": "^6.3.0",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.9"
   }
 }

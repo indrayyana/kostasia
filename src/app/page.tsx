@@ -263,7 +263,6 @@ function HomeContent() {
 
   return (
     <>
-      <Header />
       <main className="overflow-x-hidden">
         <section className="w-full h-screen">
           <div ref={containerRef} className="relative h-screen w-full overflow-hidden flex items-center justify-center">
@@ -387,7 +386,6 @@ function HomeContent() {
         <CallToAction />
         <ScrollToTop />
       </main>
-      <Footer />
     </>
   );
 }
@@ -395,9 +393,11 @@ function HomeContent() {
 export default function Home() {
   return (
     <>
+      <Header />
       <Suspense>
         <HomeContent />
       </Suspense>
+      <Footer />
     </>
   );
 }
