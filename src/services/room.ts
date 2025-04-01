@@ -28,7 +28,7 @@ export const getAllRooms = async (): Promise<RoomsWithCacheInterface> => {
 };
 
 export const getRoomsByCabang = async (cabang: CabangType): Promise<RoomsWithCacheInterface> => {
-  const cachedRoom = await cacheService.get(`room:${cabang}`);
+  const cachedRoom = await cacheService.get(`rooms:${cabang}`);
   if (cachedRoom) {
     return {
       cache: true,
@@ -43,7 +43,7 @@ export const getRoomsByCabang = async (cabang: CabangType): Promise<RoomsWithCac
     },
   });
 
-  await cacheService.set(`room:${cabang}`, kamar);
+  await cacheService.set(`rooms:${cabang}`, kamar);
 
   return { cache: false, kamar };
 };

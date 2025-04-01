@@ -11,7 +11,7 @@
     "lint": "next lint",
     "prepare": "husky",
     "test": "jest --passWithNoTests -u",
-    "test:api": "vitest run src/__tests__/api",
+    "test:api": "vitest run src/__tests__/api/integration",
     "test:cover": "npm run test -- --coverage",
     "test:watch": "jest --watch"
   },

@@ -17,12 +17,15 @@
 - axios
 - Husky
 - Jest
+- Vitest
 - Winston
 - Zod
 
 Prisma command:
 
 ```bash
+npx prisma studio
+
 npx prisma init
 
 npx prisma generate

@@ -3,13 +3,19 @@ import { describe, test, expect } from 'vitest';
 import httpStatus from 'http-status';
 import { adminAccessToken, userOneAccessToken } from '../fixtures/token.fixture';
 import app from '@/app/api/[...route]/app';
+import { admin, insertUsers, userOne } from '../fixtures/user.fixture';
+import { clearUsers } from '../utils/setupTestDB';
 
 describe('Room routes', () => {
   describe('GET /api/rooms', () => {
     test('should return 200 and a list of rooms', async () => {
+      await clearUsers();
+      await insertUsers([admin]);
+
       const res = await app.request('/api/rooms', {
         headers: {
           Cookie: `access-token=${await adminAccessToken}`,
+          'Content-Type': 'application/json',
         },
       });
 
@@ -38,18 +44,17 @@ describe('Room routes', () => {
         });
       });
     });
-  });
 
-  describe('GET /api/rooms', () => {
     test('should return 401 error if access token is missing', async () => {
       const res = await app.request('/api/rooms');
 
       expect(res.status).toBe(httpStatus.UNAUTHORIZED);
     });
-  });
 
-  describe('GET /api/rooms', () => {
     test('should return 403 if a non-admin is trying to access all rooms', async () => {
+      await clearUsers();
+      await insertUsers([userOne]);
+
       const res = await app.request('/api/rooms', {
         headers: {
           Cookie: `access-token=${await userOneAccessToken}`,
@@ -60,8 +65,8 @@ describe('Room routes', () => {
     });
   });
 
-  describe('GET /api/rooms/denpasar', () => {
-    test('should return 200 and a list of rooms', async () => {
+  describe('GET /api/rooms/:cabang', () => {
+    test('should return 200 and a list of denpasar rooms', async () => {
       const res = await app.request('/api/rooms/denpasar');
 
       expect(res.status).toBe(httpStatus.OK);
@@ -87,10 +92,8 @@ describe('Room routes', () => {
         cabang: 'denpasar',
       });
     });
-  });
 
-  describe('GET /api/rooms/klungkung', () => {
-    test('should return 200 and a list of rooms', async () => {
+    test('should return 200 and a list of klungkung rooms', async () => {
       const res = await app.request('/api/rooms/klungkung');
 
       expect(res.status).toBe(httpStatus.OK);
@@ -116,9 +119,7 @@ describe('Room routes', () => {
         cabang: 'klungkung',
       });
     });
-  });
 
-  describe('GET /api/rooms/:cabang', () => {
     test('should return 404 error if cabang room is not found', async () => {
       const res = await app.request('/api/rooms/badung');
 
@@ -126,8 +127,8 @@ describe('Room routes', () => {
     });
   });
 
-  describe('GET /api/rooms/denpasar/:roomId', () => {
-    test('should return 200 and the room object if data is ok', async () => {
+  describe('GET /api/rooms/:cabang/:roomId', () => {
+    test('should return 200 and the denpasar room object if data is ok', async () => {
       const res = await app.request('/api/rooms/denpasar/7');
 
       expect(res.status).toBe(httpStatus.OK);
@@ -151,18 +152,14 @@ describe('Room routes', () => {
         cabang: 'denpasar',
       });
     });
-  });
 
-  describe('GET /api/rooms/denpasar/:roomId', () => {
-    test('should return 404 error if room is not found', async () => {
+    test('should return 404 error if denpasar room is not found', async () => {
       const res = await app.request('/api/rooms/denpasar/17');
 
       expect(res.status).toBe(httpStatus.NOT_FOUND);
     });
-  });
 
-  describe('GET /api/rooms/klungkung/:roomId', () => {
-    test('should return 200 and the room object if data is ok', async () => {
+    test('should return 200 and the klungkung room object if data is ok', async () => {
       const res = await app.request('/api/rooms/klungkung/11');
 
       expect(res.status).toBe(httpStatus.OK);
@@ -186,10 +183,8 @@ describe('Room routes', () => {
         cabang: 'klungkung',
       });
     });
-  });
 
-  describe('GET /api/rooms/klungkung/:roomId', () => {
-    test('should return 404 error if room is not found', async () => {
+    test('should return 404 error if klungkung room is not found', async () => {
       const res = await app.request('/api/rooms/klungkung/21');
 
       expect(res.status).toBe(httpStatus.NOT_FOUND);
