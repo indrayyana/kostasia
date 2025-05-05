@@ -1,12 +1,13 @@
 import { Hono } from 'hono';
 import auth from '@/middlewares/auth';
 import { validate } from '@/middlewares/validate';
-import * as userController from '@/controllers/user';
+import * as userController from '@/controllers/user_controller';
 import * as userValidation from '@/validations/user';
 
 const app = new Hono();
 
 app.get('/profile', auth(), userController.getUserProfile);
+app.patch('/update', auth(), validate('json', userValidation.updateUserBody), userController.updateUser);
 
 app
   .get('/', auth('getUsers'), userController.getUsers)
@@ -18,8 +19,8 @@ app
   .patch(
     auth('manageUsers'),
     validate('param', userValidation.userParams),
-    validate('json', userValidation.updateUserBody),
-    userController.updateUser
+    validate('json', userValidation.updateUserByAdminBody),
+    userController.updateUserByAdmin
   )
   .delete(auth('manageUsers'), validate('param', userValidation.userParams), userController.deleteUser);
 
@@ -30,6 +31,7 @@ app.post(
   validate('form', userValidation.fileUploadSchema),
   userController.uploadProfileImage
 );
+
 app.post(
   '/:userId/upload-ktp',
   auth(),

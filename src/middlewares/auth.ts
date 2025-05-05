@@ -28,9 +28,7 @@ const auth = (requiredRights?: string | string[]) => {
       const userRights = RoleRights[user.role] || [];
       const hasRequiredRights = rights.every((right) => userRights.includes(right));
 
-      const userIdParam = c.req.param('userId');
-
-      if (!hasRequiredRights && (!userIdParam || userIdParam !== user.user_id)) {
+      if (!hasRequiredRights) {
         throw new ApiError(httpStatus.FORBIDDEN, "You don't have permission to access this resource");
       }
     }

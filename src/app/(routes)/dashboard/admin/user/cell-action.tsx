@@ -9,9 +9,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { UserInterface } from '@/types/user';
-import { useDeleteUser, useUpdateUser, useUploadKtp, useUploadProfile } from '@/hooks/useUser';
+import { useDeleteUser, useUpdateUserByAdmin, useUploadKtp, useUploadProfile } from '@/hooks/useUser';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
-import { updateUserBody } from '@/validations/user';
+import { updateUserByAdminBody } from '@/validations/user';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
@@ -38,14 +38,29 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
   const [imageProfile, setImageProfile] = useState<File | null>(null);
   const [fotoKtp, setFotoKtp] = useState<File | null>(null);
 
+  const form = useForm<z.infer<typeof updateUserByAdminBody>>({
+    resolver: zodResolver(updateUserByAdminBody),
+    defaultValues: {
+      nama: data.nama,
+      email: data.email,
+      telepon: data.telepon,
+      gender: data.gender || undefined,
+      role: data.role,
+      foto: undefined,
+      ktp: undefined,
+    },
+  });
+
   useEffect(() => {
     if (openEdit) {
+      form.reset();
+
       setPreviewProfile(data.foto || null);
       setPreviewKtp(data.ktp || null);
       setImageProfile(null);
       setFotoKtp(null);
     }
-  }, [openEdit, data]);
+  }, [openEdit, data, form]);
 
   const { mutate: uploadProfile, isPending: uploadProfileIsLoading } = useUploadProfile({
     onSuccess: () => {
@@ -69,11 +84,15 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
     onError: (error) => {
       console.log(error);
 
-      toast.error('Terjadi kesalahan saat mengupload foto KTP', { duration: 3000 });
+      const errorMessage =
+        error.response?.data?.code === 400
+          ? error.response?.data?.errors[0]?.message
+          : 'Terjadi kesalahan saat mengupload foto KTP';
+      toast.error(errorMessage, { duration: 5000 });
     },
   });
 
-  const { mutate: updateUser, isPending: updateUserIsLoading } = useUpdateUser({
+  const { mutate: updateUser, isPending: updateUserIsLoading } = useUpdateUserByAdmin({
     onSuccess: () => {
       refetch();
       toast.success('Berhasil mengedit data user', { duration: 3000 });
@@ -90,44 +109,53 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
     },
   });
 
-  const form = useForm<z.infer<typeof updateUserBody>>({
-    resolver: zodResolver(updateUserBody),
-    defaultValues: {
-      nama: data.nama,
-      email: data.email,
-      telepon: data.telepon,
-      role: data.role,
-      foto: undefined,
-      ktp: undefined,
-    },
-  });
+  const onSubmit = async (values: z.infer<typeof updateUserByAdminBody>) => {
+    try {
+      if (imageProfile) {
+        await new Promise<void>((resolve, reject) => {
+          uploadProfile(
+            {
+              param: { userId: data.user_id },
+              body: { file: imageProfile },
+            },
+            {
+              onSuccess: () => resolve(),
+              onError: (error) => reject(error),
+            }
+          );
+        });
+      }
 
-  const onSubmit = (values: z.infer<typeof updateUserBody>) => {
-    if (imageProfile) {
-      uploadProfile({
+      if (fotoKtp) {
+        await new Promise<void>((resolve, reject) => {
+          uploadKtp(
+            {
+              param: { userId: data.user_id },
+              body: { file: fotoKtp },
+            },
+            {
+              onSuccess: () => resolve(),
+              onError: (error) => reject(error),
+            }
+          );
+        });
+      }
+
+      updateUser({
         param: { userId: data.user_id },
-        body: { file: imageProfile },
+        body: {
+          nama: values.nama,
+          email: values.email,
+          telepon: values.telepon,
+          gender: values.gender,
+          role: values.role,
+          ...(imageProfile && { foto: values.foto }),
+          ...(fotoKtp && { ktp: values.ktp }),
+        },
       });
+    } catch (error) {
+      console.error('Update gagal:', error);
     }
-
-    if (fotoKtp) {
-      uploadKtp({
-        param: { userId: data.user_id },
-        body: { file: fotoKtp },
-      });
-    }
-
-    updateUser({
-      param: { userId: data.user_id },
-      body: {
-        nama: values.nama,
-        email: values.email,
-        telepon: values.telepon,
-        role: values.role,
-        foto: values.foto,
-        ktp: values.ktp,
-      },
-    });
   };
 
   const { mutate: deleteUser, isPending } = useDeleteUser({
@@ -201,11 +229,11 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
                     name="foto"
                     render={() => (
                       <FormItem className="flex flex-col">
-                        <FormLabel>Foto Profil (PNG/JPG/SVG/WEBP)</FormLabel>
+                        <FormLabel>Foto Profil (PNG/JPG)</FormLabel>
                         <FormControl>
                           <Input id="foto" type="file" onChange={handleProfileChange} />
                         </FormControl>
-                        <FormDescription>Maksimal ukuran file 2MB</FormDescription>
+                        <FormDescription>Maksimal ukuran file 3MB</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -215,9 +243,11 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
                     name="nama"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nama</FormLabel>
+                        <FormLabel>
+                          Nama<sup className="text-red-600 dark:text-red-400">*</sup>
+                        </FormLabel>
                         <FormControl>
-                          <Input id="nama" placeholder="Nama" autoComplete="off" {...field} className="text-black" />
+                          <Input id="nama" placeholder="Nama" autoComplete="off" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -228,16 +258,11 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Email</FormLabel>
+                        <FormLabel>
+                          Email<sup className="text-red-600 dark:text-red-400">*</sup>
+                        </FormLabel>
                         <FormControl>
-                          <Input
-                            id="email"
-                            type="email"
-                            placeholder="Email"
-                            autoComplete="off"
-                            {...field}
-                            className="text-black"
-                          />
+                          <Input id="email" type="email" placeholder="Email" autoComplete="off" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -248,17 +273,35 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
                     name="telepon"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>No Telepon</FormLabel>
+                        <FormLabel>
+                          No Telepon<sup className="text-red-600 dark:text-red-400">*</sup>
+                        </FormLabel>
                         <FormControl>
-                          <Input
-                            id="telepon"
-                            type="number"
-                            placeholder="No Telepon"
-                            autoComplete="off"
-                            {...field}
-                            className="text-black"
-                          />
+                          <Input id="telepon" type="number" placeholder="No Telepon" autoComplete="off" {...field} />
                         </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="gender"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Jenis Kelamin<sup className="text-red-600 dark:text-red-400">*</sup>
+                        </FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Pilih jenis kelamin" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="laki_laki">{'Laki-laki'}</SelectItem>
+                            <SelectItem value="perempuan">{'Perempuan'}</SelectItem>
+                          </SelectContent>
+                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -268,10 +311,12 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
                     name="role"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Role</FormLabel>
+                        <FormLabel>
+                          Role<sup className="text-red-600 dark:text-red-400">*</sup>
+                        </FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger className="text-black">
+                            <SelectTrigger>
                               <SelectValue placeholder="Pilih role" />
                             </SelectTrigger>
                           </FormControl>
@@ -290,10 +335,11 @@ export const CellAction = ({ data, refetch }: CellActionProps) => {
                     name="ktp"
                     render={() => (
                       <FormItem className="flex flex-col">
-                        <FormLabel>Foto KTP (PNG/JPG/SVG/WEBP)</FormLabel>
+                        <FormLabel>Foto KTP (PNG/JPG)</FormLabel>
                         <FormControl>
                           <Input id="ktp" type="file" onChange={handleKtpChange} />
                         </FormControl>
+                        <FormDescription>Maksimal ukuran file 3MB</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

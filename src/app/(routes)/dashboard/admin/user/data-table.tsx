@@ -1,6 +1,11 @@
 'use client';
 
 import * as React from 'react';
+import toast from 'react-hot-toast';
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import Image from 'next/image';
+import { v4 as uuidv4 } from 'uuid';
 import { Download, FileDown, FileSpreadsheet, FileText, Loader2, Plus, Trash2 } from 'lucide-react';
 import {
   ColumnDef,
@@ -39,18 +44,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import TableSearch from '@/components/ui/table-search';
-import { useBulkDeleteUsers, useCreateUser } from '@/hooks/useUser';
-import toast from 'react-hot-toast';
+import { useBulkDeleteUsers, useCreateUser, useUploadKtp, useUploadProfile } from '@/hooks/useUser';
 import { Skeleton } from '@/components/ui/skeleton';
 import TablePagination from '@/components/ui/table-pagination';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { createUserBody } from '@/validations/user';
-import Image from 'next/image';
 
 interface DataTableProps<TData extends { user_id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -72,7 +73,6 @@ export function DataTable<TData extends { user_id: string }, TValue>({
   const [isOpen, setIsOpen] = React.useState(false);
   const [previewProfile, setPreviewProfile] = React.useState<string | null>(null);
   const [previewKtp, setPreviewKtp] = React.useState<string | null>(null);
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [imageProfile, setImageProfile] = React.useState<File | null>(null);
   const [fotoKtp, setFotoKtp] = React.useState<File | null>(null);
 
@@ -111,41 +111,110 @@ export function DataTable<TData extends { user_id: string }, TValue>({
     bulkDeleteUser({ id: ids });
   };
 
-  const { mutate: createUser, isPending: createUserIsLoading } = useCreateUser({
+  const { mutate: uploadProfile, isPending: uploadProfileIsLoading } = useUploadProfile({
     onSuccess: () => {
+      refetch();
+    },
+    onError: (error) => {
+      console.log(error);
+
+      const errorMessage =
+        error.response?.data?.code === 400
+          ? error.response?.data?.errors[0]?.message
+          : 'Terjadi kesalahan saat mengupload foto profil';
+      toast.error(errorMessage, { duration: 5000 });
+    },
+  });
+
+  const { mutate: uploadKtp, isPending: uploadKtpIsLoading } = useUploadKtp({
+    onSuccess: () => {
+      refetch();
+    },
+    onError: (error) => {
+      console.log(error);
+
+      const errorMessage =
+        error.response?.data?.code === 400
+          ? error.response?.data?.errors[0]?.message
+          : 'Terjadi kesalahan saat mengupload foto KTP';
+      toast.error(errorMessage, { duration: 5000 });
+    },
+  });
+
+  const { mutate: createUser, isPending: createUserIsLoading } = useCreateUser({
+    onSuccess: async () => {
       form.reset();
       toast.success('Berhasil menambahkan user baru', { duration: 3000 });
       refetch();
       setOpen(false);
+      setPreviewKtp(null);
+      setPreviewProfile(null);
     },
     onError: (error) => {
+      console.log(error);
+
       const errorMessage =
-        error.response?.data?.code === 400 ? error.response?.data?.message : 'Terjadi kesalahan saat menambahkan user';
-      toast.error(errorMessage, { duration: 3000 });
+        error.response?.data?.code === 400
+          ? error.response?.data?.errors[0]?.message || error.response?.data?.message
+          : 'Terjadi kesalahan saat menambahkan user';
+      toast.error(errorMessage, { duration: 5000 });
     },
   });
 
   const form = useForm<z.infer<typeof createUserBody>>({
     resolver: zodResolver(createUserBody),
     defaultValues: {
+      user_id: '',
       nama: '',
       email: '',
       telepon: '',
+      gender: undefined,
+      role: undefined,
+      foto: undefined,
+      ktp: undefined,
     },
   });
 
-  async function onSubmit(values: z.infer<typeof createUserBody>) {
-    createUser({
-      nama: values.nama,
-      email: values.email,
-      telepon: values.telepon,
-      role: values.role,
-    });
+  const onSubmit = async (values: z.infer<typeof createUserBody>) => {
+    try {
+      const userId = uuidv4();
 
-    // if (image) {
+      await new Promise<void>((resolve, reject) => {
+        createUser(
+          {
+            user_id: userId,
+            nama: values.nama,
+            email: values.email,
+            telepon: values.telepon,
+            gender: values.gender,
+            role: values.role,
+            ...(imageProfile && { foto: values.foto }),
+            ...(fotoKtp && { ktp: values.ktp }),
+          },
+          {
+            onSuccess: () => resolve(),
+            onError: (error) => reject(error),
+          }
+        );
+      });
 
-    // }
-  }
+      if (imageProfile) {
+        uploadProfile({
+          param: { userId: userId },
+          body: { file: imageProfile },
+        });
+      }
+
+      if (fotoKtp) {
+        uploadKtp({
+          param: { userId: userId },
+          body: { file: fotoKtp },
+        });
+      }
+    } catch (error) {
+      console.error('Update gagal:', error);
+    }
+  };
 
   const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -235,10 +304,11 @@ export function DataTable<TData extends { user_id: string }, TValue>({
                       name="foto"
                       render={() => (
                         <FormItem className="flex flex-col">
-                          <FormLabel>Foto Profil</FormLabel>
+                          <FormLabel>Foto Profil (PNG/JPG)</FormLabel>
                           <FormControl>
-                            <Input id="foto" type="file" onChange={handleProfileChange} />
+                            <Input id="foto" type="file" accept="image/*" onChange={handleProfileChange} />
                           </FormControl>
+                          <FormDescription>Maksimal ukuran file 3MB</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -248,7 +318,9 @@ export function DataTable<TData extends { user_id: string }, TValue>({
                       name="nama"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nama</FormLabel>
+                          <FormLabel>
+                            Nama<sup className="text-red-600 dark:text-red-400">*</sup>
+                          </FormLabel>
                           <FormControl>
                             <Input id="nama" placeholder="Nama" autoComplete="off" {...field} />
                           </FormControl>
@@ -261,7 +333,9 @@ export function DataTable<TData extends { user_id: string }, TValue>({
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>
+                            Email<sup className="text-red-600 dark:text-red-400">*</sup>
+                          </FormLabel>
                           <FormControl>
                             <Input id="email" type="email" placeholder="Email" autoComplete="off" {...field} />
                           </FormControl>
@@ -274,7 +348,9 @@ export function DataTable<TData extends { user_id: string }, TValue>({
                       name="telepon"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Telepon</FormLabel>
+                          <FormLabel>
+                            Telepon<sup className="text-red-600 dark:text-red-400">*</sup>
+                          </FormLabel>
                           <FormControl>
                             <Input id="telepon" type="number" placeholder="Telepon" autoComplete="off" {...field} />
                           </FormControl>
@@ -284,10 +360,35 @@ export function DataTable<TData extends { user_id: string }, TValue>({
                     />
                     <FormField
                       control={form.control}
+                      name="gender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Jenis Kelamin<sup className="text-red-600 dark:text-red-400">*</sup>
+                          </FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger>
+                                <SelectValue placeholder="Pilih jenis kelamin" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="laki_laki">{'Laki-laki'}</SelectItem>
+                              <SelectItem value="perempuan">{'Perempuan'}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
                       name="role"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Role</FormLabel>
+                          <FormLabel>
+                            Role<sup className="text-red-600 dark:text-red-400">*</sup>
+                          </FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
@@ -309,10 +410,11 @@ export function DataTable<TData extends { user_id: string }, TValue>({
                       name="ktp"
                       render={() => (
                         <FormItem className="flex flex-col">
-                          <FormLabel>Foto KTP</FormLabel>
+                          <FormLabel>Foto KTP (PNG/JPG)</FormLabel>
                           <FormControl>
-                            <Input id="ktp" type="file" onChange={handleKtpChange} />
+                            <Input id="ktp" type="file" accept="image/*" onChange={handleKtpChange} />
                           </FormControl>
+                          <FormDescription>Maksimal ukuran file 3MB</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -328,8 +430,12 @@ export function DataTable<TData extends { user_id: string }, TValue>({
                     )}
                   </div>
                   <DialogFooter>
-                    <Button type="submit" className="dark:text-white font-bold" disabled={createUserIsLoading}>
-                      {createUserIsLoading ? (
+                    <Button
+                      type="submit"
+                      className="dark:text-white font-bold"
+                      disabled={createUserIsLoading || uploadProfileIsLoading || uploadKtpIsLoading}
+                    >
+                      {createUserIsLoading || uploadProfileIsLoading || uploadKtpIsLoading ? (
                         <div className="flex items-center gap-2">
                           <Loader2 className="animate-spin" />
                           <span>Loading</span>

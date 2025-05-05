@@ -20,6 +20,7 @@ model User {
   nama        String   @db.VarChar(20)
   email       String   @unique @db.VarChar(64)
   telepon     String?  @db.VarChar(20)
+  gender      Gender?
   role        Role     @default(pengunjung)
   foto        String?  @db.Text
   ktp         String?  @db.Text
@@ -90,6 +91,11 @@ enum Role {
   admin
   penyewa
   pengunjung
+}
+
+enum Gender {
+  laki_laki
+  perempuan
 }
 
 enum TokenType {

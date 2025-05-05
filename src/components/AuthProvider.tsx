@@ -4,7 +4,6 @@ import { useContext, createContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { UserInterface } from '@/types/user';
 import api from '@/lib/axios';
-import { config } from '@/utils/config';
 import { deleteToken, getToken } from '@/utils/cookies';
 import { useFetchUserProfile } from '@/hooks/useUser';
 
@@ -12,6 +11,7 @@ interface AuthContextType {
   token: string | null;
   user: UserInterface | null;
   isPending: boolean;
+  refetch: () => void;
   logout: () => void;
 }
 
@@ -33,7 +33,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadToken();
   }, []);
 
-  const { data, isPending, isError } = useFetchUserProfile(token);
+  const { data, refetch, isPending, isError } = useFetchUserProfile(token);
 
   useEffect(() => {
     if (!isPending) {
@@ -46,7 +46,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [data, isPending, isError]);
 
   const logout = async () => {
-    const res = await api.post(`${config.app.apiURL}/auth/logout`);
+    const res = await api.post('/auth/logout');
     if (res.status !== 200) {
       throw new Error('Gagal logout, coba lagi.');
     }
@@ -57,7 +57,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     router.push('/');
   };
 
-  return <AuthContext.Provider value={{ token, user, isPending, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ token, user, refetch, isPending, logout }}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

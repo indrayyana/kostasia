@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import * as roomController from '@/controllers/room';
+import * as roomController from '@/controllers/room_controller';
 import auth from '@/middlewares/auth';
 
 const app = new Hono();

@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { Slash } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import {
@@ -9,8 +11,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import Link from 'next/link';
-import Image from 'next/image';
 
 interface HeaderProps {
   title?: string;
@@ -34,9 +34,7 @@ export default function Header({ title, title2 }: HeaderProps) {
               className="object-cover object-center"
             />
             <div className="absolute inset-0 bg-black/90"></div>
-            <h1 className="text-4xl text-center font-bold text-white relative z-10 capitalize">
-              {title}
-            </h1>
+            <h1 className="text-4xl text-center font-bold text-white relative z-10 capitalize">{title}</h1>
             <Breadcrumb className="mt-4 relative z-10">
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -51,13 +49,7 @@ export default function Header({ title, title2 }: HeaderProps) {
                 </BreadcrumbSeparator>
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link
-                      className="text-white capitalize"
-                      href={`/${title
-                        .replace('Kost', '')
-                        .toLowerCase()
-                        .trim()}`}
-                    >
+                    <Link className="text-white capitalize" href={`/${title.replace('Kost', '').toLowerCase().trim()}`}>
                       {title.replace('Kost', '')}
                     </Link>
                   </BreadcrumbLink>
@@ -66,9 +58,7 @@ export default function Header({ title, title2 }: HeaderProps) {
                   <Slash className="text-white" />
                 </BreadcrumbSeparator>
                 <BreadcrumbItem>
-                  <BreadcrumbPage className="text-white">
-                    {title2}
-                  </BreadcrumbPage>
+                  <BreadcrumbPage className="text-white">{title2}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -93,9 +83,7 @@ export default function Header({ title, title2 }: HeaderProps) {
             className="object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/90"></div>
-          <h1 className="text-4xl text-center font-bold text-white relative z-10">
-            {title}
-          </h1>
+          <h1 className="text-4xl text-center font-bold text-white relative z-10 capitalize">{title}</h1>
           <Breadcrumb className="mt-4 relative z-10">
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -109,9 +97,7 @@ export default function Header({ title, title2 }: HeaderProps) {
                 <Slash className="text-white" />
               </BreadcrumbSeparator>
               <BreadcrumbItem>
-                <BreadcrumbPage className="text-white">
-                  {title.replace('Kost', '')}
-                </BreadcrumbPage>
+                <BreadcrumbPage className="text-white capitalize">{title.replace('Kost', '')}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

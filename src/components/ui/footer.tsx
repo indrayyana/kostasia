@@ -1,48 +1,38 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { IconBrandWhatsapp, IconMail } from '@tabler/icons-react';
-import { config } from '@/utils/config';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="p-12 bg-white dark:bg-gray-900">
+    <footer className="p-12 bg-white dark:bg-gray-900 min-h-65">
       <div className="max-w-screen-lg mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 sm:gap-12">
           <div>
-            <Link href={config.app.baseURL} className="flex items-center">
+            <Link href="https://www.kostasia.com" className="flex items-center">
               <Image
                 src="https://www.kostasia.com/assets/logo.png"
                 width={250}
                 height={250}
                 className="h-8 w-auto"
                 alt="Kost ASIA Logo"
+                priority={true}
               />
-              <span className="ml-2 text-2xl font-semibold dark:text-white">
-                Kost ASIA
-              </span>
+              <span className="ml-2 text-2xl font-semibold dark:text-white">Kost ASIA</span>
             </Link>
             <div className="mt-3 flex flex-col gap-2">
-              <Link
-                href="#"
-                className="text-gray-500 dark:text-gray-400 hover:underline"
-              >
+              <Link href="/kebijakan-privasi" className="text-gray-500 dark:text-gray-400 hover:underline">
                 Kebijakan Privasi
               </Link>
-              <Link
-                href="#"
-                className="text-gray-500 dark:text-gray-400 hover:underline"
-              >
+              <Link href="/syarat-dan-ketentuan" className="text-gray-500 dark:text-gray-400 hover:underline">
                 Syarat & Ketentuan
               </Link>
             </div>
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">
-              Hubungi Kami
-            </p>
+            <p className="mb-3 text-sm font-semibold text-gray-900 uppercase dark:text-white">Hubungi Kami</p>
             <ul className="text-gray-600 dark:text-gray-400">
               <li className="mb-3 flex items-center gap-2">
                 <IconBrandWhatsapp size={20} />
@@ -56,10 +46,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <IconMail size={20} />
-                <Link
-                  href="mailto:info@kostasia.com"
-                  className="hover:underline"
-                >
+                <Link href="mailto:info@kostasia.com" className="hover:underline">
                   info@kostasia.com
                 </Link>
               </li>

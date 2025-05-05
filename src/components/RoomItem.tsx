@@ -3,14 +3,7 @@ import { memo } from 'react';
 import Image from 'next/image';
 import { RoomInterface } from '@/types/room';
 import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from './ui/button';
 
 interface RoomItemProps {
@@ -19,8 +12,8 @@ interface RoomItemProps {
 
 const RoomItem = memo(({ room }: RoomItemProps) => {
   const statusStyles = {
-    kosong: 'bg-green-100 text-green-800',
-    terisi: 'bg-red-100 text-red-800',
+    kosong: 'bg-green-100 text-green-800 border border-green-800',
+    terisi: 'bg-red-100 text-red-800 border border-red-800',
   };
 
   return (
@@ -38,10 +31,7 @@ const RoomItem = memo(({ room }: RoomItemProps) => {
         </CardHeader>
         <CardContent>
           <CardDescription>
-            <Badge
-              variant="custom"
-              className={`${statusStyles[room.status] || ''}`}
-            >
+            <Badge variant="custom" className={`${statusStyles[room.status] || ''}`}>
               {room.status}
             </Badge>
           </CardDescription>
@@ -61,4 +51,3 @@ const RoomItem = memo(({ room }: RoomItemProps) => {
 RoomItem.displayName = 'RoomItem';
 
 export default RoomItem;
-

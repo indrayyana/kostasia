@@ -62,7 +62,7 @@ const DropdownNotification = () => {
                     </Link>
                   </li>
                 ))
-              ) : data?.notifications ? (
+              ) : data?.notifications.length > 0 ? (
                 data?.notifications.map((message, index) => (
                   <li key={index}>
                     <Link
@@ -79,7 +79,9 @@ const DropdownNotification = () => {
                   </li>
                 ))
               ) : (
-                <p className="px-4.5 py-3 text-sm text-bodydark2">Tidak ada notifikasi.</p>
+                <p className="px-4.5 py-8 flex justify-center items-center text-sm text-bodydark2">
+                  Tidak ada notifikasi.
+                </p>
               )}
             </ul>
           </div>

@@ -36,6 +36,7 @@ const DropdownUser = memo(() => {
               }}
               alt="User"
               title="Foto Profil"
+              priority={true}
             />
           ) : (
             <Skeleton className="rounded-full h-[48px] w-[48px]" />

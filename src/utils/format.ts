@@ -28,3 +28,11 @@ export const priceFormat = (angka: number) => {
     .replace(/\s+/g, '');
 };
 
+const genderMap: Record<string, string> = {
+  laki_laki: 'Laki-laki',
+  perempuan: 'Perempuan',
+};
+
+export const genderFormat = (gender: string | undefined) => {
+  return gender ? genderMap[gender] || gender : null;
+};

@@ -8,6 +8,7 @@ import {
   createUserBodyType,
   fileUploadSchemaType,
   updateUserBodyType,
+  updateUserByAdminBodyType,
   userParamsType,
 } from '@/validations/user';
 import { uploadImageFile } from '@/utils/firebase-admin';
@@ -71,10 +72,26 @@ export const getUserProfile = catchAsync(async (c: Context) => {
 });
 
 export const updateUser = catchAsync(async (c: Context) => {
+  const authUser = c.get('user');
+
+  // @ts-expect-error off
+  const validatedBody: updateUserBodyType = c.req.valid('json');
+
+  const user = await userService.updateUserById(authUser.user_id, validatedBody);
+
+  return c.json({
+    code: httpStatus.OK,
+    status: 'success',
+    message: 'Update user successfully',
+    user,
+  });
+});
+
+export const updateUserByAdmin = catchAsync(async (c: Context) => {
   // @ts-expect-error off
   const validatedParam: userParamsType = c.req.valid('param');
   // @ts-expect-error off
-  const validatedBody: updateUserBodyType = c.req.valid('json');
+  const validatedBody: updateUserByAdminBodyType = c.req.valid('json');
 
   const user = await userService.updateUserById(validatedParam.userId, validatedBody);
 

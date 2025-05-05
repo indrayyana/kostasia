@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import * as transactionController from '@/controllers/transaction';
+import * as transactionController from '@/controllers/transaction_controller';
 import auth from '@/middlewares/auth';
 
 const app = new Hono();

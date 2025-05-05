@@ -17,14 +17,14 @@ export default function LocationCard({ name, route, imageUrl, aosAnimate }: Loca
           <div className="relative h-100 w-full">
             <Image
               src={imageUrl}
+              fill={true}
               alt={`Foto kota ${name}`}
               title={`Foto kota ${name}`}
-              layout="fill"
               priority={true}
               className="rounded-t-lg object-cover object-top transition-opacity duration-500 aspect-[1.40/1] w-full"
             />
             <div className="absolute inset-0 bg-black/65"></div>
-            <CardTitle className="absolute inset-0 flex items-center justify-center xsm:text-4xl sm:text-2xl text-white text-2xl md:text-4xl lg:text-5xl font-semibold">
+            <CardTitle className="hover:underline absolute inset-0 flex items-center justify-center xsm:text-4xl sm:text-2xl text-white text-2xl md:text-4xl lg:text-5xl font-semibold">
               {name}
             </CardTitle>
           </div>

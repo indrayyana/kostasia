@@ -3,13 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { IconBrandWhatsapp, IconMail } from '@tabler/icons-react';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,11 +14,9 @@ export default function Kontak() {
 
   return (
     <>
-      <div className="max-w-5xl p-10 bg-white dark:bg-gray-900 rounded-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-        <div className="">
-          <p className="text-3xl font-bold text-blue-700 text-center">
-            Hubungi Kami
-          </p>
+      <section className="max-w-5xl p-10 bg-white dark:bg-gray-900 rounded-xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+        <div>
+          <p className="text-3xl font-bold text-blue-700 text-center">Hubungi Kami</p>
           <Image
             className="w-203 my-20"
             src={'/assets/contact-us.svg'}
@@ -54,7 +46,7 @@ export default function Kontak() {
             </li>
           </div>
         </div>
-        <div className="">
+        <div>
           <Form {...form}>
             <div className="flex flex-col items-center gap-8 w-full">
               <FormField
@@ -111,28 +103,19 @@ export default function Kontak() {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormControl>
-                      <Textarea
-                        rows={5}
-                        placeholder="Pesan"
-                        id="pesan"
-                        autoComplete="off"
-                        {...field}
-                      />
+                      <Textarea rows={5} placeholder="Pesan" id="pesan" autoComplete="off" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button
-                type="submit"
-                className="w-full dark:text-white font-bold"
-              >
+              <Button type="submit" className="w-full dark:text-white font-bold">
                 Kirim Email
               </Button>
             </div>
           </Form>
         </div>
-      </div>
+      </section>
     </>
   );
 }

@@ -69,7 +69,7 @@ export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
 
   return (
     <nav
-      className={`fixed w-full z-20 top-0 start-0 transition-all duration-300 ${
+      className={`fixed w-full z-99 top-0 start-0 transition-all duration-300 ${
         scrolled || !hasBreadcrumb ? 'bg-white dark:bg-gray-900 shadow-md' : 'bg-transparent dark:bg-transparent'
       }`}
     >

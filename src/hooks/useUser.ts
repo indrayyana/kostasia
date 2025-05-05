@@ -8,6 +8,7 @@ import {
   createUserBodyType,
   fileUploadSchemaType,
   updateUserBodyType,
+  updateUserByAdminBodyType,
   userParamsType,
 } from '@/validations/user';
 
@@ -48,7 +49,19 @@ export const useFetchUserProfile = (token: string | null) => {
 
 export const useUpdateUser = ({ onSuccess, onError }) => {
   return useMutation({
-    mutationFn: async ({ param, body }: { param: userParamsType; body: updateUserBodyType }) => {
+    mutationFn: async (body: updateUserBodyType) => {
+      const response = await api.patch(`/users/update`, body);
+
+      return response;
+    },
+    onSuccess,
+    onError,
+  });
+};
+
+export const useUpdateUserByAdmin = ({ onSuccess, onError }) => {
+  return useMutation({
+    mutationFn: async ({ param, body }: { param: userParamsType; body: updateUserByAdminBodyType }) => {
       const response = await api.patch(`/users/${param.userId}`, body);
 
       return response;

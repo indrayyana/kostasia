@@ -46,6 +46,7 @@ api.interceptors.response.use(
           }).then((result) => {
             if (result.isConfirmed) {
               window.location.replace('/');
+              window.location.reload();
             }
           });
         }

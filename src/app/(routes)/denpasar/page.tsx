@@ -1,4 +1,4 @@
-// import Image from 'next/image';
+import Image from 'next/image';
 import Rooms from '@/components/Rooms';
 import GoogleMaps from '@/components/GoogleMaps';
 import Header from '@/components/ui/header';
@@ -14,16 +14,14 @@ export default function Denpasar() {
         <section className="w-full p-12 bg-blue-600">
           <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
             <div className="">
-              <div className="w-full h-100 bg-gray-600" />
-
-              {/* <Image
-              src={'/assets/dummy.jpg'}
-              loading="lazy"
-              width={200}
-              height={200}
-              alt="Gambar kost"
-              className="w-full h-auto rounded-2xl"
-            /> */}
+              <Image
+                src={'/assets/room-detail.webp'}
+                loading="lazy"
+                width={1000}
+                height={1000}
+                alt="Gambar kost"
+                className="w-full h-auto rounded-2xl"
+              />
             </div>
 
             <div className="text-white flex flex-col gap-5">

@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import * as authController from '@/controllers/auth';
+import * as authController from '@/controllers/auth_controller';
 
 const app = new Hono();
 

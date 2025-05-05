@@ -28,7 +28,7 @@ export default function Rooms({ cabang }: RoomsProps) {
   return (
     <>
       <section className="flex flex-col p-12">
-        <p className="text-3xl font-bold my-4">Kamar</p>
+        <p className="text-3xl font-bold my-4 text-black dark:text-white">Kamar Kami</p>
         <div
           className={`grid grid-cols-1 sm:grid-cols-2 ${
             cabang === 'klungkung' ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
@@ -44,7 +44,7 @@ export default function Rooms({ cabang }: RoomsProps) {
                     <div className="mt-2 flex flex-col gap-2">
                       <Skeleton className="rounded-full h-[1.5rem] w-[4rem] max-w-lg" />
                       <Skeleton className="h-[1.5rem] w-[8rem] max-w-lg" />
-                      <Skeleton className="h-[1rem] w-[15rem] max-w-lg" />
+                      <Skeleton className="h-[1rem] w-[15rem] max-w-full" />
                       <Skeleton className="mt-4 h-[2rem] w-full max-w-lg" />
                     </div>
                   </CardContent>

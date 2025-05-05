@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import prisma from '@/lib/prisma';
 import ApiError from '@/utils/ApiError';
-import { createUserBodyType, updateUserBodyType } from '@/validations/user';
+import { createUserBodyType, updateUserBodyType, updateUserByAdminBodyType } from '@/validations/user';
 import * as cacheService from './cache';
 import { UserDBInterface } from '@/types/user';
 
@@ -100,7 +100,7 @@ export const getUserWithPermission = async () => {
   return users;
 };
 
-export const updateUserById = async (userId: string, updateBody: updateUserBodyType) => {
+export const updateUserById = async (userId: string, updateBody: updateUserBodyType | updateUserByAdminBodyType) => {
   let user = await getUserById(userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
@@ -124,7 +124,7 @@ export const updateGoogleUserById = async (userId: string, updateBody: GoogleLog
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  const data: updateUserBodyType = {
+  const data: updateUserByAdminBodyType = {
     nama: updateBody.name as string,
     email: updateBody.email as string,
   };
