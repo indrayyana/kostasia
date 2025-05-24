@@ -15,14 +15,15 @@ import {
 interface HeaderProps {
   title?: string;
   title2?: string;
+  noScroll?: boolean;
 }
 
-export default function Header({ title, title2 }: HeaderProps) {
+export default function Header({ title, title2, noScroll }: HeaderProps) {
   if (!!title2) {
     return (
       <header>
         <Suspense>
-          <Navbar />
+          <Navbar hasBreadcrumb={!noScroll} />
         </Suspense>
         {title && (
           <div className="pb-12 relative w-full h-60 flex flex-col items-center justify-end text-white overflow-hidden">
@@ -71,7 +72,7 @@ export default function Header({ title, title2 }: HeaderProps) {
   return (
     <header>
       <Suspense>
-        <Navbar />
+        <Navbar hasBreadcrumb={!noScroll} />
       </Suspense>
       {title && (
         <div className="pb-12 relative w-full h-60 flex flex-col items-center justify-end text-white overflow-hidden">

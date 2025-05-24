@@ -28,7 +28,6 @@ model User {
   // updated_at DateTime @default(now()) @updatedAt
 
   token      Token[]
-  kamar      Kamar?
   notifikasi Notifikasi[]
   transaksi  Transaksi[]
 
@@ -48,8 +47,6 @@ model Token {
 
 model Kamar {
   kamar_id Int         @id @default(autoincrement())
-  user_id  String?     @unique @db.Uuid
-  user     User?       @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
   nama     String      @db.VarChar(20)
   harga    Int         @db.Integer
   status   StatusKamar @default(kosong)

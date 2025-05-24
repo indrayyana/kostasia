@@ -3,7 +3,7 @@ export const config = {
   app: {
     baseURL: `${process.env.BASE_URL}`,
     apiURL: `${process.env.NEXT_PUBLIC_API_URL}`,
-    dashboardURL: `${process.env.DASHBOARD_URL}`,
+    profileURL: `${process.env.PROFILE_URL}`,
   },
   jwt: {
     secret: `${process.env.JWT_SECRET}`,

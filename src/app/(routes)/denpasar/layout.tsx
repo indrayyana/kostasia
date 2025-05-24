@@ -10,6 +10,12 @@ export const metadata: Metadata = {
     title: 'Kost Denpasar - Kost ASIA',
     description:
       'Menyediakan kamar kost-kostan untuk sewa harian, mingguan, dan bulanan di Kota Denpasar dengan harga terjangkau',
+    images: [
+      {
+        url: `${process.env.BASE_URL}/assets/opengraph/opengraph-denpasar.png`,
+        type: 'image/png',
+      },
+    ],
   },
   other: {
     'place:location:latitude': '-8.676971',

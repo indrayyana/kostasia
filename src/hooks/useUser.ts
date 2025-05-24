@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery } from '@tanstack/react-query';
 import api from '@/lib/axios';
-import { UserInterface } from '@/types/user';
+import { UserDashboardInterface, UserInterface } from '@/types/user';
 import {
   bulkDeleteUserQueryType,
   createUserBodyType,
@@ -44,6 +44,17 @@ export const useFetchUserProfile = (token: string | null) => {
       return response.data.user;
     },
     enabled: !!token,
+  });
+};
+
+export const useFetchUserDashboard = () => {
+  return useQuery({
+    queryKey: ['user.dashboard'],
+    queryFn: async (): Promise<UserDashboardInterface> => {
+      const response = await api.get('/users/dashboard');
+
+      return response.data.dashboard;
+    },
   });
 };
 

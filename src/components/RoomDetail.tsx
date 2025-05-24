@@ -30,7 +30,7 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
   const [openSelect, setOpenSelect] = useState(false);
 
   const [date, setDate] = useState<Date>();
-  const [duration, setDuration] = useState<'harian' | 'mingguan' | 'bulanan'>();
+  const [duration, setDuration] = useState<'harian' | 'mingguan' | 'bulanan'>('bulanan');
 
   const handleClickAjukan = () => {
     if (!date) {
@@ -43,7 +43,11 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
       return;
     }
 
-    router.push(`/booking/${room.cabang}/${room.kamar_id}`);
+    router.push(
+      `/booking/${room.cabang}/${room.kamar_id}?date=${format(date, 'dd-MM-yy', {
+        locale: localeId,
+      })}&duration=${duration}`
+    );
   };
 
   if (!isPending && !data) {

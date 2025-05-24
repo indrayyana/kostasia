@@ -123,7 +123,7 @@ export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
             data-collapse-toggle="navbar-sticky"
             type="button"
             className={`inline-flex items-center w-9 h-9 justify-center text-sm text-gray-500 rounded-lg lg:hidden focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-white ${
-              scrolled ? '' : 'text-white'
+              scrolled || !hasBreadcrumb ? '' : 'text-white'
             }`}
             aria-controls="navbar-sticky"
             aria-expanded={isOpen}
@@ -153,7 +153,7 @@ export default function Navbar({ hasBreadcrumb = true }: NavbarProps) {
         >
           <ul
             className={`flex flex-col p-4 lg:p-0 mt-4 font-medium border border-gray-100 rounded-lg lg:space-x-8 rtl:space-x-reverse lg:flex-row lg:mt-0 lg:border-0 dark:border-gray-700 ${
-              scrolled ? '' : 'bg-white lg:bg-transparent dark:lg:bg-transparent dark:bg-black-2'
+              scrolled || !hasBreadcrumb ? '' : 'bg-white lg:bg-transparent dark:lg:bg-transparent dark:bg-black-2'
             }`}
           >
             {menuItems.map((item) => {

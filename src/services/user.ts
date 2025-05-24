@@ -3,7 +3,7 @@ import prisma from '@/lib/prisma';
 import ApiError from '@/utils/ApiError';
 import { createUserBodyType, updateUserBodyType, updateUserByAdminBodyType } from '@/validations/user';
 import * as cacheService from './cache';
-import { UserDBInterface } from '@/types/user';
+import { UserDashboardInterface, UserDBInterface } from '@/types/user';
 
 interface GoogleLoginInterface {
   name?: string | null;
@@ -78,6 +78,38 @@ export const getUserByEmail = async (email: string): Promise<UserDBInterface | n
   });
 
   return user;
+};
+
+export const getUserDashboard = async (): Promise<UserDashboardInterface | null> => {
+  const totalPengunjung = await prisma.user.count({
+    where: {
+      role: 'pengunjung',
+    },
+  });
+
+  const totalPenyewa = await prisma.user.count({
+    where: {
+      role: 'penyewa',
+    },
+  });
+
+  const totalPemasukan = await prisma.transaksi.aggregate({
+    _sum: {
+      total: true,
+    },
+    where: {
+      status: 'settlement',
+    },
+  });
+
+  const totalKamar = await prisma.kamar.count();
+
+  return {
+    total_pengunjung: totalPengunjung,
+    total_penyewa: totalPenyewa,
+    total_pemasukan: totalPemasukan._sum.total ?? 0,
+    total_kamar: totalKamar,
+  };
 };
 
 export const getUserWithPermission = async () => {

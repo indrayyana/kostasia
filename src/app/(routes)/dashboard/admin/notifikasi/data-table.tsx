@@ -155,14 +155,14 @@ export function DataTable<TData extends { notifikasi_id: string | number }, TVal
 
     const token = selectedUser.token;
 
+    await sendPushNotification(token, values);
+
     // @ts-expect-error off
     createNotification({
       judul: values.judul,
       deskripsi: values.deskripsi,
       user_id: values.kepada,
     });
-
-    await sendPushNotification(token, values);
   }
 
   return (

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { format, startOfDay, addMonths, startOfMonth } from 'date-fns';
+import { format, startOfDay, addMonths, startOfMonth, parse } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
 import { CabangType } from '@/types/room';
@@ -34,12 +34,29 @@ interface RoomCheckoutProps {
 }
 
 export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
+  const searchParams = useSearchParams();
   const { user, isPending: userPending } = useAuth();
   const { data, isPending, isError } = useFetchRoomDetail(cabang, id);
   const { mutate: createTransaction } = useCreateTransaction();
 
+  const durationParams = searchParams.get('duration');
+  const dateParams = searchParams.get('date');
+  const parsedDate =
+    dateParams && /^\d{2}-\d{2}-\d{2}$/.test(dateParams) ? parse(dateParams, 'dd-MM-yy', new Date()) : undefined;
+
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date>();
+  const [date, setDate] = useState<Date | undefined>(parsedDate);
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const [duration, setDuration] = useState<string | null>(durationParams);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (dateParams || durationParams) {
+      const cleanUrl = window.location.pathname;
+      router.replace(cleanUrl, { scroll: false });
+    }
+  }, [dateParams, durationParams, router]);
 
   if (isPending || userPending) {
     return <Loader />;
@@ -48,6 +65,12 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
   if (!data) {
     notFound();
   }
+
+  const getPrice = () => {
+    if (duration === 'harian') return { label: 'Rp100.000', satuan: 'per hari', info: 'sehari' };
+    if (duration === 'mingguan') return { label: 'Rp300.000', satuan: 'per minggu', info: 'seminggu' };
+    return { label: 'Rp500.000', satuan: 'per bulan', info: 'sebulan' };
+  };
 
   const room = data.kamar || {};
 
@@ -90,7 +113,10 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
           {/* KIRI - Informasi Penyewa */}
           <div className="md:col-span-2 space-y-5">
             <div className="space-y-3">
-              <p className="text-base font-semibold">Informasi penyewa</p>
+              <div className="flex justify-between">
+                <p className="text-base font-semibold">Informasi penyewa</p>
+                <p className="text-sm underline cursor-pointer font-medium">Edit</p>
+              </div>
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span>Nama penyewa</span>
@@ -170,11 +196,13 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
               <p className="text-base font-semibold">Biaya sewa kost</p>
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
-                  <span>Harga sewa per bulan</span>
-                  <span className="font-medium">Rp500.000</span>
+                  <span>Harga sewa {getPrice().satuan}</span>
+                  <span className="font-medium">{getPrice().label}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-300 text-xs font-light">Dibayar sebulan sekali</span>
+                  <span className="text-gray-500 dark:text-gray-300 text-xs font-light">
+                    Dibayar {getPrice().info} sekali
+                  </span>
                 </div>
               </div>
             </div>
@@ -187,7 +215,9 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
                   <span className="font-medium">Rp500.000</span>
                 </div>
                 <div className="flex justify-end">
-                  <span className="text-gray-500 dark:text-gray-300 text-xs font-light">Per Bulan</span>
+                  <span className="text-gray-500 dark:text-gray-300 text-xs font-light capitalize">
+                    {getPrice().satuan}
+                  </span>
                 </div>
               </div>
             </div>
@@ -226,7 +256,7 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span>Biaya sewa kos</span>
-                  <span>Rp500.000</span>
+                  <span>{getPrice().label}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Deposit</span>

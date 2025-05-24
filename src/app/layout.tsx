@@ -2,6 +2,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Analytics } from '@vercel/analytics/next';
 import type { Metadata, Viewport } from 'next';
 import { Poppins } from 'next/font/google';
+import { Toaster } from 'react-hot-toast';
 import './globals.css';
 import { Providers } from '@/components/Provider';
 import AOSInit from '@/lib/aos';
@@ -40,11 +41,11 @@ export const metadata: Metadata = {
     type: 'website',
     url: `${process.env.BASE_URL}`,
     siteName: 'Kost ASIA',
-    // images: [
-    //   {
-    //     url: `${process.env.BASE_URL}/api/og`,
-    //   },
-    // ]
+    images: [
+      {
+        url: `${process.env.BASE_URL}/opengraph-image.png`,
+      },
+    ],
     locale: 'in_ID',
   },
   manifest: '/manifest.json',
@@ -93,6 +94,7 @@ export default function RootLayout({
     <html lang="id">
       <body className={`${poppins.className} bg-white dark:bg-slate-800`}>
         <AOSInit />
+        <Toaster position="top-center" />
         <Providers>{children}</Providers>
         <SpeedInsights />
         <Analytics />

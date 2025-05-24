@@ -42,6 +42,9 @@ export const columns = (refetch: () => void): ColumnDef<NotifInterface>[] => [
   {
     accessorKey: 'status',
     header: 'Status',
+    cell: ({ row }) => {
+      return <p className="capitalize">{row.getValue<string>('status')}</p>;
+    },
   },
   {
     accessorKey: 'user.nama',

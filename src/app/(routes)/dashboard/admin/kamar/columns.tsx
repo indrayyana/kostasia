@@ -79,10 +79,16 @@ export const columns: ColumnDef<RoomInterface>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
+    cell: ({ row }) => {
+      return <p className="capitalize">{row.getValue<string>('status')}</p>;
+    },
   },
   {
     accessorKey: 'cabang',
     header: 'Cabang',
+    cell: ({ row }) => {
+      return <p className="capitalize">{row.getValue<string>('cabang')}</p>;
+    },
   },
   {
     id: 'actions',

@@ -7,6 +7,7 @@ import * as userValidation from '@/validations/user';
 const app = new Hono();
 
 app.get('/profile', auth(), userController.getUserProfile);
+app.get('/dashboard', auth('getUsers'), userController.getUserDashboard);
 app.patch('/update', auth(), validate('json', userValidation.updateUserBody), userController.updateUser);
 
 app

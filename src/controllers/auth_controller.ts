@@ -51,7 +51,7 @@ export const loginWithGoogle = catchAsync(async (c: Context) => {
 
   setToken(authTokens.access.token, authTokens.refresh.token);
 
-  return c.redirect(config.app.dashboardURL);
+  return c.redirect(config.app.profileURL);
 });
 
 export const logout = catchAsync(async (c: Context) => {

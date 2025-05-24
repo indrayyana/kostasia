@@ -35,7 +35,6 @@ describe('Room routes', () => {
       data.kamar.forEach((room) => {
         expect(room).toEqual({
           kamar_id: expect.any(Number),
-          user_id: expect.toBeOneOf([expect.any(String), null]),
           nama: expect.any(String),
           harga: expect.any(Number),
           status: expect.toBeOneOf(['kosong', 'terisi']),
@@ -84,7 +83,6 @@ describe('Room routes', () => {
 
       expect(data.kamar[0]).toEqual({
         kamar_id: expect.any(Number),
-        user_id: expect.toBeOneOf([expect.any(String), null]),
         nama: expect.any(String),
         harga: expect.any(Number),
         status: expect.toBeOneOf(['kosong', 'terisi']),
@@ -111,7 +109,6 @@ describe('Room routes', () => {
 
       expect(data.kamar[0]).toEqual({
         kamar_id: expect.any(Number),
-        user_id: expect.toBeOneOf([expect.any(String), null]),
         nama: expect.any(String),
         harga: expect.any(Number),
         status: expect.toBeOneOf(['kosong', 'terisi']),
@@ -144,7 +141,6 @@ describe('Room routes', () => {
 
       expect(data.kamar).toEqual({
         kamar_id: expect.any(Number),
-        user_id: expect.toBeOneOf([expect.any(String), null]),
         nama: expect.any(String),
         harga: expect.any(Number),
         status: expect.toBeOneOf(['kosong', 'terisi']),
@@ -175,7 +171,6 @@ describe('Room routes', () => {
 
       expect(data.kamar).toEqual({
         kamar_id: expect.any(Number),
-        user_id: expect.toBeOneOf([expect.any(String), null]),
         nama: expect.any(String),
         harga: expect.any(Number),
         status: expect.toBeOneOf(['kosong', 'terisi']),

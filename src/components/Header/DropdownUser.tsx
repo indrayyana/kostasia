@@ -49,7 +49,7 @@ const DropdownUser = memo(() => {
       {/* <!-- Dropdown Start --> */}
       {dropdownOpen && (
         <div
-          className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
+          className={`absolute text-gray-500 dark:text-gray-400 right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
         >
           <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
             <li>
@@ -61,24 +61,49 @@ const DropdownUser = memo(() => {
                 Profil
               </Link>
             </li>
-            <li>
-              <Link
-                href="#"
-                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-              >
-                <DoorOpen />
-                Kamar Saya
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-              >
-                <CreditCard />
-                Pembayaran
-              </Link>
-            </li>
+            {user?.role === 'admin' ? (
+              <>
+                <li>
+                  <Link
+                    href="/dashboard/admin/kamar"
+                    className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                  >
+                    <DoorOpen />
+                    Kamar
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/dashboard/admin/pembayaran"
+                    className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                  >
+                    <CreditCard />
+                    Pembayaran
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                  >
+                    <DoorOpen />
+                    Kamar Saya
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
+                    className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+                  >
+                    <CreditCard />
+                    Pembayaran
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
           <ButtonLogout />
         </div>

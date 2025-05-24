@@ -71,6 +71,17 @@ export const getUserProfile = catchAsync(async (c: Context) => {
   });
 });
 
+export const getUserDashboard = catchAsync(async (c: Context) => {
+  const userDashboard = await userService.getUserDashboard();
+
+  return c.json({
+    code: httpStatus.OK,
+    status: 'success',
+    message: 'Get user dashboard successfully',
+    dashboard: userDashboard,
+  });
+});
+
 export const updateUser = catchAsync(async (c: Context) => {
   const authUser = c.get('user');
 

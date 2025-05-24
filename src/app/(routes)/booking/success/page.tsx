@@ -27,7 +27,7 @@ function SuccessContent() {
             <p>Terjadi Kesalahan, Coba lagi nanti</p>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center h-[50vh] ">
+          <div className="flex flex-col items-center mt-20 justify-center h-[50vh] ">
             <Image
               className="mt-10"
               src={'/assets/payment-success.svg'}
@@ -49,7 +49,7 @@ function SuccessContent() {
 export default function Success() {
   return (
     <>
-      <Header />
+      <Header noScroll={true} />
       <Suspense>
         <SuccessContent />
       </Suspense>

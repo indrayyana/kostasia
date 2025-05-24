@@ -29,3 +29,10 @@ export interface UserDBInterface {
   dibuat_pada: Date;
 }
 
+export interface UserDashboardInterface {
+  total_pengunjung: number;
+  total_kamar: number;
+  total_pemasukan: number;
+  total_penyewa: number;
+}
+
