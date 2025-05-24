@@ -87,9 +87,7 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
               )}
 
               <div className="p-6">
-                <h2 className="text-2xl font-bold mt-2 mb-6 capitalize">
-                  {Number(id) > 10 ? `Kamar ${Number(id) - 10} - ${cabang}` : `Kamar ${id} - ${cabang}`}
-                </h2>
+                <h2 className="text-2xl font-bold mt-2 mb-6 capitalize">{`${room.nama} - ${room.cabang}`}</h2>
 
                 <p className="font-bold mb-2">Spesifikasi Tipe Kamar</p>
                 <ul className="list-disc list-inside mb-4 text-gray-700 dark:text-gray-300">
