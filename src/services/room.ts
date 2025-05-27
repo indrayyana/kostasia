@@ -1,13 +1,13 @@
 import httpStatus from 'http-status';
 import prisma from '@/lib/prisma';
 import ApiError from '@/utils/ApiError';
-import { CabangType, RoomInterface } from '@/types/room';
+import { CabangType, RoomDBInterface, RoomInterface } from '@/types/room';
 import * as cacheService from './cache';
 import { createRoomBodyType, updateRoomBodyType } from '@/validations/room';
 
 interface RoomsWithCacheInterface {
   cache: boolean;
-  kamar: RoomInterface[] | null;
+  kamar: RoomDBInterface[] | null;
 }
 
 export const createRoom = async (roomBody: createRoomBodyType) => {
@@ -63,7 +63,7 @@ export const getRoomsByCabang = async (cabang: CabangType): Promise<RoomsWithCac
   return { cache: false, kamar };
 };
 
-export const getRoomById = async (id: number, cabang?: CabangType): Promise<RoomInterface | null> => {
+export const getRoomById = async (id: number, cabang?: CabangType): Promise<RoomDBInterface | null> => {
   const kamar = await prisma.kamar.findFirst({
     where: {
       kamar_id: id,
