@@ -7,7 +7,7 @@ import { columns } from './columns';
 import { useFetchRooms } from '@/hooks/useRoom';
 
 export default function KamarPage() {
-  const { data, isPending, isError } = useFetchRooms();
+  const { data, refetch, isPending, isError } = useFetchRooms();
 
   return (
     <DefaultLayout>
@@ -16,7 +16,7 @@ export default function KamarPage() {
         {isError ? (
           <p className="text-red-500 text-center my-20">Terjadi kesalahan saat menampilkan data</p>
         ) : (
-          <DataTable columns={columns} data={data?.kamar || []} isLoading={isPending} />
+          <DataTable columns={columns(refetch)} data={data?.kamar || []} isLoading={isPending} refetch={refetch} />
         )}
       </div>
     </DefaultLayout>

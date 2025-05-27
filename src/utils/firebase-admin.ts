@@ -4,6 +4,7 @@ import admin from 'firebase-admin';
 import { v4 as uuidv4 } from 'uuid';
 import { config } from './config';
 import { updateUserById } from '@/services/user';
+import { updateRoomById } from '@/services/room';
 
 const serviceAccount = {
   type: config.firebase.type,
@@ -58,7 +59,7 @@ export const sendPushNotification = async (token: string, payload: notifPayload)
     });
 };
 
-export const uploadImageFile = async (userId: string, folderName: 'profile' | 'ktp', file: File) => {
+export const uploadImageFile = async (fileId: string, folderName: 'profile' | 'ktp' | 'room', file: File) => {
   const bucket = admin.storage().bucket();
 
   if (!file) {
@@ -85,7 +86,7 @@ export const uploadImageFile = async (userId: string, folderName: 'profile' | 'k
   }
 
   const downloadToken = uuidv4();
-  const fileName = `${folderName}/${userId}`;
+  const fileName = `${folderName}/${fileId}`;
 
   const metadata = {
     metadata: {
@@ -113,14 +114,21 @@ export const uploadImageFile = async (userId: string, folderName: 'profile' | 'k
           blob.name
         )}?alt=media&token=${downloadToken}`;
 
-        if (folderName === 'ktp') {
-          await updateUserById(userId, {
-            ktp: imageUrl,
-          });
-        } else {
-          await updateUserById(userId, {
-            foto: imageUrl,
-          });
+        switch (folderName) {
+          case 'ktp':
+            await updateUserById(fileId, { ktp: imageUrl });
+            break;
+
+          case 'profile':
+            await updateUserById(fileId, { foto: imageUrl });
+            break;
+
+          case 'room':
+            await updateRoomById(Number(fileId), { gambar: imageUrl });
+            break;
+
+          default:
+            throw new Error('Invalid folder name');
         }
 
         resolve(imageUrl);

@@ -64,7 +64,7 @@ export default function RoomDetail({ id, cabang }: RoomDetailProps) {
 
   return (
     <>
-      <Header title={`Kost ${cabang}`} title2={Number(id) > 10 ? `Kamar ${Number(id) - 10}` : `Kamar ${id}`} />
+      <Header title={`Kost ${cabang}`} title2={room.nama} />
       <main className="p-6 sm:p-12 bg-gray-100 dark:bg-slate-800">
         {isError ? (
           <p className="text-red-500 text-center">Terjadi kesalahan saat menampilkan data</p>

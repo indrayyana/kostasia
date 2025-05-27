@@ -212,7 +212,7 @@ export function DataTable<TData extends { user_id: string }, TValue>({
         });
       }
     } catch (error) {
-      console.error('Update gagal:', error);
+      console.error('Create User Failed:', error);
     }
   };
 

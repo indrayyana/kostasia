@@ -4,13 +4,13 @@ import Image from 'next/image';
 import { ColumnDef } from '@tanstack/react-table';
 import { RoomInterface } from '@/types/room';
 import { Checkbox } from '@/components/ui/checkbox';
-import { CellAction } from '@/components/cell-action';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import { CellAction } from './cell-action';
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const columns: ColumnDef<RoomInterface>[] = [
+export const columns = (refetch: () => void): ColumnDef<RoomInterface>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -92,7 +92,7 @@ export const columns: ColumnDef<RoomInterface>[] = [
   },
   {
     id: 'actions',
-    cell: () => <CellAction />,
+    cell: ({ row }) => <CellAction data={row.original} refetch={refetch} />,
   },
 ];
 

@@ -7,6 +7,9 @@ import toast from 'react-hot-toast';
 import { format, startOfDay, addMonths, startOfMonth, parse } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
+// import { z } from 'zod';
+// import { useForm } from 'react-hook-form';
+// import { zodResolver } from '@hookform/resolvers/zod';
 import { CabangType } from '@/types/room';
 import { useFetchRoomDetail } from '@/hooks/useRoom';
 import { useCreateTransaction } from '@/hooks/useTransaction';
@@ -20,6 +23,10 @@ import { cn } from '../lib/utils';
 import { Calendar } from './ui/calendar';
 import { Checkbox } from './ui/checkbox';
 import { genderFormat } from '../utils/format';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
+import { RadioGroup, RadioGroupItem } from './ui/radio-group';
+import { Label } from './ui/label';
+// import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare global {
@@ -39,24 +46,29 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
   const { data, isPending, isError } = useFetchRoomDetail(cabang, id);
   const { mutate: createTransaction } = useCreateTransaction();
 
-  const durationParams = searchParams.get('duration');
+  const durationParams = searchParams.get('duration') || 'bulanan';
   const dateParams = searchParams.get('date');
   const parsedDate =
     dateParams && /^\d{2}-\d{2}-\d{2}$/.test(dateParams) ? parse(dateParams, 'dd-MM-yy', new Date()) : undefined;
 
   const [open, setOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [date, setDate] = useState<Date | undefined>(parsedDate);
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [duration, setDuration] = useState<string | null>(durationParams);
+  const [previewKtp, setPreviewKtp] = useState<string | null>(null);
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  const [fotoKtp, setFotoKtp] = useState<File | null>(null);
 
   const router = useRouter();
 
   useEffect(() => {
+    setPreviewKtp(user?.foto || null);
+
     if (dateParams || durationParams) {
       const cleanUrl = window.location.pathname;
       router.replace(cleanUrl, { scroll: false });
     }
-  }, [dateParams, durationParams, router]);
+  }, [user, dateParams, durationParams, router]);
 
   if (isPending || userPending) {
     return <Loader />;
@@ -104,12 +116,74 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
     });
   };
 
+  // const roomCheckoutBody = z
+  //   .object({
+  //     nama: z.string().min(1, 'Nama tidak boleh kosong').max(20),
+  //     telepon: z.string().min(1, 'Telepon tidak boleh kosong').max(20),
+  //     gender: z.enum(['laki_laki', 'perempuan'], {
+  //       errorMap: () => ({ message: 'Gender harus diisi dengan nilai yang benar' }),
+  //     }),
+  //     ktp: z.string().min(1).max(255).nullable(),
+  //     fasilitas: z.enum(['kasur', 'lemari'], {
+  //       errorMap: () => ({ message: 'Fasilitas harus diisi dengan nilai yang benar' }),
+  //     }),
+  //     tanggal: z.date(),
+  //     durasi: z.enum(['harian', 'mingguan', 'bulanan'], {
+  //       errorMap: () => ({ message: 'Durasi harus diisi dengan nilai yang benar' }),
+  //     }),
+  //   })
+  //   .strict();
+
+  // const form = useForm<z.infer<typeof roomCheckoutBody>>({
+  //   resolver: zodResolver(roomCheckoutBody),
+  //   defaultValues: {
+  //     nama: '',
+  //     telepon: '',
+  //     gender: undefined,
+  //     ktp: undefined,
+  //   },
+  // });
+
+  // const onSubmit = async (values: z.infer<typeof roomCheckoutBody>) => {
+  //   console.log(values);
+  // };
+
+  const handleKtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFotoKtp(file);
+      setPreviewKtp(URL.createObjectURL(file));
+    }
+  };
+
   return (
     <main className="p-6">
       {isError ? (
         <p className="text-red-500 text-center">Terjadi kesalahan saat menampilkan data</p>
       ) : (
         <section className="grid lg:grid-cols-4 text-black dark:text-white gap-8 max-w-5xl mx-auto my-10">
+          {/* <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <FormField
+                control={form.control}
+                name="nama"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between">
+                      <FormLabel>
+                        Nama penyewa<sup className="text-red-600 dark:text-red-400">*</sup>
+                      </FormLabel>
+                      <FormControl>
+                        <Input id="nama" placeholder="Nama" autoComplete="off" {...field} />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form> */}
+
           {/* KIRI - Informasi Penyewa */}
           <div className="md:col-span-2 space-y-5">
             <div className="space-y-3">
@@ -144,7 +218,10 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
             <hr />
             <div className="space-y-3">
               <p className="text-base font-semibold">Foto KTP</p>
-              <Input type="file" accept="image/*" />
+              <Input id="ktp" type="file" accept="image/*" onChange={handleKtpChange} />
+              {!!previewKtp && (
+                <Image src={previewKtp} alt="foto profile" width={200} height={200} className="w-auto h-30 mx-auto" />
+              )}
             </div>
 
             <hr />
@@ -193,17 +270,81 @@ export default function RoomCheckout({ id, cabang }: RoomCheckoutProps) {
 
             <hr />
             <div className="space-y-3">
-              <p className="text-base font-semibold">Biaya sewa kost</p>
+              <div className="flex justify-between">
+                <p className="text-base font-semibold">Biaya sewa kost</p>
+                <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+                  <DialogTrigger asChild>
+                    <p className="text-sm underline cursor-pointer font-medium">Edit</p>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle className="font-bold">Biaya sewa kost</DialogTitle>
+                    </DialogHeader>
+
+                    <RadioGroup
+                      defaultValue={`${duration}`}
+                      onValueChange={(value) => setDuration(value)}
+                      className="gap-5"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="harian" id="r1" />
+                        <div className="flex w-full justify-between">
+                          <div className="flex flex-col">
+                            <Label htmlFor="r1">Per Hari</Label>
+                            <span className="text-gray-500 dark:text-gray-300 text-xs font-light">
+                              Dibayar sehari sekali
+                            </span>
+                          </div>
+                          <span className="font-medium">Rp100.000</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="mingguan" id="r2" />
+                        <div className="flex w-full justify-between">
+                          <div className="flex flex-col">
+                            <Label htmlFor="r2">Per Minggu</Label>
+                            <span className="text-gray-500 dark:text-gray-300 text-xs font-light">
+                              Dibayar seminggu sekali
+                            </span>
+                          </div>
+                          <span className="font-medium">Rp300.000</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="bulanan" id="r3" />
+                        <div className="flex w-full justify-between">
+                          <div className="flex flex-col">
+                            <Label htmlFor="r3">Per Bulan</Label>
+                            <span className="text-gray-500 dark:text-gray-300 text-xs font-light">
+                              Dibayar sebulan sekali
+                            </span>
+                          </div>
+                          <span className="font-medium">Rp500.000</span>
+                        </div>
+                      </div>
+                    </RadioGroup>
+                    <DialogFooter>
+                      <Button
+                        type="button"
+                        className="dark:text-white font-bold"
+                        onClick={() => {
+                          setOpenDialog(false);
+                        }}
+                      >
+                        Simpan
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              </div>
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span>Harga sewa {getPrice().satuan}</span>
                   <span className="font-medium">{getPrice().label}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500 dark:text-gray-300 text-xs font-light">
-                    Dibayar {getPrice().info} sekali
-                  </span>
-                </div>
+                <span className="text-gray-500 dark:text-gray-300 text-xs font-light">
+                  Dibayar {getPrice().info} sekali
+                </span>
               </div>
             </div>
 

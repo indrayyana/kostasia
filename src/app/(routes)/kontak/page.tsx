@@ -34,7 +34,7 @@ export default function Kontak() {
   const onSubmit = (values: z.infer<typeof sendMessageBody>) => {
     const message = `Nama: ${values.nama || '-'}%0AEmail: ${values.email || '-'}%0ATelepon: ${
       values.telepon || '-'
-    }%0A${values.pesan || '-'}`;
+    }%0A%0A${values.pesan || '-'}`;
 
     const whatsappURL = `https://wa.me/6287762642945?text=${message}`;
 

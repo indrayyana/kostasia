@@ -50,7 +50,7 @@ model Kamar {
   nama     String      @db.VarChar(20)
   harga    Int         @db.Integer
   status   StatusKamar @default(kosong)
-  gambar   String      @db.Text
+  gambar   String?     @db.Text
   cabang   Cabang
 
   transaksi Transaksi[]
